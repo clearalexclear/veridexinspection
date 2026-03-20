@@ -10,6 +10,8 @@ import Dashboard from "./pages/Dashboard";
 import BookInspection from "./pages/BookInspection";
 import Report from "./pages/Report";
 import SampleReport from "./pages/SampleReport";
+import UploadReport from "./pages/UploadReport";
+import ReviewReport from "./pages/ReviewReport";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +30,8 @@ const App = () => (
             <Route path="/book" element={<BookInspection />} />
             <Route path="/report/:id" element={<Report />} />
             <Route path="/sample-report" element={<SampleReport />} />
+            <Route path="/upload" element={<UploadReport />} />
+            <Route path="/review-report" element={<ReviewReport />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

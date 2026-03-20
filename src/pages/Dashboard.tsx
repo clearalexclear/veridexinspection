@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import logo from '@/assets/inspectra-logo.png';
 import {
   Plus, LogOut, Loader2, ClipboardCheck, Clock, CheckCircle, AlertTriangle,
-  ArrowRight, Package, MapPin, Calendar,
+  ArrowRight, Package, MapPin, Calendar, Upload,
 } from 'lucide-react';
 
 type Inspection = {
