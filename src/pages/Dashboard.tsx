@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import logo from '@/assets/inspectra-logo.png';
 import {
   Plus, LogOut, Loader2, ClipboardCheck, Clock, CheckCircle, AlertTriangle,
-  ArrowRight, Package, MapPin, Calendar,
+  ArrowRight, Package, MapPin, Calendar, Upload,
 } from 'lucide-react';
 
 type Inspection = {
@@ -83,6 +83,9 @@ export default function Dashboard() {
             <span className="font-semibold text-foreground text-sm">Inspectra</span>
           </div>
           <div className="flex items-center gap-3">
+            <Button size="sm" variant="outline" onClick={() => navigate('/upload')}>
+              <Upload className="w-4 h-4 mr-1" /> Upload Report
+            </Button>
             <Button size="sm" onClick={() => navigate('/book')}>
               <Plus className="w-4 h-4 mr-1" /> Book Inspection
             </Button>
