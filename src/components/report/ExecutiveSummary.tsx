@@ -1,17 +1,20 @@
 import { ScoreRing } from './ScoreRing';
-import { OverallResultBadge, RiskBadge, DecisionBadge } from './StatusBadge';
-import { AlertTriangle, AlertOctagon, Info } from 'lucide-react';
-import type { InspectionReport, DefectItem } from '@/data/reportData';
+import { OverallResultBadge, RiskBadge } from './StatusBadge';
+import { AlertTriangle, AlertOctagon, Info, BarChart3 } from 'lucide-react';
+import type { InspectionReport, DefectItem, AQLData } from '@/data/reportData';
 
-export function ExecutiveSummary({ report, defects }: { report: InspectionReport; defects: DefectItem[] }) {
+export function ExecutiveSummary({ report, defects, aql }: { report: InspectionReport; defects: DefectItem[]; aql: AQLData }) {
   const critical = defects.filter(d => d.severity === 'critical').length;
   const major = defects.filter(d => d.severity === 'major').length;
   const minor = defects.filter(d => d.severity === 'minor').length;
 
+  const aqlLabel = aql.result === 'pass' ? 'PASSED' : aql.result === 'fail' ? 'FAILED' : 'WARNING';
+  const aqlColor = aql.result === 'pass' ? 'text-success' : aql.result === 'fail' ? 'text-danger' : 'text-warning';
+
   return (
     <section id="summary" className="report-section">
       <h2 className="section-title">
-        <span className="w-1.5 h-5 rounded-full bg-primary inline-block" />
+        <BarChart3 className="w-5 h-5 text-primary" />
         Executive Summary
       </h2>
 
@@ -26,10 +29,10 @@ export function ExecutiveSummary({ report, defects }: { report: InspectionReport
           </div>
         </div>
 
-        {/* Issue Counts */}
+        {/* Issue Counts + AQL */}
         <div className="report-card p-6 fade-in-up stagger-1">
           <h3 className="text-sm font-semibold text-foreground mb-4">Issues Found</h3>
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="flex items-center justify-between p-3 rounded-lg bg-danger/5 border border-danger/10">
               <div className="flex items-center gap-3">
                 <AlertOctagon className="w-5 h-5 text-danger" />
@@ -52,16 +55,21 @@ export function ExecutiveSummary({ report, defects }: { report: InspectionReport
               <span className="text-2xl font-bold tabular-nums text-muted-foreground">{minor}</span>
             </div>
           </div>
+          <div className="mt-4 p-3 rounded-lg bg-muted/50 border border-border flex items-center justify-between">
+            <span className="text-xs font-medium text-muted-foreground">AQL Result</span>
+            <span className={`text-sm font-bold ${aqlColor}`}>{aqlLabel}</span>
+          </div>
         </div>
 
-        {/* Decision */}
+        {/* Risk Explanation */}
         <div className="report-card p-6 fade-in-up stagger-2">
-          <h3 className="text-sm font-semibold text-foreground mb-4">Decision</h3>
-          <div className="flex justify-center mb-4">
-            <DecisionBadge decision={report.decision} className="text-base px-6 py-3" />
-          </div>
-          <div className="mt-4 p-4 rounded-lg bg-muted/50 border border-border">
-            <p className="text-sm text-muted-foreground leading-relaxed">{report.recommendation}</p>
+          <h3 className="text-sm font-semibold text-foreground mb-4">Risk Explanation</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed mb-4">{report.recommendation}</p>
+          <div className="p-3 rounded-lg bg-warning/5 border border-warning/10">
+            <p className="text-xs font-semibold text-warning mb-1">Key Risk</p>
+            <p className="text-xs text-muted-foreground">
+              AQL Major defects ({aql.major.found} found vs {aql.major.accept} acceptable) exceed threshold. {aql.minor.found > aql.minor.accept ? 'Minor defects also exceed limit.' : 'Minor defects within tolerance.'}
+            </p>
           </div>
         </div>
       </div>

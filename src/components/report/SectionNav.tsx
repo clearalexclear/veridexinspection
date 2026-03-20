@@ -2,12 +2,17 @@ import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import {
   FileText, BarChart3, ClipboardList, Target, CheckSquare,
-  AlertTriangle, Camera, Package, Zap, Ruler, Box, MessageSquare, Award
+  AlertTriangle, Camera, Package, Zap, Ruler, Box, MessageSquare, Shield,
+  Flame, ListChecks, Building2, Clock
 } from 'lucide-react';
 
 const sections = [
   { id: 'header', label: 'Report', icon: FileText },
+  { id: 'decision', label: 'Decision', icon: Shield },
+  { id: 'key-issues', label: 'Issues', icon: Flame },
+  { id: 'action-plan', label: 'Actions', icon: ListChecks },
   { id: 'summary', label: 'Summary', icon: BarChart3 },
+  { id: 'supplier', label: 'Supplier', icon: Building2 },
   { id: 'overview', label: 'Overview', icon: ClipboardList },
   { id: 'aql', label: 'AQL', icon: Target },
   { id: 'conformity', label: 'Conformity', icon: CheckSquare },
@@ -17,8 +22,9 @@ const sections = [
   { id: 'testing', label: 'Testing', icon: Zap },
   { id: 'measurements', label: 'Specs', icon: Ruler },
   { id: 'cartons', label: 'Cartons', icon: Box },
+  { id: 'time-to-fix', label: 'Timeline', icon: Clock },
   { id: 'comments', label: 'Comments', icon: MessageSquare },
-  { id: 'recommendation', label: 'Decision', icon: Award },
+  { id: 'recommendation', label: 'Final', icon: Shield },
 ];
 
 export function SectionNav() {

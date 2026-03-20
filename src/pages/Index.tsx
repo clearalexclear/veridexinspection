@@ -1,6 +1,10 @@
 import { SectionNav } from '@/components/report/SectionNav';
 import { ReportHeader } from '@/components/report/ReportHeader';
+import { DecisionBlock } from '@/components/report/DecisionBlock';
+import { KeyIssuesBlock } from '@/components/report/KeyIssuesBlock';
+import { ActionPlanSection } from '@/components/report/ActionPlanSection';
 import { ExecutiveSummary } from '@/components/report/ExecutiveSummary';
+import { SupplierScoreSection } from '@/components/report/SupplierScoreSection';
 import { InspectionOverview } from '@/components/report/InspectionOverview';
 import { AQLSection } from '@/components/report/AQLSection';
 import { ConformitySection } from '@/components/report/ConformitySection';
@@ -10,6 +14,7 @@ import { PackagingSection } from '@/components/report/PackagingSection';
 import { TestingSection } from '@/components/report/TestingSection';
 import { MeasurementsSection } from '@/components/report/MeasurementsSection';
 import { CartonsSection } from '@/components/report/CartonsSection';
+import { TimeToFixSection } from '@/components/report/TimeToFixSection';
 import { CommentsSection } from '@/components/report/CommentsSection';
 import { FinalRecommendation } from '@/components/report/FinalRecommendation';
 import {
@@ -22,6 +27,10 @@ import {
   sampleMeasurements,
   samplePhotos,
   sampleCartonData,
+  sampleKeyIssues,
+  sampleActionPlan,
+  sampleSupplierScore,
+  sampleTimeToFix,
 } from '@/data/reportData';
 
 const Index = () => {
@@ -30,7 +39,11 @@ const Index = () => {
       <SectionNav />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ReportHeader report={sampleReport} />
-        <ExecutiveSummary report={sampleReport} defects={sampleDefects} />
+        <DecisionBlock report={sampleReport} />
+        <KeyIssuesBlock issues={sampleKeyIssues} />
+        <ActionPlanSection items={sampleActionPlan} />
+        <ExecutiveSummary report={sampleReport} defects={sampleDefects} aql={sampleAQL} />
+        <SupplierScoreSection score={sampleSupplierScore} />
         <InspectionOverview report={sampleReport} />
         <AQLSection aql={sampleAQL} />
         <ConformitySection items={sampleConformity} />
@@ -40,6 +53,7 @@ const Index = () => {
         <TestingSection tests={sampleTests} />
         <MeasurementsSection rows={sampleMeasurements} />
         <CartonsSection data={sampleCartonData} />
+        <TimeToFixSection items={sampleTimeToFix} />
         <CommentsSection comments={sampleReport.inspectorComments} />
         <FinalRecommendation report={sampleReport} />
       </main>

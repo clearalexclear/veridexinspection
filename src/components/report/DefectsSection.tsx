@@ -1,6 +1,24 @@
-import type { DefectItem } from '@/data/reportData';
+import type { DefectItem, ImpactLevel } from '@/data/reportData';
 import { SeverityBadge } from './StatusBadge';
-import { AlertTriangle, Wrench, Package } from 'lucide-react';
+import { AlertTriangle, Wrench, Package, ShieldAlert, Users, RotateCcw } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+const impactColors: Record<ImpactLevel, string> = {
+  low: 'text-success bg-success/10',
+  medium: 'text-warning bg-warning/10',
+  high: 'text-danger bg-danger/10',
+};
+
+function ImpactPill({ level, label }: { level: ImpactLevel; label: string }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-[10px] text-muted-foreground">{label}</span>
+      <span className={cn('text-[10px] font-bold uppercase px-2 py-0.5 rounded-full', impactColors[level])}>
+        {level}
+      </span>
+    </div>
+  );
+}
 
 export function DefectsSection({ defects }: { defects: DefectItem[] }) {
   const grouped = {
@@ -40,12 +58,29 @@ export function DefectsSection({ defects }: { defects: DefectItem[] }) {
                       </div>
                       <h4 className="text-base font-semibold text-foreground">{defect.title}</h4>
                     </div>
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-danger/5 border border-danger/10">
-                      <span className="text-xs text-danger font-medium">{defect.quantityAffected} units affected</span>
+                    <div className="flex items-center gap-3">
+                      <div className="px-3 py-1.5 rounded-lg bg-danger/5 border border-danger/10">
+                        <span className="text-xs text-danger font-semibold tabular-nums">{defect.percentAffected}%</span>
+                        <span className="text-xs text-muted-foreground ml-1">({defect.quantityAffected} units)</span>
+                      </div>
                     </div>
                   </div>
 
                   <p className="text-sm text-muted-foreground leading-relaxed mb-4">{defect.description}</p>
+
+                  {/* Business Impact */}
+                  <div className="mb-4 p-4 rounded-lg bg-muted/30 border border-border">
+                    <div className="flex items-center gap-2 mb-3">
+                      <ShieldAlert className="w-4 h-4 text-danger" />
+                      <p className="text-xs font-semibold uppercase tracking-wider text-foreground">Business Impact</p>
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-3">{defect.impactDescription}</p>
+                    <div className="grid grid-cols-3 gap-3">
+                      <ImpactPill level={defect.businessImpact.customerExperience} label="Customer Experience" />
+                      <ImpactPill level={defect.businessImpact.compliance} label="Compliance" />
+                      <ImpactPill level={defect.businessImpact.returnRefund} label="Return / Refund" />
+                    </div>
+                  </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="flex items-start gap-2 p-3 rounded-lg bg-muted/50">

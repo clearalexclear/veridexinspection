@@ -3,6 +3,8 @@ export type Severity = 'critical' | 'major' | 'minor';
 export type Status = 'pass' | 'fail' | 'warning' | 'na';
 export type RiskLevel = 'low' | 'medium' | 'high';
 export type Decision = 'ship' | 'ship-with-corrections' | 'do-not-ship';
+export type ImpactLevel = 'low' | 'medium' | 'high';
+export type PriorityLevel = 'low' | 'medium' | 'high';
 
 export interface InspectionReport {
   id: string;
@@ -32,6 +34,15 @@ export interface InspectionReport {
   topReasons: string[];
   nextStep: string;
   inspectorComments: string;
+  confidenceScore: number;
+  businessImpact: string;
+  quickSummary: string;
+}
+
+export interface BusinessImpact {
+  customerExperience: ImpactLevel;
+  compliance: ImpactLevel;
+  returnRefund: ImpactLevel;
 }
 
 export interface DefectItem {
@@ -40,8 +51,34 @@ export interface DefectItem {
   severity: Severity;
   description: string;
   quantityAffected: number;
+  percentAffected: number;
   recommendedAction: string;
   affectedCartons: string;
+  impactDescription: string;
+  businessImpact: BusinessImpact;
+}
+
+export interface KeyIssue {
+  title: string;
+  severity: Severity;
+  percentAffected: number;
+  impactDescription: string;
+}
+
+export interface ActionPlanItem {
+  issue: string;
+  action: string;
+  estimatedDays: string;
+  priority: PriorityLevel;
+}
+
+export interface SupplierScore {
+  overall: number;
+  qualityConsistency: number;
+  packagingAccuracy: number;
+  defectRate: number;
+  professionalism: number;
+  insight: string;
 }
 
 export interface ConformityItem {
@@ -91,6 +128,11 @@ export interface PhotoItem {
   defectRef?: string;
 }
 
+export interface TimeToFixItem {
+  task: string;
+  estimatedDays: string;
+}
+
 // --- SAMPLE DATA ---
 
 export const sampleReport: InspectionReport = {
@@ -125,6 +167,9 @@ export const sampleReport: InspectionReport = {
   ],
   nextStep: 'Request supplier corrections and re-inspect labeling before shipment',
   inspectorComments: 'Factory was cooperative throughout the inspection. Production line was clean and organized. Workers appeared adequately trained. However, QC station was understaffed — only 1 QC operator for the entire bottling line. Packing area had moderate humidity, which could affect carton integrity over time. Communication with factory management was smooth. Supplier representative was present on-site and responsive to all requests. Overall factory condition is acceptable but improvements in QC staffing and climate control in the packing area are recommended.',
+  confidenceScore: 74,
+  businessImpact: 'If shipped as-is, estimated 5–10% return rate and potential Amazon compliance risk due to missing suffocation warnings.',
+  quickSummary: 'Shipment is conditionally acceptable but requires labeling corrections and polybag warning labels before shipping.',
 };
 
 export const sampleDefects: DefectItem[] = [
@@ -134,8 +179,11 @@ export const sampleDefects: DefectItem[] = [
     severity: 'major',
     description: 'Product label positioned 4–6mm off-center from the designated print area. Visible misalignment affects brand presentation.',
     quantityAffected: 26,
+    percentAffected: 8.2,
     recommendedAction: 'Re-label affected units before shipment. Adjust label applicator calibration.',
     affectedCartons: 'Cartons #12, #18, #19, #23, #31',
+    impactDescription: 'May cause Amazon ASIN listing rejection and negative customer reviews.',
+    businessImpact: { customerExperience: 'medium', compliance: 'high', returnRefund: 'medium' },
   },
   {
     id: 'DEF-002',
@@ -143,8 +191,11 @@ export const sampleDefects: DefectItem[] = [
     severity: 'major',
     description: 'Inner polybag packaging missing required suffocation warning label per US CPSC guidelines.',
     quantityAffected: 11,
+    percentAffected: 3.5,
     recommendedAction: 'Apply suffocation warning stickers to all affected polybags. Audit remaining inventory.',
     affectedCartons: 'Cartons #7, #14, #22',
+    impactDescription: 'Non-compliant with US CPSC. Could result in marketplace suspension or liability.',
+    businessImpact: { customerExperience: 'low', compliance: 'high', returnRefund: 'low' },
   },
   {
     id: 'DEF-003',
@@ -152,8 +203,11 @@ export const sampleDefects: DefectItem[] = [
     severity: 'minor',
     description: 'Small cosmetic dent (approx 2mm) on bottle base. Does not affect functionality or stability.',
     quantityAffected: 4,
+    percentAffected: 1.3,
     recommendedAction: 'Sort and remove affected units from shipment.',
     affectedCartons: 'Carton #9',
+    impactDescription: 'Low impact but may affect brand perception for premium positioning.',
+    businessImpact: { customerExperience: 'medium', compliance: 'low', returnRefund: 'low' },
   },
   {
     id: 'DEF-004',
@@ -161,9 +215,42 @@ export const sampleDefects: DefectItem[] = [
     severity: 'minor',
     description: 'Slight color shade difference on matte black lid compared to approved sample. Barely noticeable under normal lighting.',
     quantityAffected: 8,
+    percentAffected: 2.5,
     recommendedAction: 'Accept with notation. Monitor in next production run.',
     affectedCartons: 'Cartons #5, #16',
+    impactDescription: 'Minimal risk. Unlikely to be noticed by end consumers.',
+    businessImpact: { customerExperience: 'low', compliance: 'low', returnRefund: 'low' },
   },
+];
+
+export const sampleKeyIssues: KeyIssue[] = [
+  { title: 'Label misalignment', severity: 'major', percentAffected: 8.2, impactDescription: 'May cause Amazon ASIN rejection' },
+  { title: 'Missing suffocation warnings', severity: 'major', percentAffected: 3.5, impactDescription: 'Compliance risk in US market' },
+  { title: 'Minor cosmetic dents', severity: 'minor', percentAffected: 1.3, impactDescription: 'Low impact but affects brand perception' },
+  { title: 'Lid color variation', severity: 'minor', percentAffected: 2.5, impactDescription: 'Minimal — unlikely noticed by consumers' },
+];
+
+export const sampleActionPlan: ActionPlanItem[] = [
+  { issue: 'Fix labeling alignment', action: 'Re-label affected units and recalibrate applicator', estimatedDays: '1–2 days', priority: 'high' },
+  { issue: 'Add suffocation warning labels', action: 'Apply warning stickers to all polybags', estimatedDays: '1 day', priority: 'high' },
+  { issue: 'Remove dented units', action: 'Sort and pull 4 affected bottles', estimatedDays: '< 1 day', priority: 'medium' },
+  { issue: 'Accept lid color variation', action: 'No action — monitor next batch', estimatedDays: '—', priority: 'low' },
+];
+
+export const sampleSupplierScore: SupplierScore = {
+  overall: 6.4,
+  qualityConsistency: 7,
+  packagingAccuracy: 5,
+  defectRate: 6,
+  professionalism: 8,
+  insight: 'This supplier shows moderate reliability. Product quality is acceptable but packaging QC needs improvement. Recommend tighter incoming QC on labeling and polybag compliance for future orders.',
+};
+
+export const sampleTimeToFix: TimeToFixItem[] = [
+  { task: 'Label corrections', estimatedDays: '1–2 days' },
+  { task: 'Polybag warning stickers', estimatedDays: '1 day' },
+  { task: 'Remove defective units', estimatedDays: '< 1 day' },
+  { task: 'Full compliance achieved', estimatedDays: '3–5 days total' },
 ];
 
 export const sampleConformity: ConformityItem[] = [
