@@ -1,16 +1,23 @@
 import type { InspectionReport } from '@/data/reportData';
 import { DecisionBadge } from './StatusBadge';
-import { CheckCircle, ArrowRight } from 'lucide-react';
+import { ArrowRight, Shield } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+const riskConfig = {
+  low: 'border-success/30',
+  medium: 'border-warning/30',
+  high: 'border-danger/30',
+};
 
 export function FinalRecommendation({ report }: { report: InspectionReport }) {
   return (
     <section id="recommendation" className="report-section pb-16">
       <h2 className="section-title">
-        <span className="w-1.5 h-5 rounded-full bg-primary inline-block" />
+        <Shield className="w-5 h-5 text-primary" />
         Final Recommendation
       </h2>
 
-      <div className="report-card p-8">
+      <div className={cn('report-card border-2 p-8', riskConfig[report.riskLevel])}>
         <div className="flex justify-center mb-8">
           <DecisionBadge decision={report.decision} className="text-lg px-8 py-4" />
         </div>
