@@ -1,5 +1,6 @@
 import type { TimeToFixItem } from '@/data/reportData';
 import { Clock, ArrowRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export function TimeToFixSection({ items }: { items: TimeToFixItem[] }) {
   return (
@@ -40,5 +41,3 @@ export function TimeToFixSection({ items }: { items: TimeToFixItem[] }) {
     </section>
   );
 }
-
-import { cn } from '@/lib/utils';
