@@ -12,6 +12,7 @@ import Report from "./pages/Report";
 import SampleReport from "./pages/SampleReport";
 import UploadReport from "./pages/UploadReport";
 import ReviewReport from "./pages/ReviewReport";
+import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
