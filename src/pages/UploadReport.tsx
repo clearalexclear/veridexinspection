@@ -14,6 +14,7 @@ import { toast } from '@/hooks/use-toast';
 
 export default function UploadReport() {
   const { user, loading: authLoading } = useAuth();
+  const { isAdmin, roleLoading } = useRole();
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
   const [parsing, setParsing] = useState(false);
