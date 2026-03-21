@@ -19,6 +19,7 @@ import { toast } from '@/hooks/use-toast';
 
 export default function ReviewReport() {
   const { user, loading: authLoading } = useAuth();
+  const { isAdmin, roleLoading } = useRole();
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as { parsedData?: any; fileName?: string; filePath?: string } | null;
