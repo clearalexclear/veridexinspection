@@ -18,6 +18,12 @@ serve(async (req) => {
       });
     }
 
+    // Truncate content to avoid exceeding AI context limits
+    const maxChars = 600_000;
+    const trimmedContent = fileContent.length > maxChars 
+      ? fileContent.slice(0, maxChars) + "\n\n[Content truncated due to length]"
+      : fileContent;
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
