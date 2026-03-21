@@ -151,7 +151,7 @@ Return a JSON object with these exact fields. Use realistic values based on what
         model: "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `Parse this inspection report and extract all structured data. File name: ${fileName}\n\nContent:\n${fileContent}` },
+          { role: "user", content: `Parse this inspection report and extract all structured data. File name: ${fileName}\n\nContent:\n${trimmedContent}` },
         ],
         tools: [
           {
