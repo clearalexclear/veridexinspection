@@ -10,7 +10,7 @@ serve(async (req) => {
 
   try {
     const { fileContent, fileName } = await req.json();
-    
+
     if (!fileContent) {
       return new Response(JSON.stringify({ error: "No file content provided" }), {
         status: 400,
@@ -18,128 +18,29 @@ serve(async (req) => {
       });
     }
 
-    // Truncate content to avoid exceeding AI context limits
     const maxChars = 600_000;
-    const trimmedContent = fileContent.length > maxChars 
+    const trimmedContent = fileContent.length > maxChars
       ? fileContent.slice(0, maxChars) + "\n\n[Content truncated due to length]"
       : fileContent;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const systemPrompt = `You are an expert inspection report parser. Extract structured data from raw inspection reports (PDF text or Word document text). 
+    const systemPrompt = `You are an expert inspection report parser for a quality control company. Extract structured data from raw inspection reports.
 
-Return a JSON object with these exact fields. Use realistic values based on what you find. If a field cannot be determined, use sensible defaults.
+CRITICAL RULES:
+- Treat these as DISTINCT fields — never merge or confuse them:
+  - "orderQuantity" = total quantity ordered by client
+  - "shipmentQuantity" = quantity being shipped this time
+  - "qtyReadyForInspection" = quantity available at factory when inspector arrived
+  - "inspectedQuantity" = quantity actually inspected/sampled
+- Extract "inspectorName" carefully — it is the person who performed the inspection, NOT the client or supplier contact.
+- Extract "inspectionDate" as the actual date the inspection took place, not the report date.
+- "overallResult" must be one of: APPROVED, APPROVED WITH RESERVATIONS, REJECTED.
 
-{
-  "productName": "string",
-  "supplierName": "string",
-  "factoryName": "string",
-  "factoryAddress": "string",
-  "inspectionDate": "YYYY-MM-DD",
-  "poNumber": "string",
-  "orderQuantity": number,
-  "inspectedQuantity": number,
-  "destinationCountry": "string",
-  "inspectorName": "string",
-  "inspectionType": "string",
-  "productCategory": "string",
-  "skuModel": "string",
-  "overallResult": "APPROVED" | "APPROVED WITH RESERVATIONS" | "REJECTED",
-  "qualityScore": number (0-100),
-  "riskLevel": "low" | "medium" | "high",
-  "decision": "ship" | "ship-with-corrections" | "do-not-ship",
-  "confidenceScore": number (0-100),
-  "recommendation": "string (2-3 sentences)",
-  "quickSummary": "string (1 sentence)",
-  "businessImpact": "string (1-2 sentences about business risk)",
-  "inspectorComments": "string (paragraph)",
-  "defects": [
-    {
-      "title": "string",
-      "severity": "critical" | "major" | "minor",
-      "description": "string",
-      "quantityAffected": number,
-      "percentAffected": number,
-      "recommendedAction": "string",
-      "impactDescription": "string",
-      "businessImpact": {
-        "customerExperience": "low" | "medium" | "high",
-        "compliance": "low" | "medium" | "high",
-        "returnRefund": "low" | "medium" | "high"
-      }
-    }
-  ],
-  "keyIssues": [
-    {
-      "title": "string",
-      "severity": "critical" | "major" | "minor",
-      "percentAffected": number,
-      "impactDescription": "string"
-    }
-  ],
-  "actionPlan": [
-    {
-      "issue": "string",
-      "action": "string",
-      "estimatedDays": "string",
-      "priority": "low" | "medium" | "high"
-    }
-  ],
-  "aql": {
-    "inspectionLevel": "string",
-    "sampleSizeCode": "string",
-    "sampleSize": number,
-    "critical": { "accept": number, "found": number },
-    "major": { "accept": number, "found": number },
-    "minor": { "accept": number, "found": number },
-    "result": "pass" | "fail"
-  },
-  "tests": [
-    {
-      "name": "string",
-      "unitsTested": number,
-      "passed": number,
-      "failed": number,
-      "notes": "string",
-      "status": "pass" | "fail" | "warning"
-    }
-  ],
-  "measurements": [
-    {
-      "parameter": "string",
-      "spec": "string",
-      "actual": "string",
-      "tolerance": "string",
-      "status": "pass" | "fail" | "warning"
-    }
-  ],
-  "conformity": [
-    {
-      "name": "string",
-      "status": "pass" | "fail" | "warning",
-      "note": "string"
-    }
-  ],
-  "packagingChecklist": [
-    {
-      "name": "string",
-      "status": "pass" | "fail" | "warning",
-      "notes": "string"
-    }
-  ],
-  "supplierScore": {
-    "overall": number (0-10),
-    "qualityConsistency": number (0-10),
-    "packagingAccuracy": number (0-10),
-    "defectRate": number (0-10),
-    "professionalism": number (0-10),
-    "insight": "string"
-  },
-  "timeToFix": [
-    { "task": "string", "estimatedDays": "string" }
-  ]
-}`;
+For each key field, also provide a confidence level ("high", "medium", or "low") indicating how certain you are the extraction is correct.
+
+Return a JSON object with these fields. If a field cannot be determined, use null and set confidence to "low".`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -158,23 +59,27 @@ Return a JSON object with these exact fields. Use realistic values based on what
             type: "function",
             function: {
               name: "extract_inspection_data",
-              description: "Extract structured inspection report data",
+              description: "Extract structured inspection report data with confidence levels",
               parameters: {
                 type: "object",
                 properties: {
                   productName: { type: "string" },
                   supplierName: { type: "string" },
+                  manufacturer: { type: "string" },
                   factoryName: { type: "string" },
                   factoryAddress: { type: "string" },
-                  inspectionDate: { type: "string" },
+                  inspectionDate: { type: "string", description: "YYYY-MM-DD format" },
                   poNumber: { type: "string" },
-                  orderQuantity: { type: "number" },
-                  inspectedQuantity: { type: "number" },
+                  orderQuantity: { type: "number", description: "Total quantity ordered" },
+                  shipmentQuantity: { type: "number", description: "Quantity being shipped" },
+                  qtyReadyForInspection: { type: "number", description: "Quantity available at factory during inspection" },
+                  inspectedQuantity: { type: "number", description: "Quantity actually inspected/sampled" },
                   destinationCountry: { type: "string" },
-                  inspectorName: { type: "string" },
+                  inspectorName: { type: "string", description: "Name of the person who performed the inspection" },
                   inspectionType: { type: "string" },
                   productCategory: { type: "string" },
                   skuModel: { type: "string" },
+                  clientName: { type: "string" },
                   overallResult: { type: "string", enum: ["APPROVED", "APPROVED WITH RESERVATIONS", "REJECTED"] },
                   qualityScore: { type: "number" },
                   riskLevel: { type: "string", enum: ["low", "medium", "high"] },
@@ -184,18 +89,80 @@ Return a JSON object with these exact fields. Use realistic values based on what
                   quickSummary: { type: "string" },
                   businessImpact: { type: "string" },
                   inspectorComments: { type: "string" },
-                  defects: { type: "array", items: { type: "object", properties: { title: { type: "string" }, severity: { type: "string" }, description: { type: "string" }, quantityAffected: { type: "number" }, percentAffected: { type: "number" }, recommendedAction: { type: "string" }, impactDescription: { type: "string" }, businessImpact: { type: "object", properties: { customerExperience: { type: "string" }, compliance: { type: "string" }, returnRefund: { type: "string" } } } } } },
+                  fieldConfidence: {
+                    type: "object",
+                    description: "Confidence level for each key field",
+                    properties: {
+                      inspectionDate: { type: "string", enum: ["high", "medium", "low"] },
+                      inspectorName: { type: "string", enum: ["high", "medium", "low"] },
+                      orderQuantity: { type: "string", enum: ["high", "medium", "low"] },
+                      shipmentQuantity: { type: "string", enum: ["high", "medium", "low"] },
+                      qtyReadyForInspection: { type: "string", enum: ["high", "medium", "low"] },
+                      inspectedQuantity: { type: "string", enum: ["high", "medium", "low"] },
+                      overallResult: { type: "string", enum: ["high", "medium", "low"] },
+                      supplierName: { type: "string", enum: ["high", "medium", "low"] },
+                      manufacturer: { type: "string", enum: ["high", "medium", "low"] },
+                      productName: { type: "string", enum: ["high", "medium", "low"] },
+                    },
+                  },
+                  defects: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        title: { type: "string" },
+                        severity: { type: "string", enum: ["critical", "major", "minor"] },
+                        description: { type: "string" },
+                        quantityAffected: { type: "number" },
+                        percentAffected: { type: "number" },
+                        recommendedAction: { type: "string" },
+                        impactDescription: { type: "string" },
+                        businessImpact: {
+                          type: "object",
+                          properties: {
+                            customerExperience: { type: "string" },
+                            compliance: { type: "string" },
+                            returnRefund: { type: "string" },
+                          },
+                        },
+                      },
+                    },
+                  },
                   keyIssues: { type: "array", items: { type: "object", properties: { title: { type: "string" }, severity: { type: "string" }, percentAffected: { type: "number" }, impactDescription: { type: "string" } } } },
                   actionPlan: { type: "array", items: { type: "object", properties: { issue: { type: "string" }, action: { type: "string" }, estimatedDays: { type: "string" }, priority: { type: "string" } } } },
-                  aql: { type: "object", properties: { inspectionLevel: { type: "string" }, sampleSizeCode: { type: "string" }, sampleSize: { type: "number" }, critical: { type: "object" }, major: { type: "object" }, minor: { type: "object" }, result: { type: "string" } } },
-                  tests: { type: "array", items: { type: "object" } },
-                  measurements: { type: "array", items: { type: "object" } },
-                  conformity: { type: "array", items: { type: "object" } },
-                  packagingChecklist: { type: "array", items: { type: "object" } },
-                  supplierScore: { type: "object" },
-                  timeToFix: { type: "array", items: { type: "object" } },
+                  remarks: {
+                    type: "array",
+                    description: "Each remark or pending/failure reason as a separate item",
+                    items: {
+                      type: "object",
+                      properties: {
+                        text: { type: "string" },
+                        category: { type: "string", enum: ["remark", "pending", "failure"] },
+                      },
+                    },
+                  },
+                  quantityBreakdown: {
+                    type: "array",
+                    description: "Breakdown of quantities by variant/SKU",
+                    items: {
+                      type: "object",
+                      properties: {
+                        variant: { type: "string" },
+                        ordered: { type: "number" },
+                        packed: { type: "number" },
+                        inspected: { type: "number" },
+                      },
+                    },
+                  },
+                  aql: { type: "object", properties: { inspectionLevel: { type: "string" }, sampleSizeCode: { type: "string" }, sampleSize: { type: "number" }, critical: { type: "object" }, major: { type: "object" }, minor: { type: "object" }, result: { type: "string" }, quantityCheckResult: { type: "string" }, productSpecResult: { type: "string" }, packagingResult: { type: "string" }, testMeasurementResult: { type: "string" } } },
+                  tests: { type: "array", items: { type: "object", properties: { name: { type: "string" }, description: { type: "string" }, unitsTested: { type: "number" }, passed: { type: "number" }, failed: { type: "number" }, notes: { type: "string" }, status: { type: "string" } } } },
+                  measurements: { type: "array", items: { type: "object", properties: { parameter: { type: "string" }, spec: { type: "string" }, actual: { type: "string" }, tolerance: { type: "string" }, status: { type: "string" } } } },
+                  conformity: { type: "array", items: { type: "object", properties: { name: { type: "string" }, status: { type: "string" }, note: { type: "string" } } } },
+                  packagingChecklist: { type: "array", items: { type: "object", properties: { name: { type: "string" }, status: { type: "string" }, notes: { type: "string" } } } },
+                  supplierScore: { type: "object", properties: { overall: { type: "number" }, qualityConsistency: { type: "number" }, packagingAccuracy: { type: "number" }, defectRate: { type: "number" }, professionalism: { type: "number" }, insight: { type: "string" } } },
+                  timeToFix: { type: "array", items: { type: "object", properties: { task: { type: "string" }, estimatedDays: { type: "string" } } } },
                 },
-                required: ["productName", "supplierName", "overallResult", "qualityScore", "decision", "defects"],
+                required: ["productName", "overallResult", "defects", "fieldConfidence"],
               },
             },
           },
@@ -224,7 +191,7 @@ Return a JSON object with these exact fields. Use realistic values based on what
 
     const aiResult = await response.json();
     const toolCall = aiResult.choices?.[0]?.message?.tool_calls?.[0];
-    
+
     if (!toolCall?.function?.arguments) {
       throw new Error("AI did not return structured data");
     }
