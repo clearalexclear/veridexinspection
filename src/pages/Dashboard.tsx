@@ -38,6 +38,7 @@ const decisionConfig: Record<string, { label: string; classes: string }> = {
 
 export default function Dashboard() {
   const { user, loading: authLoading, signOut } = useAuth();
+  const { isAdmin } = useRole();
   const navigate = useNavigate();
   const [inspections, setInspections] = useState<Inspection[]>([]);
   const [loading, setLoading] = useState(true);
