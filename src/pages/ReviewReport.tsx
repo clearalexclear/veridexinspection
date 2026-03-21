@@ -29,7 +29,8 @@ export default function ReviewReport() {
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth');
-  }, [user, authLoading, navigate]);
+    if (!authLoading && !roleLoading && user && !isAdmin) navigate('/dashboard');
+  }, [user, authLoading, roleLoading, isAdmin, navigate]);
 
   useEffect(() => {
     if (!state?.parsedData) {

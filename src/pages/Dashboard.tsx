@@ -85,9 +85,11 @@ export default function Dashboard() {
             <span className="font-semibold text-foreground text-sm">Inspectra</span>
           </div>
           <div className="flex items-center gap-3">
-            <Button size="sm" variant="outline" onClick={() => navigate('/upload')}>
-              <Upload className="w-4 h-4 mr-1" /> Upload Report
-            </Button>
+            {isAdmin && (
+              <Button size="sm" variant="outline" onClick={() => navigate('/upload')}>
+                <Upload className="w-4 h-4 mr-1" /> Upload Report
+              </Button>
+            )}
             <Button size="sm" onClick={() => navigate('/book')}>
               <Plus className="w-4 h-4 mr-1" /> Book Inspection
             </Button>

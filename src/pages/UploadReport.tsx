@@ -22,7 +22,11 @@ export default function UploadReport() {
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth');
-  }, [user, authLoading, navigate]);
+    if (!authLoading && !roleLoading && user && !isAdmin) {
+      toast({ title: 'Access denied', description: 'Only admins can upload reports.', variant: 'destructive' });
+      navigate('/dashboard');
+    }
+  }, [user, authLoading, roleLoading, isAdmin, navigate]);
 
   const acceptedTypes = [
     'application/pdf',
