@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useRole } from '@/hooks/useRole';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -37,6 +38,7 @@ const decisionConfig: Record<string, { label: string; classes: string }> = {
 
 export default function Dashboard() {
   const { user, loading: authLoading, signOut } = useAuth();
+  const { isAdmin } = useRole();
   const navigate = useNavigate();
   const [inspections, setInspections] = useState<Inspection[]>([]);
   const [loading, setLoading] = useState(true);
@@ -83,9 +85,11 @@ export default function Dashboard() {
             <span className="font-semibold text-foreground text-sm">Inspectra</span>
           </div>
           <div className="flex items-center gap-3">
-            <Button size="sm" variant="outline" onClick={() => navigate('/upload')}>
-              <Upload className="w-4 h-4 mr-1" /> Upload Report
-            </Button>
+            {isAdmin && (
+              <Button size="sm" variant="outline" onClick={() => navigate('/upload')}>
+                <Upload className="w-4 h-4 mr-1" /> Upload Report
+              </Button>
+            )}
             <Button size="sm" onClick={() => navigate('/book')}>
               <Plus className="w-4 h-4 mr-1" /> Book Inspection
             </Button>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useRole } from '@/hooks/useRole';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,6 +19,7 @@ import { toast } from '@/hooks/use-toast';
 
 export default function ReviewReport() {
   const { user, loading: authLoading } = useAuth();
+  const { isAdmin, roleLoading } = useRole();
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as { parsedData?: any; fileName?: string; filePath?: string } | null;
@@ -27,7 +29,8 @@ export default function ReviewReport() {
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth');
-  }, [user, authLoading, navigate]);
+    if (!authLoading && !roleLoading && user && !isAdmin) navigate('/dashboard');
+  }, [user, authLoading, roleLoading, isAdmin, navigate]);
 
   useEffect(() => {
     if (!state?.parsedData) {

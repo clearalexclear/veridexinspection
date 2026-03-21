@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useRole } from '@/hooks/useRole';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,6 +14,7 @@ import { toast } from '@/hooks/use-toast';
 
 export default function UploadReport() {
   const { user, loading: authLoading } = useAuth();
+  const { isAdmin, roleLoading } = useRole();
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
   const [parsing, setParsing] = useState(false);
@@ -20,7 +22,11 @@ export default function UploadReport() {
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth');
-  }, [user, authLoading, navigate]);
+    if (!authLoading && !roleLoading && user && !isAdmin) {
+      toast({ title: 'Access denied', description: 'Only admins can upload reports.', variant: 'destructive' });
+      navigate('/dashboard');
+    }
+  }, [user, authLoading, roleLoading, isAdmin, navigate]);
 
   const acceptedTypes = [
     'application/pdf',
