@@ -91,7 +91,7 @@ export default function Dashboard() {
                   <Shield className="w-4 h-4 mr-1" /> Admin
                 </Button>
                 <Button size="sm" variant="outline" onClick={() => navigate('/upload')}>
-                  <Upload className="w-4 h-4 mr-1" /> Upload Report
+                  <Upload className="w-4 h-4 mr-1" /> Create Report
                 </Button>
               </>
             )}

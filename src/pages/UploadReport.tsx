@@ -130,10 +130,56 @@ export default function UploadReport() {
 
       <main className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-foreground">Upload Inspection Report</h1>
+          <h1 className="text-2xl font-bold text-foreground">Create Inspection Report</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Upload a raw inspection report and we'll transform it into a structured Inspectra decision report.
+            Upload a raw report for AI extraction, or create one manually from scratch.
           </p>
+        </div>
+
+        {/* Manual creation option */}
+        <Card className="mb-6 border-primary/20 bg-primary/5">
+          <CardContent className="p-5 flex items-center justify-between">
+            <div>
+              <p className="font-medium text-foreground text-sm">Create report manually</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Fill in all inspection fields yourself — no file needed.
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/review-report', {
+                state: {
+                  parsedData: {
+                    productName: '', supplierName: '', manufacturer: '', factoryName: '', factoryAddress: '',
+                    inspectionDate: new Date().toISOString().split('T')[0], poNumber: '',
+                    orderQuantity: 0, shipmentQuantity: 0, qtyReadyForInspection: 0, inspectedQuantity: 0,
+                    destinationCountry: '', inspectorName: '', inspectionType: 'Pre-Shipment Inspection',
+                    productCategory: '', skuModel: '', clientName: '',
+                    overallResult: 'APPROVED WITH RESERVATIONS', qualityScore: 70,
+                    riskLevel: 'medium', decision: 'ship-with-corrections', confidenceScore: 100,
+                    recommendation: '', quickSummary: '', businessImpact: '', inspectorComments: '',
+                    fieldConfidence: {
+                      inspectionDate: 'high', inspectorName: 'high', orderQuantity: 'high',
+                      shipmentQuantity: 'high', qtyReadyForInspection: 'high', inspectedQuantity: 'high',
+                      overallResult: 'high', supplierName: 'high', manufacturer: 'high', productName: 'high',
+                    },
+                    defects: [], keyIssues: [], actionPlan: [], remarks: [], quantityBreakdown: [],
+                    aql: {}, tests: [], measurements: [], conformity: [], packagingChecklist: [],
+                    supplierScore: {}, timeToFix: [],
+                  },
+                  fileName: 'Manual Entry',
+                },
+              })}
+            >
+              <FileText className="w-4 h-4 mr-1" /> Create Manually
+            </Button>
+          </CardContent>
+        </Card>
+
+        <div className="relative flex items-center justify-center my-6">
+          <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div>
+          <span className="relative bg-background px-3 text-xs text-muted-foreground uppercase tracking-wider">or upload a file</span>
         </div>
 
         {/* Upload zone */}
