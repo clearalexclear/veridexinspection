@@ -31,6 +31,29 @@ function parseNestedJson(raw: string) {
   }
 }
 
+function normalizeOverallResult(value: unknown) {
+  const v = String(value || "").toUpperCase();
+  if (v.includes("RESERV")) return "APPROVED WITH RESERVATIONS";
+  if (v.includes("REJECT") || v.includes("FAIL")) return "REJECTED";
+  if (v.includes("APPROV")) return "APPROVED";
+  return "APPROVED WITH RESERVATIONS";
+}
+
+function normalizeDecision(value: unknown) {
+  const v = String(value || "").toLowerCase();
+  if (v.includes("do-not-ship") || v.includes("do not ship") || v.includes("reject")) return "do-not-ship";
+  if (v.includes("correction") || v.includes("reservation") || v.includes("fix")) return "ship-with-corrections";
+  if (v.includes("ship")) return "ship";
+  return "ship-with-corrections";
+}
+
+function normalizeRisk(value: unknown) {
+  const v = String(value || "").toLowerCase();
+  if (v.includes("high")) return "high";
+  if (v.includes("low")) return "low";
+  return "medium";
+}
+
 function normalizeParsedData(raw: Record<string, any>) {
   return {
     productName: raw.productName ?? "",
@@ -50,10 +73,10 @@ function normalizeParsedData(raw: Record<string, any>) {
     productCategory: raw.productCategory ?? "",
     skuModel: raw.skuModel ?? "",
     clientName: raw.clientName ?? "",
-    overallResult: raw.overallResult ?? "APPROVED WITH RESERVATIONS",
+    overallResult: normalizeOverallResult(raw.overallResult),
     qualityScore: Number(raw.qualityScore ?? 70),
-    riskLevel: raw.riskLevel ?? "medium",
-    decision: raw.decision ?? "ship-with-corrections",
+    riskLevel: normalizeRisk(raw.riskLevel),
+    decision: normalizeDecision(raw.decision),
     confidenceScore: Number(raw.confidenceScore ?? 70),
     recommendation: raw.recommendation ?? "",
     quickSummary: raw.quickSummary ?? "",
