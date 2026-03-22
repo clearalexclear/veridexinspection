@@ -23,6 +23,7 @@ const sections = [
   { id: 'measurements', label: 'Specs', icon: Ruler },
   { id: 'cartons', label: 'Cartons', icon: Box },
   { id: 'time-to-fix', label: 'Timeline', icon: Clock },
+  { id: 'amazon-readiness', label: 'Amazon', icon: ShoppingCart },
   { id: 'comments', label: 'Comments', icon: MessageSquare },
   { id: 'recommendation', label: 'Final', icon: Shield },
 ];
