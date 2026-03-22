@@ -49,8 +49,8 @@ export function DecisionBlock({ report }: { report: InspectionReport }) {
             <div className="flex items-center gap-4">
               <span className="text-4xl">{dc.icon}</span>
               <div>
-                <p className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium mb-1">Final Decision</p>
-                <h2 className={cn('text-3xl font-extrabold tracking-tight leading-none', dc.text)}>
+                <p className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium mb-1">Shipment Assessment</p>
+                <h2 className={cn('text-2xl lg:text-3xl font-extrabold tracking-tight leading-none', dc.text)}>
                   {dc.label}
                 </h2>
               </div>
