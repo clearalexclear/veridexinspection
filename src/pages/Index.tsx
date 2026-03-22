@@ -34,6 +34,7 @@ import {
   sampleSupplierScore,
   sampleTimeToFix,
   sampleAmazonReadiness,
+  sampleShipmentItems,
 } from '@/data/reportData';
 
 const Index = () => {
