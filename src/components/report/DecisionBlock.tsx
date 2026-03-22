@@ -4,24 +4,24 @@ import { Shield, TrendingDown, AlertTriangle, CheckCircle, XCircle, Send, Rotate
 import { cn } from '@/lib/utils';
 
 const decisionConfig = {
-  'ship': {
-    label: 'APPROVED',
+  'low-risk': {
+    label: 'LOW RISK – READY FOR SHIPMENT',
     icon: '✅',
     bg: 'bg-success/8',
     border: 'border-success/30',
     text: 'text-success',
     glow: 'shadow-[0_0_40px_-8px_hsl(152,60%,36%,0.3)]',
   },
-  'ship-with-corrections': {
-    label: 'SHIP WITH CORRECTIONS',
+  'moderate-risk': {
+    label: 'MODERATE RISK – IMPROVEMENTS RECOMMENDED',
     icon: '⚠️',
     bg: 'bg-warning/8',
     border: 'border-warning/30',
     text: 'text-warning',
     glow: 'shadow-[0_0_40px_-8px_hsl(38,92%,50%,0.3)]',
   },
-  'do-not-ship': {
-    label: 'DO NOT SHIP',
+  'high-risk': {
+    label: 'HIGH RISK – ACTION REQUIRED BEFORE SHIPPING',
     icon: '❌',
     bg: 'bg-danger/8',
     border: 'border-danger/30',
