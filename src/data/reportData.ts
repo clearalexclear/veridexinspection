@@ -133,6 +133,44 @@ export interface TimeToFixItem {
   estimatedDays: string;
 }
 
+// --- SHIPMENT ITEM MODEL ---
+
+export interface ItemDefect {
+  description: string;
+  severity: Severity;
+  quantityAffected: number;
+}
+
+export interface ItemPackaging {
+  method: string;
+  cartonSize: string;
+  cartonWeight: string;
+  issues: string[];
+}
+
+export interface ItemTest {
+  name: string;
+  result: Status;
+  comments: string;
+}
+
+export interface ShipmentItem {
+  itemName: string;
+  colorVariant: string;
+  orderQuantity: number;
+  packedQuantity: number;
+  cartonsCount: number;
+  unitsPerCarton: number;
+  totalUnits: number;
+  defects: {
+    critical: ItemDefect[];
+    major: ItemDefect[];
+    minor: ItemDefect[];
+  };
+  packaging: ItemPackaging;
+  tests: ItemTest[];
+}
+
 // --- SAMPLE DATA ---
 
 export const sampleReport: InspectionReport = {
