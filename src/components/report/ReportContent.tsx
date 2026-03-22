@@ -318,6 +318,7 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
         <ExecutiveSummary report={report} defects={defects} aql={aql} />
         <SupplierScoreSection score={supplierScore} />
         <InspectionOverview report={report} />
+        <ShipmentItemsSection items={shipmentItems} />
         <AQLSection aql={aql} />
         <ConformitySection items={conformity} />
         <DefectsSection defects={defects} />

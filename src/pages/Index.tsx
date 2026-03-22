@@ -49,6 +49,7 @@ const Index = () => {
         <ExecutiveSummary report={sampleReport} defects={sampleDefects} aql={sampleAQL} />
         <SupplierScoreSection score={sampleSupplierScore} />
         <InspectionOverview report={sampleReport} />
+        <ShipmentItemsSection items={sampleShipmentItems} />
         <AQLSection aql={sampleAQL} />
         <ConformitySection items={sampleConformity} />
         <DefectsSection defects={sampleDefects} />
