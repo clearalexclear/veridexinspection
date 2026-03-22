@@ -1,6 +1,6 @@
 import type { InspectionReport } from '@/data/reportData';
 import { ScoreRing } from './ScoreRing';
-import { Shield, TrendingDown, AlertTriangle, CheckCircle, XCircle, Send, RotateCcw, Wrench } from 'lucide-react';
+import { Shield, TrendingDown, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const decisionConfig = {

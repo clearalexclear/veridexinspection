@@ -8,7 +8,7 @@ import {
 
 const sections = [
   { id: 'header', label: 'Report', icon: FileText },
-  { id: 'decision', label: 'Decision', icon: Shield },
+  { id: 'decision', label: 'Assessment', icon: Shield },
   { id: 'key-issues', label: 'Issues', icon: Flame },
   { id: 'action-plan', label: 'Actions', icon: ListChecks },
   { id: 'summary', label: 'Summary', icon: BarChart3 },
