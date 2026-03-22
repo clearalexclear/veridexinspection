@@ -195,6 +195,7 @@ function mapReportData(raw: any, inspectionId: string): {
   };
 
   return { report, defects, keyIssues, actionPlan, aql, conformity, packagingChecklist, tests, measurements, photos, supplierScore, timeToFix, cartonData, amazonReadiness };
+}
 
 export default function ReportContent({ inspectionId, showBackButton, isSample }: ReportContentProps) {
   const navigate = useNavigate();
