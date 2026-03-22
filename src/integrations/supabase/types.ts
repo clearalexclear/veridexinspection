@@ -25,6 +25,7 @@ export type Database = {
           product_name: string
           quality_score: number | null
           quantity: number
+          report_data: Json | null
           status: string
           updated_at: string
           user_id: string
@@ -39,6 +40,7 @@ export type Database = {
           product_name: string
           quality_score?: number | null
           quantity: number
+          report_data?: Json | null
           status?: string
           updated_at?: string
           user_id: string
@@ -53,6 +55,7 @@ export type Database = {
           product_name?: string
           quality_score?: number | null
           quantity?: number
+          report_data?: Json | null
           status?: string
           updated_at?: string
           user_id?: string
