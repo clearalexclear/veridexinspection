@@ -64,9 +64,9 @@ export function RiskBadge({ level, className }: { level: RiskLevel; className?: 
 
 export function DecisionBadge({ decision, className }: { decision: Decision; className?: string }) {
   const config = {
-    'ship': { label: 'Ship', classes: 'bg-success text-success-foreground', icon: '✓' },
-    'ship-with-corrections': { label: 'Ship with Corrections', classes: 'bg-warning text-warning-foreground', icon: '⚠' },
-    'do-not-ship': { label: 'Do Not Ship', classes: 'bg-danger text-danger-foreground', icon: '✕' },
+    'low-risk': { label: 'Low Risk – Ready', classes: 'bg-success text-success-foreground', icon: '✓' },
+    'moderate-risk': { label: 'Moderate Risk – Improvements Recommended', classes: 'bg-warning text-warning-foreground', icon: '⚠' },
+    'high-risk': { label: 'High Risk – Action Required', classes: 'bg-danger text-danger-foreground', icon: '✕' },
   };
   const { label, classes, icon } = config[decision];
   return (

@@ -1,27 +1,27 @@
 import type { InspectionReport } from '@/data/reportData';
 import { ScoreRing } from './ScoreRing';
-import { Shield, TrendingDown, AlertTriangle, CheckCircle, XCircle, Send, RotateCcw, Wrench } from 'lucide-react';
+import { Shield, TrendingDown, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const decisionConfig = {
-  'ship': {
-    label: 'APPROVED',
+  'low-risk': {
+    label: 'LOW RISK – READY FOR SHIPMENT',
     icon: '✅',
     bg: 'bg-success/8',
     border: 'border-success/30',
     text: 'text-success',
     glow: 'shadow-[0_0_40px_-8px_hsl(152,60%,36%,0.3)]',
   },
-  'ship-with-corrections': {
-    label: 'SHIP WITH CORRECTIONS',
+  'moderate-risk': {
+    label: 'MODERATE RISK – IMPROVEMENTS RECOMMENDED',
     icon: '⚠️',
     bg: 'bg-warning/8',
     border: 'border-warning/30',
     text: 'text-warning',
     glow: 'shadow-[0_0_40px_-8px_hsl(38,92%,50%,0.3)]',
   },
-  'do-not-ship': {
-    label: 'DO NOT SHIP',
+  'high-risk': {
+    label: 'HIGH RISK – ACTION REQUIRED BEFORE SHIPPING',
     icon: '❌',
     bg: 'bg-danger/8',
     border: 'border-danger/30',
@@ -49,8 +49,8 @@ export function DecisionBlock({ report }: { report: InspectionReport }) {
             <div className="flex items-center gap-4">
               <span className="text-4xl">{dc.icon}</span>
               <div>
-                <p className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium mb-1">Final Decision</p>
-                <h2 className={cn('text-3xl font-extrabold tracking-tight leading-none', dc.text)}>
+                <p className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium mb-1">Shipment Assessment</p>
+                <h2 className={cn('text-2xl lg:text-3xl font-extrabold tracking-tight leading-none', dc.text)}>
                   {dc.label}
                 </h2>
               </div>
@@ -95,22 +95,11 @@ export function DecisionBlock({ report }: { report: InspectionReport }) {
           </div>
         </div>
 
-        {/* Action buttons */}
-        <div className="border-t border-border px-8 py-5 bg-muted/30">
-          <div className="flex flex-wrap gap-3">
-            <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-success text-success-foreground text-sm font-semibold hover:bg-success/90 active:scale-[0.97] transition-all duration-150">
-              <Send className="w-4 h-4" />
-              Approve Shipment
-            </button>
-            <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-warning text-warning-foreground text-sm font-semibold hover:bg-warning/90 active:scale-[0.97] transition-all duration-150">
-              <Wrench className="w-4 h-4" />
-              Request Corrections
-            </button>
-            <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border bg-card text-foreground text-sm font-semibold hover:bg-muted active:scale-[0.97] transition-all duration-150">
-              <RotateCcw className="w-4 h-4" />
-              Schedule Re-inspection
-            </button>
-          </div>
+        {/* Disclaimer */}
+        <div className="border-t border-border px-8 py-4 bg-muted/30">
+          <p className="text-[11px] text-muted-foreground italic">
+            Inspectra provides structured insights based on inspection data to support your decision-making. Final shipping decisions remain the responsibility of the buyer.
+          </p>
         </div>
       </div>
     </section>

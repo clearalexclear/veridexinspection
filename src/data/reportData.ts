@@ -2,7 +2,7 @@ export type OverallResult = 'APPROVED' | 'APPROVED WITH RESERVATIONS' | 'REJECTE
 export type Severity = 'critical' | 'major' | 'minor';
 export type Status = 'pass' | 'fail' | 'warning' | 'na';
 export type RiskLevel = 'low' | 'medium' | 'high';
-export type Decision = 'ship' | 'ship-with-corrections' | 'do-not-ship';
+export type Decision = 'low-risk' | 'moderate-risk' | 'high-risk';
 export type ImpactLevel = 'low' | 'medium' | 'high';
 export type PriorityLevel = 'low' | 'medium' | 'high';
 
@@ -187,7 +187,7 @@ export const sampleReport: InspectionReport = {
   overallResult: 'APPROVED WITH RESERVATIONS',
   qualityScore: 72,
   riskLevel: 'medium',
-  decision: 'ship-with-corrections',
+  decision: 'moderate-risk',
   inspectionType: 'Pre-Shipment Inspection (PSI)',
   factoryAddress: '88 Huangpu Industrial Rd, Baiyun District, Guangzhou 510440, China',
   supplierContact: 'Kevin Wang — kevin.w@brightwaytrading.cn — +86 139 2887 4412',
