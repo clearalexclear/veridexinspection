@@ -56,6 +56,7 @@ const Index = () => {
         <MeasurementsSection rows={sampleMeasurements} />
         <CartonsSection data={sampleCartonData} />
         <TimeToFixSection items={sampleTimeToFix} />
+        <AmazonReadinessSection data={sampleAmazonReadiness} />
         <CommentsSection comments={sampleReport.inspectorComments} />
         <FinalRecommendation report={sampleReport} />
       </main>
