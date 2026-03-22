@@ -55,6 +55,7 @@ function mapReportData(raw: any, inspectionId: string): {
   timeToFix: TimeToFixItem[];
   cartonData: any;
   amazonReadiness: AmazonReadinessData;
+  shipmentItems: ShipmentItem[];
 } {
   const report: InspectionReport = {
     id: inspectionId,
