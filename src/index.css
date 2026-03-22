@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
+    --background: 220 20% 97%;
     --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
@@ -15,8 +15,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 224 72% 33%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 217 91% 53%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96%;
     --secondary-foreground: 222 47% 11%;
@@ -24,41 +24,46 @@
     --muted: 210 40% 96%;
     --muted-foreground: 215 16% 47%;
 
-    --accent: 173 80% 40%;
-    --accent-foreground: 222 47% 11%;
+    --accent: 192 91% 42%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
 
-    --warning: 38 92% 50%;
+    --warning: 27 96% 61%;
     --warning-foreground: 222 47% 11%;
 
-    --danger: 0 84% 60%;
+    --danger: 0 72% 51%;
     --danger-foreground: 0 0% 100%;
 
     --border: 214 20% 90%;
     --input: 214 20% 90%;
-    --ring: 224 72% 33%;
+    --ring: 217 91% 53%;
 
-    --radius: 0.625rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 210 40% 98%;
+    --sidebar-background: 220 20% 97%;
     --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 224 72% 33%;
-    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-primary: 217 91% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 210 40% 96%;
     --sidebar-accent-foreground: 222 47% 11%;
     --sidebar-border: 214 20% 90%;
-    --sidebar-ring: 224 72% 33%;
+    --sidebar-ring: 217 91% 53%;
+
+    /* Dark section */
+    --dark-bg: 220 40% 8%;
+    --dark-fg: 220 13% 91%;
+    --dark-muted: 215 16% 47%;
 
     /* Score ring */
     --score-excellent: 142 71% 45%;
-    --score-good: 173 80% 40%;
-    --score-fair: 38 92% 50%;
-    --score-poor: 0 84% 60%;
+    --score-good: 192 91% 42%;
+    --score-fair: 27 96% 61%;
+    --score-poor: 0 72% 51%;
   }
 }
 
@@ -113,6 +118,17 @@
 
   .mono {
     font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Gradient button */
+  .btn-gradient {
+    @apply text-white font-semibold transition-all duration-200;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    box-shadow: 0 4px 14px -2px hsl(var(--primary) / 0.35);
+  }
+  .btn-gradient:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 6px 20px -2px hsl(var(--primary) / 0.45);
   }
 }
 
