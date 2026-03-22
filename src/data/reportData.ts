@@ -317,6 +317,24 @@ export const samplePhotos: PhotoItem[] = [
   { id: 'P008', url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&h=400&fit=crop', caption: 'Factory production floor overview', category: 'factory' },
 ];
 
+export const sampleAmazonReadiness = {
+  overallStatus: 'READY WITH FIXES' as const,
+  categories: [
+    { name: 'Labeling', status: 'issue' as const, explanation: 'FNSKU labels misaligned on 8.2% of units. Must be corrected before FBA inbound.' },
+    { name: 'Packaging', status: 'issue' as const, explanation: 'Polybag suffocation warnings missing on 11 units. Required for Amazon compliance.' },
+    { name: 'Product Condition', status: 'ok' as const, explanation: 'Product quality is acceptable. Minor cosmetic dents on 4 units — within tolerance.' },
+    { name: 'Compliance', status: 'issue' as const, explanation: 'Missing suffocation warning labels violate Amazon packaging requirements.' },
+    { name: 'Carton Quality', status: 'ok' as const, explanation: 'Cartons passed drop test and burst test. Structural integrity is good.' },
+  ],
+  riskSummary: 'Shipment presents moderate risk for Amazon FBA due to labeling misalignment and missing suffocation warnings on polybags. If shipped as-is, units may be rejected at Amazon fulfillment centers or flagged during intake inspection.',
+  actionsRequired: [
+    'Fix FNSKU label alignment on all affected units before shipping to Amazon',
+    'Add suffocation warning labels to all polybags',
+    'Re-inspect labeling after corrections to confirm compliance',
+    'Ensure all cartons have correct shipping marks for FBA requirements',
+  ],
+};
+
 export const sampleCartonData = {
   cartonsAvailable: 241,
   quantityPerCarton: 20,

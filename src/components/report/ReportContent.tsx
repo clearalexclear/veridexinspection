@@ -20,6 +20,8 @@ import { CartonsSection } from './CartonsSection';
 import { TimeToFixSection } from './TimeToFixSection';
 import { CommentsSection } from './CommentsSection';
 import { FinalRecommendation } from './FinalRecommendation';
+import { AmazonReadinessSection } from './AmazonReadinessSection';
+import type { AmazonReadinessData } from './AmazonReadinessSection';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -27,6 +29,7 @@ import {
   sampleReport, sampleDefects, sampleConformity, sampleAQL,
   samplePackagingChecklist, sampleTests, sampleMeasurements, samplePhotos,
   sampleCartonData, sampleKeyIssues, sampleActionPlan, sampleSupplierScore, sampleTimeToFix,
+  sampleAmazonReadiness,
 } from '@/data/reportData';
 import type { InspectionReport, DefectItem, KeyIssue, ActionPlanItem, AQLData, ConformityItem, ChecklistItem, TestItem, MeasurementRow, PhotoItem, SupplierScore, TimeToFixItem } from '@/data/reportData';
 
@@ -50,6 +53,7 @@ function mapReportData(raw: any, inspectionId: string): {
   supplierScore: SupplierScore;
   timeToFix: TimeToFixItem[];
   cartonData: any;
+  amazonReadiness: AmazonReadinessData;
 } {
   const report: InspectionReport = {
     id: inspectionId,
@@ -183,7 +187,14 @@ function mapReportData(raw: any, inspectionId: string): {
     shortShipmentRisk: '',
   };
 
-  return { report, defects, keyIssues, actionPlan, aql, conformity, packagingChecklist, tests, measurements, photos, supplierScore, timeToFix, cartonData };
+  const amazonReadiness: AmazonReadinessData = raw.amazonReadiness || {
+    overallStatus: 'READY',
+    categories: [],
+    riskSummary: '',
+    actionsRequired: [],
+  };
+
+  return { report, defects, keyIssues, actionPlan, aql, conformity, packagingChecklist, tests, measurements, photos, supplierScore, timeToFix, cartonData, amazonReadiness };
 }
 
 export default function ReportContent({ inspectionId, showBackButton, isSample }: ReportContentProps) {
@@ -249,6 +260,7 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
   const supplierScore = useSample ? sampleSupplierScore : reportState!.supplierScore;
   const timeToFix = useSample ? sampleTimeToFix : reportState!.timeToFix;
   const cartonData = useSample ? sampleCartonData : reportState!.cartonData;
+  const amazonReadiness = useSample ? sampleAmazonReadiness : reportState!.amazonReadiness;
 
   return (
     <div className="min-h-screen bg-background">
@@ -290,6 +302,7 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
         <MeasurementsSection rows={measurements} />
         <CartonsSection data={cartonData} />
         {timeToFix.length > 0 && <TimeToFixSection items={timeToFix} />}
+        <AmazonReadinessSection data={amazonReadiness} />
         <CommentsSection comments={report.inspectorComments} />
         <FinalRecommendation report={report} />
       </main>

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import {
   FileText, BarChart3, ClipboardList, Target, CheckSquare,
   AlertTriangle, Camera, Package, Zap, Ruler, Box, MessageSquare, Shield,
-  Flame, ListChecks, Building2, Clock
+  Flame, ListChecks, Building2, Clock, ShoppingCart
 } from 'lucide-react';
 
 const sections = [
@@ -23,6 +23,7 @@ const sections = [
   { id: 'measurements', label: 'Specs', icon: Ruler },
   { id: 'cartons', label: 'Cartons', icon: Box },
   { id: 'time-to-fix', label: 'Timeline', icon: Clock },
+  { id: 'amazon-readiness', label: 'Amazon', icon: ShoppingCart },
   { id: 'comments', label: 'Comments', icon: MessageSquare },
   { id: 'recommendation', label: 'Final', icon: Shield },
 ];

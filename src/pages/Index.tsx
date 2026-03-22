@@ -17,6 +17,7 @@ import { CartonsSection } from '@/components/report/CartonsSection';
 import { TimeToFixSection } from '@/components/report/TimeToFixSection';
 import { CommentsSection } from '@/components/report/CommentsSection';
 import { FinalRecommendation } from '@/components/report/FinalRecommendation';
+import { AmazonReadinessSection } from '@/components/report/AmazonReadinessSection';
 import {
   sampleReport,
   sampleDefects,
@@ -31,6 +32,7 @@ import {
   sampleActionPlan,
   sampleSupplierScore,
   sampleTimeToFix,
+  sampleAmazonReadiness,
 } from '@/data/reportData';
 
 const Index = () => {
@@ -54,6 +56,7 @@ const Index = () => {
         <MeasurementsSection rows={sampleMeasurements} />
         <CartonsSection data={sampleCartonData} />
         <TimeToFixSection items={sampleTimeToFix} />
+        <AmazonReadinessSection data={sampleAmazonReadiness} />
         <CommentsSection comments={sampleReport.inspectorComments} />
         <FinalRecommendation report={sampleReport} />
       </main>
