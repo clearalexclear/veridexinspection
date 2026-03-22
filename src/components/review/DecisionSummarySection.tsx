@@ -11,6 +11,10 @@ type Props = {
 
 export default function DecisionSummarySection({ data, onUpdate }: Props) {
   const decisionColors: Record<string, string> = {
+    'low-risk': 'border-l-success',
+    'moderate-risk': 'border-l-warning',
+    'high-risk': 'border-l-danger',
+    // Legacy
     'ship': 'border-l-success',
     'ship-with-corrections': 'border-l-warning',
     'do-not-ship': 'border-l-danger',
