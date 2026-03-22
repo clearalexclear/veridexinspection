@@ -302,6 +302,7 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
         <MeasurementsSection rows={measurements} />
         <CartonsSection data={cartonData} />
         {timeToFix.length > 0 && <TimeToFixSection items={timeToFix} />}
+        <AmazonReadinessSection data={amazonReadiness} />
         <CommentsSection comments={report.inspectorComments} />
         <FinalRecommendation report={report} />
       </main>
