@@ -133,6 +133,44 @@ export interface TimeToFixItem {
   estimatedDays: string;
 }
 
+// --- SHIPMENT ITEM MODEL ---
+
+export interface ItemDefect {
+  description: string;
+  severity: Severity;
+  quantityAffected: number;
+}
+
+export interface ItemPackaging {
+  method: string;
+  cartonSize: string;
+  cartonWeight: string;
+  issues: string[];
+}
+
+export interface ItemTest {
+  name: string;
+  result: Status;
+  comments: string;
+}
+
+export interface ShipmentItem {
+  itemName: string;
+  colorVariant: string;
+  orderQuantity: number;
+  packedQuantity: number;
+  cartonsCount: number;
+  unitsPerCarton: number;
+  totalUnits: number;
+  defects: {
+    critical: ItemDefect[];
+    major: ItemDefect[];
+    minor: ItemDefect[];
+  };
+  packaging: ItemPackaging;
+  tests: ItemTest[];
+}
+
 // --- SAMPLE DATA ---
 
 export const sampleReport: InspectionReport = {
@@ -343,3 +381,67 @@ export const sampleCartonData = {
   randomCheckNotes: '10 random cartons opened. Quantity matched in all. No mixed SKUs detected.',
   shortShipmentRisk: 'Low – 96.4% of order quantity packed and ready.',
 };
+
+export const sampleShipmentItems: ShipmentItem[] = [
+  {
+    itemName: 'Stainless Steel Insulated Water Bottle – 750ml',
+    colorVariant: 'Matte Black',
+    orderQuantity: 3000,
+    packedQuantity: 2900,
+    cartonsCount: 145,
+    unitsPerCarton: 20,
+    totalUnits: 2900,
+    defects: {
+      critical: [],
+      major: [
+        { description: 'Label misalignment on front panel', severity: 'major', quantityAffected: 18 },
+        { description: 'Missing suffocation warning on polybag', severity: 'major', quantityAffected: 7 },
+      ],
+      minor: [
+        { description: 'Minor base dent — cosmetic only', severity: 'minor', quantityAffected: 3 },
+      ],
+    },
+    packaging: {
+      method: 'Individual polybag + inner box + master carton',
+      cartonSize: '60 × 40 × 35 cm',
+      cartonWeight: '14.2 kg',
+      issues: ['Missing suffocation warning on 7 polybags'],
+    },
+    tests: [
+      { name: 'Leak Test', result: 'pass', comments: 'No leakage after 5 min inversion.' },
+      { name: 'Drop Test (1m)', result: 'pass', comments: 'All units intact.' },
+      { name: 'Vacuum Seal Check', result: 'pass', comments: 'Heat retention within spec.' },
+    ],
+  },
+  {
+    itemName: 'Stainless Steel Insulated Water Bottle – 750ml',
+    colorVariant: 'Arctic White',
+    orderQuantity: 2000,
+    packedQuantity: 1920,
+    cartonsCount: 96,
+    unitsPerCarton: 20,
+    totalUnits: 1920,
+    defects: {
+      critical: [],
+      major: [
+        { description: 'Label misalignment on front panel', severity: 'major', quantityAffected: 8 },
+        { description: 'Missing suffocation warning on polybag', severity: 'major', quantityAffected: 4 },
+      ],
+      minor: [
+        { description: 'Slight color shade variation on lid', severity: 'minor', quantityAffected: 8 },
+        { description: 'Minor base dent — cosmetic only', severity: 'minor', quantityAffected: 1 },
+      ],
+    },
+    packaging: {
+      method: 'Individual polybag + inner box + master carton',
+      cartonSize: '60 × 40 × 35 cm',
+      cartonWeight: '14.0 kg',
+      issues: ['Missing suffocation warning on 4 polybags'],
+    },
+    tests: [
+      { name: 'Leak Test', result: 'pass', comments: 'No leakage.' },
+      { name: 'Drop Test (1m)', result: 'warning', comments: '1 unit showed minor dent on base.' },
+      { name: 'Capacity Verification', result: 'pass', comments: 'Avg 752ml — within spec.' },
+    ],
+  },
+];

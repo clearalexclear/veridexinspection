@@ -22,6 +22,7 @@ import { CommentsSection } from './CommentsSection';
 import { FinalRecommendation } from './FinalRecommendation';
 import { AmazonReadinessSection } from './AmazonReadinessSection';
 import type { AmazonReadinessData } from './AmazonReadinessSection';
+import { ShipmentItemsSection } from './ShipmentItemsSection';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -29,9 +30,9 @@ import {
   sampleReport, sampleDefects, sampleConformity, sampleAQL,
   samplePackagingChecklist, sampleTests, sampleMeasurements, samplePhotos,
   sampleCartonData, sampleKeyIssues, sampleActionPlan, sampleSupplierScore, sampleTimeToFix,
-  sampleAmazonReadiness,
+  sampleAmazonReadiness, sampleShipmentItems,
 } from '@/data/reportData';
-import type { InspectionReport, DefectItem, KeyIssue, ActionPlanItem, AQLData, ConformityItem, ChecklistItem, TestItem, MeasurementRow, PhotoItem, SupplierScore, TimeToFixItem } from '@/data/reportData';
+import type { InspectionReport, DefectItem, KeyIssue, ActionPlanItem, AQLData, ConformityItem, ChecklistItem, TestItem, MeasurementRow, PhotoItem, SupplierScore, TimeToFixItem, ShipmentItem } from '@/data/reportData';
 
 interface ReportContentProps {
   inspectionId?: string;
@@ -54,6 +55,7 @@ function mapReportData(raw: any, inspectionId: string): {
   timeToFix: TimeToFixItem[];
   cartonData: any;
   amazonReadiness: AmazonReadinessData;
+  shipmentItems: ShipmentItem[];
 } {
   const report: InspectionReport = {
     id: inspectionId,
@@ -194,7 +196,29 @@ function mapReportData(raw: any, inspectionId: string): {
     actionsRequired: [],
   };
 
-  return { report, defects, keyIssues, actionPlan, aql, conformity, packagingChecklist, tests, measurements, photos, supplierScore, timeToFix, cartonData, amazonReadiness };
+  const shipmentItems: ShipmentItem[] = (raw.shipmentItems || []).map((item: any) => ({
+    itemName: item.itemName || '',
+    colorVariant: item.colorVariant || '',
+    orderQuantity: Number(item.orderQuantity) || 0,
+    packedQuantity: Number(item.packedQuantity) || 0,
+    cartonsCount: Number(item.cartonsCount) || 0,
+    unitsPerCarton: Number(item.unitsPerCarton) || 0,
+    totalUnits: Number(item.totalUnits) || 0,
+    defects: {
+      critical: (item.defects?.critical || []).map((d: any) => ({ description: d.description || '', severity: 'critical' as const, quantityAffected: Number(d.quantityAffected) || 0 })),
+      major: (item.defects?.major || []).map((d: any) => ({ description: d.description || '', severity: 'major' as const, quantityAffected: Number(d.quantityAffected) || 0 })),
+      minor: (item.defects?.minor || []).map((d: any) => ({ description: d.description || '', severity: 'minor' as const, quantityAffected: Number(d.quantityAffected) || 0 })),
+    },
+    packaging: {
+      method: item.packaging?.method || '',
+      cartonSize: item.packaging?.cartonSize || '',
+      cartonWeight: item.packaging?.cartonWeight || '',
+      issues: item.packaging?.issues || [],
+    },
+    tests: (item.tests || []).map((t: any) => ({ name: t.name || '', result: t.result || 'pass', comments: t.comments || '' })),
+  }));
+
+  return { report, defects, keyIssues, actionPlan, aql, conformity, packagingChecklist, tests, measurements, photos, supplierScore, timeToFix, cartonData, amazonReadiness, shipmentItems };
 }
 
 export default function ReportContent({ inspectionId, showBackButton, isSample }: ReportContentProps) {
@@ -261,6 +285,7 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
   const timeToFix = useSample ? sampleTimeToFix : reportState!.timeToFix;
   const cartonData = useSample ? sampleCartonData : reportState!.cartonData;
   const amazonReadiness = useSample ? sampleAmazonReadiness : reportState!.amazonReadiness;
+  const shipmentItems = useSample ? sampleShipmentItems : reportState!.shipmentItems;
 
   return (
     <div className="min-h-screen bg-background">
@@ -293,6 +318,7 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
         <ExecutiveSummary report={report} defects={defects} aql={aql} />
         <SupplierScoreSection score={supplierScore} />
         <InspectionOverview report={report} />
+        <ShipmentItemsSection items={shipmentItems} />
         <AQLSection aql={aql} />
         <ConformitySection items={conformity} />
         <DefectsSection defects={defects} />

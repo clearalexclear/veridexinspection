@@ -18,6 +18,7 @@ import { TimeToFixSection } from '@/components/report/TimeToFixSection';
 import { CommentsSection } from '@/components/report/CommentsSection';
 import { FinalRecommendation } from '@/components/report/FinalRecommendation';
 import { AmazonReadinessSection } from '@/components/report/AmazonReadinessSection';
+import { ShipmentItemsSection } from '@/components/report/ShipmentItemsSection';
 import {
   sampleReport,
   sampleDefects,
@@ -33,6 +34,7 @@ import {
   sampleSupplierScore,
   sampleTimeToFix,
   sampleAmazonReadiness,
+  sampleShipmentItems,
 } from '@/data/reportData';
 
 const Index = () => {
@@ -47,6 +49,7 @@ const Index = () => {
         <ExecutiveSummary report={sampleReport} defects={sampleDefects} aql={sampleAQL} />
         <SupplierScoreSection score={sampleSupplierScore} />
         <InspectionOverview report={sampleReport} />
+        <ShipmentItemsSection items={sampleShipmentItems} />
         <AQLSection aql={sampleAQL} />
         <ConformitySection items={sampleConformity} />
         <DefectsSection defects={sampleDefects} />
