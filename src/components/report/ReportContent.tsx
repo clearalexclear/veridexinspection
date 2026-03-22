@@ -53,6 +53,7 @@ function mapReportData(raw: any, inspectionId: string): {
   supplierScore: SupplierScore;
   timeToFix: TimeToFixItem[];
   cartonData: any;
+  amazonReadiness: AmazonReadinessData;
 } {
   const report: InspectionReport = {
     id: inspectionId,
