@@ -29,6 +29,7 @@ import {
   sampleReport, sampleDefects, sampleConformity, sampleAQL,
   samplePackagingChecklist, sampleTests, sampleMeasurements, samplePhotos,
   sampleCartonData, sampleKeyIssues, sampleActionPlan, sampleSupplierScore, sampleTimeToFix,
+  sampleAmazonReadiness,
 } from '@/data/reportData';
 import type { InspectionReport, DefectItem, KeyIssue, ActionPlanItem, AQLData, ConformityItem, ChecklistItem, TestItem, MeasurementRow, PhotoItem, SupplierScore, TimeToFixItem } from '@/data/reportData';
 
