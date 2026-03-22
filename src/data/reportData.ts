@@ -2,7 +2,7 @@ export type OverallResult = 'APPROVED' | 'APPROVED WITH RESERVATIONS' | 'REJECTE
 export type Severity = 'critical' | 'major' | 'minor';
 export type Status = 'pass' | 'fail' | 'warning' | 'na';
 export type RiskLevel = 'low' | 'medium' | 'high';
-export type Decision = 'ship' | 'ship-with-corrections' | 'do-not-ship';
+export type Decision = 'low-risk' | 'moderate-risk' | 'high-risk';
 export type ImpactLevel = 'low' | 'medium' | 'high';
 export type PriorityLevel = 'low' | 'medium' | 'high';
 
