@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import logo from '@/assets/inspectra-logo.png';
+import logo from '@/assets/inspectra-icon.png';
 import { useAuth } from '@/hooks/useAuth';
 import {
   ArrowRight, FileCheck, X, Check, Zap, Camera, ShieldAlert, ListChecks,

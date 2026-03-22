@@ -1,4 +1,4 @@
-import logo from '@/assets/inspectra-logo.png';
+import logo from '@/assets/inspectra-icon.png';
 import { OverallResultBadge } from './StatusBadge';
 import type { InspectionReport } from '@/data/reportData';
 

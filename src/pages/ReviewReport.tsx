@@ -5,7 +5,7 @@ import { useRole } from '@/hooks/useRole';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import logo from '@/assets/inspectra-logo.png';
+import logo from '@/assets/inspectra-icon.png';
 import { ArrowLeft, Loader2, FileCheck, Shield } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
