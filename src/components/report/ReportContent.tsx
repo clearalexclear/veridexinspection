@@ -20,6 +20,8 @@ import { CartonsSection } from './CartonsSection';
 import { TimeToFixSection } from './TimeToFixSection';
 import { CommentsSection } from './CommentsSection';
 import { FinalRecommendation } from './FinalRecommendation';
+import { AmazonReadinessSection } from './AmazonReadinessSection';
+import type { AmazonReadinessData } from './AmazonReadinessSection';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
