@@ -119,10 +119,10 @@ export default function Landing() {
 
         <div ref={hero.ref} className={`relative max-w-4xl mx-auto px-4 sm:px-6 text-center transition-all duration-700 ease-out ${hero.cls}`}>
           <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-foreground leading-[1.08] mb-6">
-            Know in 10 seconds<br className="hidden sm:block" /> if you should ship your order.
+            Make sure your shipment is<br className="hidden sm:block" /> Amazon-ready before it leaves the factory.
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Get a clear <strong className="text-foreground">YES / NO</strong> shipment decision within 24h — with photos, risks, and exact actions to take.
+            Clear decisions, real risks, and exact actions — based on your inspection.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button className="btn-gradient h-12 px-8 rounded-lg text-base inline-flex items-center gap-2" onClick={() => navigate('/book')}>
