@@ -260,6 +260,7 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
   const supplierScore = useSample ? sampleSupplierScore : reportState!.supplierScore;
   const timeToFix = useSample ? sampleTimeToFix : reportState!.timeToFix;
   const cartonData = useSample ? sampleCartonData : reportState!.cartonData;
+  const amazonReadiness = useSample ? sampleAmazonReadiness : reportState!.amazonReadiness;
 
   return (
     <div className="min-h-screen bg-background">
