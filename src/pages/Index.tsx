@@ -17,6 +17,7 @@ import { CartonsSection } from '@/components/report/CartonsSection';
 import { TimeToFixSection } from '@/components/report/TimeToFixSection';
 import { CommentsSection } from '@/components/report/CommentsSection';
 import { FinalRecommendation } from '@/components/report/FinalRecommendation';
+import { AmazonReadinessSection } from '@/components/report/AmazonReadinessSection';
 import {
   sampleReport,
   sampleDefects,
