@@ -196,7 +196,29 @@ function mapReportData(raw: any, inspectionId: string): {
     actionsRequired: [],
   };
 
-  return { report, defects, keyIssues, actionPlan, aql, conformity, packagingChecklist, tests, measurements, photos, supplierScore, timeToFix, cartonData, amazonReadiness };
+  const shipmentItems: ShipmentItem[] = (raw.shipmentItems || []).map((item: any) => ({
+    itemName: item.itemName || '',
+    colorVariant: item.colorVariant || '',
+    orderQuantity: Number(item.orderQuantity) || 0,
+    packedQuantity: Number(item.packedQuantity) || 0,
+    cartonsCount: Number(item.cartonsCount) || 0,
+    unitsPerCarton: Number(item.unitsPerCarton) || 0,
+    totalUnits: Number(item.totalUnits) || 0,
+    defects: {
+      critical: (item.defects?.critical || []).map((d: any) => ({ description: d.description || '', severity: 'critical' as const, quantityAffected: Number(d.quantityAffected) || 0 })),
+      major: (item.defects?.major || []).map((d: any) => ({ description: d.description || '', severity: 'major' as const, quantityAffected: Number(d.quantityAffected) || 0 })),
+      minor: (item.defects?.minor || []).map((d: any) => ({ description: d.description || '', severity: 'minor' as const, quantityAffected: Number(d.quantityAffected) || 0 })),
+    },
+    packaging: {
+      method: item.packaging?.method || '',
+      cartonSize: item.packaging?.cartonSize || '',
+      cartonWeight: item.packaging?.cartonWeight || '',
+      issues: item.packaging?.issues || [],
+    },
+    tests: (item.tests || []).map((t: any) => ({ name: t.name || '', result: t.result || 'pass', comments: t.comments || '' })),
+  }));
+
+  return { report, defects, keyIssues, actionPlan, aql, conformity, packagingChecklist, tests, measurements, photos, supplierScore, timeToFix, cartonData, amazonReadiness, shipmentItems };
 }
 
 export default function ReportContent({ inspectionId, showBackButton, isSample }: ReportContentProps) {
