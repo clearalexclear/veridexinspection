@@ -5,6 +5,7 @@ import { useRole } from '@/hooks/useRole';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
 import logo from '@/assets/inspectra-icon.png';
 import { ArrowLeft, Loader2, FileCheck, Shield } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
@@ -18,6 +19,8 @@ import TestsSection from '@/components/review/TestsSection';
 import DefectsReviewSection from '@/components/review/DefectsReviewSection';
 import ActionPlanReviewSection from '@/components/review/ActionPlanSection';
 
+type InspectionOption = { id: string; product_name: string; user_id: string; status: string };
+
 export default function ReviewReport() {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, roleLoading } = useRole();
@@ -27,6 +30,8 @@ export default function ReviewReport() {
 
   const [data, setData] = useState<any>(null);
   const [generating, setGenerating] = useState(false);
+  const [inspections, setInspections] = useState<InspectionOption[]>([]);
+  const [selectedInspection, setSelectedInspection] = useState<string>('new');
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth');
@@ -41,8 +46,71 @@ export default function ReviewReport() {
     setData(state.parsedData);
   }, [state, navigate]);
 
+  // Fetch all inspections for assignment
+  useEffect(() => {
+    if (!user || !isAdmin) return;
+    const fetch = async () => {
+      const { data: ins } = await supabase
+        .from('inspections')
+        .select('id, product_name, user_id, status')
+        .order('created_at', { ascending: false });
+      setInspections(ins || []);
+    };
+    fetch();
+  }, [user, isAdmin]);
+
   const updateField = (field: string, value: any) => {
     setData((prev: any) => ({ ...prev, [field]: value }));
+  };
+
+  const buildReportData = () => {
+    // Build the full structured report_data object from the reviewed data
+    return {
+      // General info
+      productName: data.productName || '',
+      supplierName: data.supplierName || '',
+      manufacturer: data.manufacturer || '',
+      factoryName: data.factoryName || '',
+      factoryAddress: data.factoryAddress || '',
+      inspectionDate: data.inspectionDate || '',
+      poNumber: data.poNumber || '',
+      orderQuantity: Number(data.orderQuantity) || 0,
+      shipmentQuantity: Number(data.shipmentQuantity) || 0,
+      qtyReadyForInspection: Number(data.qtyReadyForInspection) || 0,
+      inspectedQuantity: Number(data.inspectedQuantity) || 0,
+      destinationCountry: data.destinationCountry || '',
+      inspectorName: data.inspectorName || '',
+      inspectionType: data.inspectionType || '',
+      productCategory: data.productCategory || '',
+      skuModel: data.skuModel || '',
+      clientName: data.clientName || '',
+      // Decision
+      overallResult: data.overallResult || 'APPROVED WITH RESERVATIONS',
+      qualityScore: Number(data.qualityScore) || 70,
+      riskLevel: data.riskLevel || 'medium',
+      decision: data.decision || 'ship-with-corrections',
+      confidenceScore: Number(data.confidenceScore) || 70,
+      recommendation: data.recommendation || '',
+      quickSummary: data.quickSummary || '',
+      businessImpact: data.businessImpact || '',
+      inspectorComments: data.inspectorComments || '',
+      topReasons: (data.keyIssues || []).slice(0, 5).map((i: any) => i.title || i.issue || ''),
+      nextStep: (data.actionPlan || [])[0]?.action || '',
+      // Structured sections
+      defects: data.defects || [],
+      keyIssues: data.keyIssues || [],
+      actionPlan: data.actionPlan || [],
+      remarks: data.remarks || [],
+      quantityBreakdown: data.quantityBreakdown || [],
+      aql: data.aql || {},
+      tests: data.tests || [],
+      measurements: data.measurements || [],
+      conformity: data.conformity || [],
+      packagingChecklist: data.packagingChecklist || [],
+      supplierScore: data.supplierScore || {},
+      timeToFix: data.timeToFix || [],
+      images: data.images || [],
+    };
   };
 
   const handleGenerate = async () => {
@@ -50,26 +118,49 @@ export default function ReviewReport() {
     setGenerating(true);
 
     try {
-      const { data: inspection, error } = await supabase
-        .from('inspections')
-        .insert({
-          user_id: user.id,
-          product_name: data.productName || 'Untitled Product',
-          factory_location: data.factoryName || 'Unknown Factory',
-          quantity: parseInt(data.orderQuantity) || 0,
-          inspection_date: data.inspectionDate || new Date().toISOString().split('T')[0],
-          status: 'completed',
-          decision: data.decision || null,
-          overall_result: data.overallResult || null,
-          quality_score: parseInt(data.qualityScore) || null,
-        })
-        .select()
-        .single();
+      const reportData = buildReportData();
 
-      if (error) throw error;
+      if (selectedInspection !== 'new') {
+        // Update existing inspection with report data
+        const { error } = await supabase
+          .from('inspections')
+          .update({
+            status: 'completed',
+            decision: data.decision || null,
+            overall_result: data.overallResult || null,
+            quality_score: parseInt(data.qualityScore) || null,
+            report_data: reportData as any,
+          })
+          .eq('id', selectedInspection);
 
-      toast({ title: 'Report generated!', description: 'The Inspectra report has been created and is now visible to the client.' });
-      navigate(`/report/${inspection.id}`);
+        if (error) throw error;
+
+        toast({ title: 'Report generated!', description: 'The report has been attached to the existing inspection.' });
+        navigate(`/report/${selectedInspection}`);
+      } else {
+        // Create new inspection with report
+        const { data: inspection, error } = await supabase
+          .from('inspections')
+          .insert({
+            user_id: user.id,
+            product_name: data.productName || 'Untitled Product',
+            factory_location: data.factoryName || 'Unknown Factory',
+            quantity: parseInt(data.orderQuantity) || 0,
+            inspection_date: data.inspectionDate || new Date().toISOString().split('T')[0],
+            status: 'completed',
+            decision: data.decision || null,
+            overall_result: data.overallResult || null,
+            quality_score: parseInt(data.qualityScore) || null,
+            report_data: reportData as any,
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        toast({ title: 'Report generated!', description: 'The Inspectra report has been created and is now visible.' });
+        navigate(`/report/${inspection.id}`);
+      }
     } catch (err: any) {
       console.error('Generate error:', err);
       toast({
@@ -90,7 +181,6 @@ export default function ReviewReport() {
     );
   }
 
-  // Count low-confidence fields
   const fc = data.fieldConfidence || {};
   const lowConfCount = Object.values(fc).filter((v) => v === 'low').length;
 
@@ -112,7 +202,6 @@ export default function ReviewReport() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 pb-24">
-        {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-foreground">Extraction Review</h1>
           <p className="text-sm text-muted-foreground mt-1">
@@ -124,6 +213,25 @@ export default function ReviewReport() {
             </div>
           )}
         </div>
+
+        {/* Assign to existing inspection */}
+        {inspections.length > 0 && (
+          <div className="mb-6 p-4 rounded-lg border border-border bg-muted/30">
+            <Label className="text-xs text-muted-foreground mb-2 block">Assign to Inspection</Label>
+            <select
+              className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
+              value={selectedInspection}
+              onChange={(e) => setSelectedInspection(e.target.value)}
+            >
+              <option value="new">➕ Create new inspection</option>
+              {inspections.map((ins) => (
+                <option key={ins.id} value={ins.id}>
+                  {ins.product_name} — {ins.status} ({ins.id.slice(0, 8)})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <div className="space-y-6">
           <DecisionSummarySection data={data} onUpdate={updateField} />
