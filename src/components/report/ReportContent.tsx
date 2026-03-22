@@ -187,8 +187,14 @@ function mapReportData(raw: any, inspectionId: string): {
     shortShipmentRisk: '',
   };
 
-  return { report, defects, keyIssues, actionPlan, aql, conformity, packagingChecklist, tests, measurements, photos, supplierScore, timeToFix, cartonData };
-}
+  const amazonReadiness: AmazonReadinessData = raw.amazonReadiness || {
+    overallStatus: 'READY',
+    categories: [],
+    riskSummary: '',
+    actionsRequired: [],
+  };
+
+  return { report, defects, keyIssues, actionPlan, aql, conformity, packagingChecklist, tests, measurements, photos, supplierScore, timeToFix, cartonData, amazonReadiness };
 
 export default function ReportContent({ inspectionId, showBackButton, isSample }: ReportContentProps) {
   const navigate = useNavigate();
