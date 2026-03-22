@@ -157,7 +157,7 @@ export default function UploadReport() {
                     destinationCountry: '', inspectorName: '', inspectionType: 'Pre-Shipment Inspection',
                     productCategory: '', skuModel: '', clientName: '',
                     overallResult: 'APPROVED WITH RESERVATIONS', qualityScore: 70,
-                    riskLevel: 'medium', decision: 'ship-with-corrections', confidenceScore: 100,
+                    riskLevel: 'medium', decision: 'moderate-risk', confidenceScore: 100,
                     recommendation: '', quickSummary: '', businessImpact: '', inspectorComments: '',
                     fieldConfidence: {
                       inspectionDate: 'high', inspectorName: 'high', orderQuantity: 'high',

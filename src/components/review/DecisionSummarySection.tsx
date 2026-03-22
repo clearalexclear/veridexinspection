@@ -47,10 +47,10 @@ export default function DecisionSummarySection({ data, onUpdate }: Props) {
           </div>
           <div>
             <Label className="text-xs text-muted-foreground">Decision</Label>
-            <select className="mt-1 w-full h-11 rounded-md border border-input bg-background px-3 text-sm" value={data.decision || 'ship-with-corrections'} onChange={(e) => onUpdate('decision', e.target.value)}>
-              <option value="ship">✅ Approved — Ship</option>
-              <option value="ship-with-corrections">⚠️ Ship with Corrections</option>
-              <option value="do-not-ship">❌ Do Not Ship</option>
+            <select className="mt-1 w-full h-11 rounded-md border border-input bg-background px-3 text-sm" value={data.decision || 'moderate-risk'} onChange={(e) => onUpdate('decision', e.target.value)}>
+              <option value="low-risk">✅ Low Risk – Ready for Shipment</option>
+              <option value="moderate-risk">⚠️ Moderate Risk – Improvements Recommended</option>
+              <option value="high-risk">❌ High Risk – Action Required</option>
             </select>
           </div>
         </div>
