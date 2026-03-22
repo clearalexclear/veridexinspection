@@ -95,22 +95,11 @@ export function DecisionBlock({ report }: { report: InspectionReport }) {
           </div>
         </div>
 
-        {/* Action buttons */}
-        <div className="border-t border-border px-8 py-5 bg-muted/30">
-          <div className="flex flex-wrap gap-3">
-            <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-success text-success-foreground text-sm font-semibold hover:bg-success/90 active:scale-[0.97] transition-all duration-150">
-              <Send className="w-4 h-4" />
-              Approve Shipment
-            </button>
-            <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-warning text-warning-foreground text-sm font-semibold hover:bg-warning/90 active:scale-[0.97] transition-all duration-150">
-              <Wrench className="w-4 h-4" />
-              Request Corrections
-            </button>
-            <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border bg-card text-foreground text-sm font-semibold hover:bg-muted active:scale-[0.97] transition-all duration-150">
-              <RotateCcw className="w-4 h-4" />
-              Schedule Re-inspection
-            </button>
-          </div>
+        {/* Disclaimer */}
+        <div className="border-t border-border px-8 py-4 bg-muted/30">
+          <p className="text-[11px] text-muted-foreground italic">
+            Inspectra provides structured insights based on inspection data to support your decision-making. Final shipping decisions remain the responsibility of the buyer.
+          </p>
         </div>
       </div>
     </section>

@@ -14,7 +14,7 @@ export function FinalRecommendation({ report }: { report: InspectionReport }) {
     <section id="recommendation" className="report-section pb-16">
       <h2 className="section-title">
         <Shield className="w-5 h-5 text-primary" />
-        Final Recommendation
+        Assessment Summary
       </h2>
 
       <div className={cn('report-card border-2 p-8', riskConfig[report.riskLevel])}>

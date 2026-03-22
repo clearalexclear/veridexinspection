@@ -88,7 +88,7 @@ export default function ReviewReport() {
       overallResult: data.overallResult || 'APPROVED WITH RESERVATIONS',
       qualityScore: Number(data.qualityScore) || 70,
       riskLevel: data.riskLevel || 'medium',
-      decision: data.decision || 'ship-with-corrections',
+      decision: data.decision || 'moderate-risk',
       confidenceScore: Number(data.confidenceScore) || 70,
       recommendation: data.recommendation || '',
       quickSummary: data.quickSummary || '',

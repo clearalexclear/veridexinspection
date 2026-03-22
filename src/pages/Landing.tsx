@@ -27,9 +27,9 @@ function useReveal() {
 
 /* ── Decision badge cycling ── */
 const decisions = [
-  { label: 'DO NOT SHIP', icon: Ban, color: 'bg-danger/15 text-danger', glow: 'shadow-[0_0_20px_hsl(0_72%_51%/0.25)]' },
-  { label: 'SHIP WITH CORRECTIONS', icon: AlertTriangle, color: 'bg-warning/15 text-warning', glow: 'shadow-[0_0_20px_hsl(27_96%_61%/0.25)]' },
-  { label: 'APPROVED', icon: CheckCircle, color: 'bg-success/15 text-success', glow: 'shadow-[0_0_20px_hsl(142_71%_45%/0.25)]' },
+  { label: 'HIGH RISK', icon: Ban, color: 'bg-danger/15 text-danger', glow: 'shadow-[0_0_20px_hsl(0_72%_51%/0.25)]' },
+  { label: 'MODERATE RISK', icon: AlertTriangle, color: 'bg-warning/15 text-warning', glow: 'shadow-[0_0_20px_hsl(27_96%_61%/0.25)]' },
+  { label: 'LOW RISK', icon: CheckCircle, color: 'bg-success/15 text-success', glow: 'shadow-[0_0_20px_hsl(142_71%_45%/0.25)]' },
 ];
 
 function CyclingDecision() {

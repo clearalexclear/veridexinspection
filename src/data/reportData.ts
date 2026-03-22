@@ -187,7 +187,7 @@ export const sampleReport: InspectionReport = {
   overallResult: 'APPROVED WITH RESERVATIONS',
   qualityScore: 72,
   riskLevel: 'medium',
-  decision: 'ship-with-corrections',
+  decision: 'moderate-risk',
   inspectionType: 'Pre-Shipment Inspection (PSI)',
   factoryAddress: '88 Huangpu Industrial Rd, Baiyun District, Guangzhou 510440, China',
   supplierContact: 'Kevin Wang — kevin.w@brightwaytrading.cn — +86 139 2887 4412',

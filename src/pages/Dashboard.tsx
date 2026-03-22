@@ -31,9 +31,13 @@ const statusConfig: Record<string, { label: string; icon: typeof Clock; classes:
 };
 
 const decisionConfig: Record<string, { label: string; classes: string }> = {
-  'ship': { label: '✅ Approved', classes: 'bg-success text-success-foreground' },
-  'ship-with-corrections': { label: '⚠️ Fix Required', classes: 'bg-warning text-warning-foreground' },
-  'do-not-ship': { label: '❌ Rejected', classes: 'bg-danger text-danger-foreground' },
+  'low-risk': { label: '✅ Low Risk', classes: 'bg-success text-success-foreground' },
+  'moderate-risk': { label: '⚠️ Moderate Risk', classes: 'bg-warning text-warning-foreground' },
+  'high-risk': { label: '❌ High Risk', classes: 'bg-danger text-danger-foreground' },
+  // Legacy keys for backward compat
+  'ship': { label: '✅ Low Risk', classes: 'bg-success text-success-foreground' },
+  'ship-with-corrections': { label: '⚠️ Moderate Risk', classes: 'bg-warning text-warning-foreground' },
+  'do-not-ship': { label: '❌ High Risk', classes: 'bg-danger text-danger-foreground' },
 };
 
 export default function Dashboard() {

@@ -71,7 +71,7 @@ function mapReportData(raw: any, inspectionId: string): {
     overallResult: raw.overallResult || 'APPROVED WITH RESERVATIONS',
     qualityScore: Number(raw.qualityScore) || 0,
     riskLevel: raw.riskLevel || 'medium',
-    decision: raw.decision || 'ship-with-corrections',
+    decision: raw.decision || 'moderate-risk',
     inspectionType: raw.inspectionType || '',
     factoryAddress: raw.factoryAddress || '',
     supplierContact: '',
