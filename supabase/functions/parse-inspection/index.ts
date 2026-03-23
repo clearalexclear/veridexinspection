@@ -39,20 +39,9 @@ function normalizeOverallResult(value: unknown) {
   return "APPROVED WITH RESERVATIONS";
 }
 
-function normalizeDecision(value: unknown) {
-  const v = String(value || "").toLowerCase();
-  if (v.includes("do-not-ship") || v.includes("do not ship") || v.includes("reject") || v.includes("high-risk") || v.includes("high risk")) return "high-risk";
-  if (v.includes("correction") || v.includes("reservation") || v.includes("fix") || v.includes("moderate") || v.includes("ship-with")) return "moderate-risk";
-  if (v.includes("ship") || v.includes("approv") || v.includes("low-risk") || v.includes("low risk") || v.includes("ready")) return "low-risk";
-  return "moderate-risk";
-}
+// Removed: normalizeDecision — no longer needed (fact-based system)
 
-function normalizeRisk(value: unknown) {
-  const v = String(value || "").toLowerCase();
-  if (v.includes("high")) return "high";
-  if (v.includes("low")) return "low";
-  return "medium";
-}
+// Removed: normalizeRisk — no longer needed (fact-based system)
 
 function normalizeParsedData(raw: Record<string, any>) {
   return {
@@ -74,21 +63,12 @@ function normalizeParsedData(raw: Record<string, any>) {
     skuModel: raw.skuModel ?? "",
     clientName: raw.clientName ?? "",
     overallResult: normalizeOverallResult(raw.overallResult),
-    qualityScore: Number(raw.qualityScore ?? 70),
-    riskLevel: normalizeRisk(raw.riskLevel),
-    decision: normalizeDecision(raw.decision),
-    confidenceScore: Number(raw.confidenceScore ?? 70),
-    recommendation: raw.recommendation ?? "",
-    quickSummary: raw.quickSummary ?? "",
-    businessImpact: raw.businessImpact ?? "",
     inspectorComments: raw.inspectorComments ?? "",
     fieldConfidence: {
       ...defaultConfidence,
       ...(raw.fieldConfidence || {}),
     },
     defects: Array.isArray(raw.defects) ? raw.defects : [],
-    keyIssues: Array.isArray(raw.keyIssues) ? raw.keyIssues : [],
-    actionPlan: Array.isArray(raw.actionPlan) ? raw.actionPlan : [],
     remarks: Array.isArray(raw.remarks) ? raw.remarks : [],
     quantityBreakdown: Array.isArray(raw.quantityBreakdown) ? raw.quantityBreakdown : [],
     aql: raw.aql ?? {},
@@ -96,8 +76,6 @@ function normalizeParsedData(raw: Record<string, any>) {
     measurements: Array.isArray(raw.measurements) ? raw.measurements : [],
     conformity: Array.isArray(raw.conformity) ? raw.conformity : [],
     packagingChecklist: Array.isArray(raw.packagingChecklist) ? raw.packagingChecklist : [],
-    supplierScore: raw.supplierScore ?? {},
-    timeToFix: Array.isArray(raw.timeToFix) ? raw.timeToFix : [],
     images: Array.isArray(raw.images) ? raw.images : [],
   };
 }
@@ -146,10 +124,11 @@ The JSON should include keys used by the review UI:
 productName, supplierName, manufacturer, factoryName, factoryAddress, inspectionDate, poNumber,
 orderQuantity, shipmentQuantity, qtyReadyForInspection, inspectedQuantity,
 destinationCountry, inspectorName, inspectionType, productCategory, skuModel, clientName,
-overallResult, qualityScore, riskLevel, decision, confidenceScore,
-recommendation, quickSummary, businessImpact, inspectorComments,
-fieldConfidence, defects, keyIssues, actionPlan, remarks, quantityBreakdown,
-aql, tests, measurements, conformity, packagingChecklist, supplierScore, timeToFix, images.`;
+overallResult, inspectorComments,
+fieldConfidence, defects, remarks, quantityBreakdown,
+aql, tests, measurements, conformity, packagingChecklist, images.
+
+IMPORTANT: Do NOT include any subjective interpretation such as decisions, risk levels, recommendations, business impact, action plans, or supplier scores. Only extract factual inspection data.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

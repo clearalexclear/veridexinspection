@@ -17,7 +17,6 @@ import RemarksSection from '@/components/review/RemarksSection';
 import QuantityBreakdownSection from '@/components/review/QuantityBreakdownSection';
 import TestsSection from '@/components/review/TestsSection';
 import DefectsReviewSection from '@/components/review/DefectsReviewSection';
-import ActionPlanReviewSection from '@/components/review/ActionPlanSection';
 
 type InspectionOption = { id: string; product_name: string; user_id: string; status: string };
 
@@ -46,7 +45,6 @@ export default function ReviewReport() {
     setData(state.parsedData);
   }, [state, navigate]);
 
-  // Fetch all inspections for assignment
   useEffect(() => {
     if (!user || !isAdmin) return;
     const fetch = async () => {
@@ -64,9 +62,7 @@ export default function ReviewReport() {
   };
 
   const buildReportData = () => {
-    // Build the full structured report_data object from the reviewed data
     return {
-      // General info
       productName: data.productName || '',
       supplierName: data.supplierName || '',
       manufacturer: data.manufacturer || '',
@@ -84,22 +80,9 @@ export default function ReviewReport() {
       productCategory: data.productCategory || '',
       skuModel: data.skuModel || '',
       clientName: data.clientName || '',
-      // Decision
       overallResult: data.overallResult || 'APPROVED WITH RESERVATIONS',
-      qualityScore: Number(data.qualityScore) || 70,
-      riskLevel: data.riskLevel || 'medium',
-      decision: data.decision || 'moderate-risk',
-      confidenceScore: Number(data.confidenceScore) || 70,
-      recommendation: data.recommendation || '',
-      quickSummary: data.quickSummary || '',
-      businessImpact: data.businessImpact || '',
       inspectorComments: data.inspectorComments || '',
-      topReasons: (data.keyIssues || []).slice(0, 5).map((i: any) => i.title || i.issue || ''),
-      nextStep: (data.actionPlan || [])[0]?.action || '',
-      // Structured sections
       defects: data.defects || [],
-      keyIssues: data.keyIssues || [],
-      actionPlan: data.actionPlan || [],
       remarks: data.remarks || [],
       quantityBreakdown: data.quantityBreakdown || [],
       aql: data.aql || {},
@@ -107,8 +90,6 @@ export default function ReviewReport() {
       measurements: data.measurements || [],
       conformity: data.conformity || [],
       packagingChecklist: data.packagingChecklist || [],
-      supplierScore: data.supplierScore || {},
-      timeToFix: data.timeToFix || [],
       images: data.images || [],
     };
   };
@@ -121,14 +102,11 @@ export default function ReviewReport() {
       const reportData = buildReportData();
 
       if (selectedInspection !== 'new') {
-        // Update existing inspection with report data
         const { error } = await supabase
           .from('inspections')
           .update({
             status: 'completed',
-            decision: data.decision || null,
             overall_result: data.overallResult || null,
-            quality_score: parseInt(data.qualityScore) || null,
             report_data: reportData as any,
           })
           .eq('id', selectedInspection);
@@ -138,7 +116,6 @@ export default function ReviewReport() {
         toast({ title: 'Report generated!', description: 'The report has been attached to the existing inspection.' });
         navigate(`/report/${selectedInspection}`);
       } else {
-        // Create new inspection with report
         const { data: inspection, error } = await supabase
           .from('inspections')
           .insert({
@@ -148,9 +125,7 @@ export default function ReviewReport() {
             quantity: parseInt(data.orderQuantity) || 0,
             inspection_date: data.inspectionDate || new Date().toISOString().split('T')[0],
             status: 'completed',
-            decision: data.decision || null,
             overall_result: data.overallResult || null,
-            quality_score: parseInt(data.qualityScore) || null,
             report_data: reportData as any,
           })
           .select()
@@ -158,7 +133,7 @@ export default function ReviewReport() {
 
         if (error) throw error;
 
-        toast({ title: 'Report generated!', description: 'The Inspectra report has been created and is now visible.' });
+        toast({ title: 'Report generated!', description: 'The inspection report has been created.' });
         navigate(`/report/${inspection.id}`);
       }
     } catch (err: any) {
@@ -214,7 +189,6 @@ export default function ReviewReport() {
           )}
         </div>
 
-        {/* Assign to existing inspection */}
         {inspections.length > 0 && (
           <div className="mb-6 p-4 rounded-lg border border-border bg-muted/30">
             <Label className="text-xs text-muted-foreground mb-2 block">Assign to Inspection</Label>
@@ -241,10 +215,8 @@ export default function ReviewReport() {
           <RemarksSection data={data} onUpdate={updateField} />
           <QuantityBreakdownSection data={data} onUpdate={updateField} />
           <TestsSection data={data} onUpdate={updateField} />
-          <ActionPlanReviewSection data={data} onUpdate={updateField} />
         </div>
 
-        {/* Sticky approval footer */}
         <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t border-border z-40">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
             <p className="text-xs text-muted-foreground hidden sm:block">
@@ -264,7 +236,7 @@ export default function ReviewReport() {
               ) : (
                 <>
                   <FileCheck className="w-4 h-4 mr-2" />
-                  Approve & Generate Inspectra Report
+                  Approve & Generate Report
                 </>
               )}
             </Button>

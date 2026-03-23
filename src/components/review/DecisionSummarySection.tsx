@@ -2,7 +2,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp } from 'lucide-react';
+import { ClipboardList } from 'lucide-react';
 
 type Props = {
   data: any;
@@ -10,61 +10,31 @@ type Props = {
 };
 
 export default function DecisionSummarySection({ data, onUpdate }: Props) {
-  const decisionColors: Record<string, string> = {
-    'low-risk': 'border-l-success',
-    'moderate-risk': 'border-l-warning',
-    'high-risk': 'border-l-danger',
-    // Legacy
-    'ship': 'border-l-success',
-    'ship-with-corrections': 'border-l-warning',
-    'do-not-ship': 'border-l-danger',
-  };
-
   return (
-    <Card className={`border-l-4 ${decisionColors[data.decision] || 'border-l-muted'}`}>
+    <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-base flex items-center gap-2">
-          <TrendingUp className="w-4 h-4 text-primary" /> Decision & Summary
+          <ClipboardList className="w-4 h-4 text-primary" /> Inspection Results
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <div>
-            <Label className="text-xs text-muted-foreground">Quality Score</Label>
-            <Input type="number" min={0} max={100} value={data.qualityScore ?? ''} onChange={(e) => onUpdate('qualityScore', parseInt(e.target.value) || 0)} className="mt-1 font-bold text-lg h-11" />
-          </div>
-          <div>
-            <Label className="text-xs text-muted-foreground">Confidence</Label>
-            <Input type="number" min={0} max={100} value={data.confidenceScore ?? ''} onChange={(e) => onUpdate('confidenceScore', parseInt(e.target.value) || 0)} className="mt-1 h-11" />
-          </div>
-          <div>
-            <Label className="text-xs text-muted-foreground">Risk Level</Label>
-            <select className="mt-1 w-full h-11 rounded-md border border-input bg-background px-3 text-sm" value={data.riskLevel || 'medium'} onChange={(e) => onUpdate('riskLevel', e.target.value)}>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
+            <Label className="text-xs text-muted-foreground">Overall Result</Label>
+            <select className="mt-1 w-full h-11 rounded-md border border-input bg-background px-3 text-sm" value={data.overallResult || 'APPROVED WITH RESERVATIONS'} onChange={(e) => onUpdate('overallResult', e.target.value)}>
+              <option value="APPROVED">Approved</option>
+              <option value="APPROVED WITH RESERVATIONS">Approved with Reservations</option>
+              <option value="REJECTED">Rejected</option>
             </select>
           </div>
           <div>
-            <Label className="text-xs text-muted-foreground">Decision</Label>
-            <select className="mt-1 w-full h-11 rounded-md border border-input bg-background px-3 text-sm" value={data.decision || 'moderate-risk'} onChange={(e) => onUpdate('decision', e.target.value)}>
-              <option value="low-risk">✅ Low Risk – Ready for Shipment</option>
-              <option value="moderate-risk">⚠️ Moderate Risk – Improvements Recommended</option>
-              <option value="high-risk">❌ High Risk – Action Required</option>
-            </select>
+            <Label className="text-xs text-muted-foreground">Inspection Type</Label>
+            <Input value={data.inspectionType || ''} onChange={(e) => onUpdate('inspectionType', e.target.value)} className="mt-1 h-11" />
           </div>
-        </div>
-        <div>
-          <Label className="text-xs text-muted-foreground">Quick Summary</Label>
-          <Textarea value={data.quickSummary || ''} onChange={(e) => onUpdate('quickSummary', e.target.value)} className="mt-1" rows={2} />
-        </div>
-        <div>
-          <Label className="text-xs text-muted-foreground">Recommendation</Label>
-          <Textarea value={data.recommendation || ''} onChange={(e) => onUpdate('recommendation', e.target.value)} className="mt-1" rows={3} />
-        </div>
-        <div>
-          <Label className="text-xs text-muted-foreground">Business Impact</Label>
-          <Textarea value={data.businessImpact || ''} onChange={(e) => onUpdate('businessImpact', e.target.value)} className="mt-1" rows={2} />
+          <div>
+            <Label className="text-xs text-muted-foreground">Product Category</Label>
+            <Input value={data.productCategory || ''} onChange={(e) => onUpdate('productCategory', e.target.value)} className="mt-1 h-11" />
+          </div>
         </div>
         <div>
           <Label className="text-xs text-muted-foreground">Inspector Comments</Label>
