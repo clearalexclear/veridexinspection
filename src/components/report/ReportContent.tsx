@@ -16,6 +16,8 @@ import { CartonsSection } from './CartonsSection';
 import { CommentsSection } from './CommentsSection';
 import { AmazonReadinessSection } from './AmazonReadinessSection';
 import type { AmazonReadinessData } from './AmazonReadinessSection';
+import { SupplierProfileSection } from './SupplierProfileSection';
+import type { SupplierProfileData } from './SupplierProfileSection';
 import { ShipmentItemsSection } from './ShipmentItemsSection';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2 } from 'lucide-react';
