@@ -80,7 +80,6 @@ export default function ReviewReport() {
       productCategory: data.productCategory || '',
       skuModel: data.skuModel || '',
       clientName: data.clientName || '',
-      overallResult: data.overallResult || 'APPROVED WITH RESERVATIONS',
       inspectorComments: data.inspectorComments || '',
       defects: data.defects || [],
       remarks: data.remarks || [],
@@ -106,7 +105,6 @@ export default function ReviewReport() {
           .from('inspections')
           .update({
             status: 'completed',
-            overall_result: data.overallResult || null,
             report_data: reportData as any,
           })
           .eq('id', selectedInspection);
@@ -125,7 +123,6 @@ export default function ReviewReport() {
             quantity: parseInt(data.orderQuantity) || 0,
             inspection_date: data.inspectionDate || new Date().toISOString().split('T')[0],
             status: 'completed',
-            overall_result: data.overallResult || null,
             report_data: reportData as any,
           })
           .select()
@@ -220,7 +217,7 @@ export default function ReviewReport() {
         <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t border-border z-40">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
             <p className="text-xs text-muted-foreground hidden sm:block">
-              Final report will be generated and visible to the client after approval.
+              Report will be generated and visible to the client.
             </p>
             <Button
               size="lg"

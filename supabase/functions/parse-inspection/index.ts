@@ -31,17 +31,7 @@ function parseNestedJson(raw: string) {
   }
 }
 
-function normalizeOverallResult(value: unknown) {
-  const v = String(value || "").toUpperCase();
-  if (v.includes("RESERV")) return "APPROVED WITH RESERVATIONS";
-  if (v.includes("REJECT") || v.includes("FAIL")) return "REJECTED";
-  if (v.includes("APPROV")) return "APPROVED";
-  return "APPROVED WITH RESERVATIONS";
-}
-
-// Removed: normalizeDecision — no longer needed (fact-based system)
-
-// Removed: normalizeRisk — no longer needed (fact-based system)
+// All subjective functions removed (fact-based system)
 
 function normalizeParsedData(raw: Record<string, any>) {
   return {
@@ -62,7 +52,6 @@ function normalizeParsedData(raw: Record<string, any>) {
     productCategory: raw.productCategory ?? "",
     skuModel: raw.skuModel ?? "",
     clientName: raw.clientName ?? "",
-    overallResult: normalizeOverallResult(raw.overallResult),
     inspectorComments: raw.inspectorComments ?? "",
     fieldConfidence: {
       ...defaultConfidence,
@@ -124,7 +113,7 @@ The JSON should include keys used by the review UI:
 productName, supplierName, manufacturer, factoryName, factoryAddress, inspectionDate, poNumber,
 orderQuantity, shipmentQuantity, qtyReadyForInspection, inspectedQuantity,
 destinationCountry, inspectorName, inspectionType, productCategory, skuModel, clientName,
-overallResult, inspectorComments,
+inspectorComments,
 fieldConfidence, defects, remarks, quantityBreakdown,
 aql, tests, measurements, conformity, packagingChecklist, images.
 

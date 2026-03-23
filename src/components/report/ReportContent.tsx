@@ -58,7 +58,6 @@ function mapReportData(raw: any, inspectionId: string): {
     inspectedQuantity: Number(raw.inspectedQuantity) || 0,
     destinationCountry: raw.destinationCountry || '',
     inspectorName: raw.inspectorName || '',
-    overallResult: raw.overallResult || 'APPROVED WITH RESERVATIONS',
     inspectionType: raw.inspectionType || '',
     factoryAddress: raw.factoryAddress || '',
     supplierContact: '',
@@ -198,7 +197,6 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
           factoryName: data.factory_location,
           inspectionDate: data.inspection_date,
           orderQuantity: data.quantity,
-          overallResult: data.overall_result,
         }, data.id));
       }
       setLoading(false);

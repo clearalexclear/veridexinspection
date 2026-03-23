@@ -25,26 +25,26 @@ function useReveal() {
   return { ref, cls: visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6' };
 }
 
-/* ── Cycling result badge ── */
-const results = [
-  { label: 'REJECTED', icon: XCircle, color: 'bg-danger/15 text-danger', glow: 'shadow-[0_0_20px_hsl(0_72%_51%/0.25)]' },
-  { label: 'APPROVED WITH RESERVATIONS', icon: AlertTriangle, color: 'bg-warning/15 text-warning', glow: 'shadow-[0_0_20px_hsl(27_96%_61%/0.25)]' },
-  { label: 'APPROVED', icon: CheckCircle, color: 'bg-success/15 text-success', glow: 'shadow-[0_0_20px_hsl(142_71%_45%/0.25)]' },
+/* ── Cycling status badge ── */
+const statuses = [
+  { label: 'AQL MAJOR: EXCEEDED', icon: XCircle, color: 'bg-danger/15 text-danger', glow: 'shadow-[0_0_20px_hsl(0_72%_51%/0.25)]' },
+  { label: '2 TESTS: WARNING', icon: AlertTriangle, color: 'bg-warning/15 text-warning', glow: 'shadow-[0_0_20px_hsl(27_96%_61%/0.25)]' },
+  { label: 'ALL CHECKS: PASS', icon: CheckCircle, color: 'bg-success/15 text-success', glow: 'shadow-[0_0_20px_hsl(142_71%_45%/0.25)]' },
 ];
 
-function CyclingResult() {
+function CyclingStatus() {
   const [idx, setIdx] = useState(0);
   const [fading, setFading] = useState(false);
 
   useEffect(() => {
     const id = setInterval(() => {
       setFading(true);
-      setTimeout(() => { setIdx((i) => (i + 1) % results.length); setFading(false); }, 300);
+      setTimeout(() => { setIdx((i) => (i + 1) % statuses.length); setFading(false); }, 300);
     }, 2800);
     return () => clearInterval(id);
   }, []);
 
-  const d = results[idx];
+  const d = statuses[idx];
   const Icon = d.icon;
   return (
     <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-lg font-bold transition-all duration-300 ${d.color} ${d.glow} ${fading ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
@@ -150,8 +150,8 @@ export default function Landing() {
 
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>Overall Result</p>
-                <CyclingResult />
+                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>Inspection Status</p>
+                <CyclingStatus />
               </div>
               <div className="text-right">
                 <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>Sample Size</p>

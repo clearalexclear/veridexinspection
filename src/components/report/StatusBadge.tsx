@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { Status, Severity, OverallResult } from '@/data/reportData';
+import type { Status, Severity } from '@/data/reportData';
 
 interface StatusBadgeProps {
   status: Status;
@@ -31,20 +31,6 @@ export function SeverityBadge({ severity, className }: { severity: Severity; cla
   return (
     <span className={cn('inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide', classes, className)}>
       {label}
-    </span>
-  );
-}
-
-export function OverallResultBadge({ result, className }: { result: OverallResult; className?: string }) {
-  const config = {
-    'APPROVED': { classes: 'bg-success text-success-foreground', icon: '✓' },
-    'APPROVED WITH RESERVATIONS': { classes: 'bg-warning text-warning-foreground', icon: '⚠' },
-    'REJECTED': { classes: 'bg-danger text-danger-foreground', icon: '✕' },
-  };
-  const { classes, icon } = config[result];
-  return (
-    <span className={cn('inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider', classes, className)}>
-      <span>{icon}</span> {result}
     </span>
   );
 }

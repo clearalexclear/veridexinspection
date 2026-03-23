@@ -156,11 +156,11 @@ export default function UploadReport() {
                     orderQuantity: 0, shipmentQuantity: 0, qtyReadyForInspection: 0, inspectedQuantity: 0,
                     destinationCountry: '', inspectorName: '', inspectionType: 'Pre-Shipment Inspection',
                     productCategory: '', skuModel: '', clientName: '',
-                    overallResult: 'APPROVED WITH RESERVATIONS', inspectorComments: '',
+                    inspectorComments: '',
                     fieldConfidence: {
                       inspectionDate: 'high', inspectorName: 'high', orderQuantity: 'high',
                       shipmentQuantity: 'high', qtyReadyForInspection: 'high', inspectedQuantity: 'high',
-                      overallResult: 'high', supplierName: 'high', manufacturer: 'high', productName: 'high',
+                      supplierName: 'high', manufacturer: 'high', productName: 'high',
                     },
                     defects: [], remarks: [], quantityBreakdown: [],
                     aql: {}, tests: [], measurements: [], conformity: [], packagingChecklist: [],

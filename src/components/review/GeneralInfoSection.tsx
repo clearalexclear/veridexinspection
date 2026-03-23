@@ -27,7 +27,6 @@ const fields: [string, string, boolean][] = [
   ['supplierName', 'Supplier / Vendor', true],
   ['manufacturer', 'Manufacturer', true],
   ['inspectorName', 'Inspector Name', true],
-  ['overallResult', 'Overall Result', true],
 ];
 
 export default function GeneralInfoSection({ data, onUpdate }: Props) {
@@ -48,22 +47,10 @@ export default function GeneralInfoSection({ data, onUpdate }: Props) {
                 <Label className="text-xs text-muted-foreground">{label}</Label>
                 {hasConfidence && <ConfidenceBadge level={fc[key]} />}
               </div>
-              {key === 'overallResult' ? (
-                <select
-                  className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
-                  value={data[key] || ''}
-                  onChange={(e) => onUpdate(key, e.target.value)}
-                >
-                  <option value="APPROVED">APPROVED</option>
-                  <option value="APPROVED WITH RESERVATIONS">APPROVED WITH RESERVATIONS</option>
-                  <option value="REJECTED">REJECTED</option>
-                </select>
-              ) : (
-                <Input
-                  value={data[key] ?? ''}
-                  onChange={(e) => onUpdate(key, e.target.value)}
-                />
-              )}
+              <Input
+                value={data[key] ?? ''}
+                onChange={(e) => onUpdate(key, e.target.value)}
+              />
             </div>
           ))}
         </div>
