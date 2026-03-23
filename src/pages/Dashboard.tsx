@@ -4,11 +4,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { useRole } from '@/hooks/useRole';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import logo from '@/assets/inspectra-icon.png';
 import {
-  Plus, LogOut, Loader2, ClipboardCheck, Clock, CheckCircle, AlertTriangle,
+  Plus, LogOut, Loader2, ClipboardCheck, Clock, CheckCircle,
   ArrowRight, Package, MapPin, Calendar, Upload, Shield,
 } from 'lucide-react';
 
@@ -19,25 +19,13 @@ type Inspection = {
   quantity: number;
   inspection_date: string;
   status: string;
-  decision: string | null;
   overall_result: string | null;
-  quality_score: number | null;
 };
 
 const statusConfig: Record<string, { label: string; icon: typeof Clock; classes: string }> = {
   scheduled: { label: 'Scheduled', icon: Clock, classes: 'bg-muted text-muted-foreground' },
   in_progress: { label: 'In Progress', icon: Loader2, classes: 'bg-primary/10 text-primary' },
   completed: { label: 'Completed', icon: CheckCircle, classes: 'bg-success/10 text-success' },
-};
-
-const decisionConfig: Record<string, { label: string; classes: string }> = {
-  'low-risk': { label: '✅ Low Risk', classes: 'bg-success text-success-foreground' },
-  'moderate-risk': { label: '⚠️ Moderate Risk', classes: 'bg-warning text-warning-foreground' },
-  'high-risk': { label: '❌ High Risk', classes: 'bg-danger text-danger-foreground' },
-  // Legacy keys for backward compat
-  'ship': { label: '✅ Low Risk', classes: 'bg-success text-success-foreground' },
-  'ship-with-corrections': { label: '⚠️ Moderate Risk', classes: 'bg-warning text-warning-foreground' },
-  'do-not-ship': { label: '❌ High Risk', classes: 'bg-danger text-danger-foreground' },
 };
 
 export default function Dashboard() {
@@ -81,7 +69,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -115,7 +102,6 @@ export default function Dashboard() {
           <p className="text-sm text-muted-foreground mt-1">Track and manage all your product inspections</p>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
           {[
             { label: 'Total', value: inspections.length, icon: ClipboardCheck },
@@ -135,7 +121,6 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* Inspections list */}
         {loading ? (
           <div className="flex justify-center py-16">
             <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
@@ -156,7 +141,6 @@ export default function Dashboard() {
             {inspections.map((ins) => {
               const sc = statusConfig[ins.status] || statusConfig.scheduled;
               const StatusIcon = sc.icon;
-              const dc = ins.decision ? decisionConfig[ins.decision] : null;
 
               return (
                 <Card key={ins.id} className="hover:shadow-md transition-shadow">
@@ -168,9 +152,6 @@ export default function Dashboard() {
                           <Badge className={sc.classes} variant="secondary">
                             <StatusIcon className="w-3 h-3 mr-1" /> {sc.label}
                           </Badge>
-                          {dc && (
-                            <Badge className={dc.classes}>{dc.label}</Badge>
-                          )}
                         </div>
                         <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
                           <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {ins.factory_location}</span>
@@ -180,12 +161,6 @@ export default function Dashboard() {
                       </div>
 
                       <div className="flex items-center gap-2">
-                        {ins.quality_score !== null && (
-                          <div className="text-center px-3">
-                            <p className="text-xl font-bold text-foreground tabular-nums">{ins.quality_score}</p>
-                            <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Score</p>
-                          </div>
-                        )}
                         {ins.status === 'completed' && (
                           <Button size="sm" variant="outline" onClick={() => navigate(`/report/${ins.id}`)}>
                             View Report <ArrowRight className="w-3.5 h-3.5 ml-1" />
