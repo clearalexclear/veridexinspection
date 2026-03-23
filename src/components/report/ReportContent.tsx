@@ -177,7 +177,7 @@ function mapReportData(raw: any, inspectionId: string): {
     tests: (item.tests || []).map((t: any) => ({ name: t.name || '', result: t.result || 'pass', comments: t.comments || '' })),
   }));
 
-  return { report, defects, aql, conformity, packagingChecklist, tests, measurements, photos, cartonData, amazonReadiness, shipmentItems };
+  return { report, defects, aql, conformity, packagingChecklist, tests, measurements, photos, cartonData, amazonReadiness, supplierProfile, shipmentItems };
 }
 
 export default function ReportContent({ inspectionId, showBackButton, isSample }: ReportContentProps) {
