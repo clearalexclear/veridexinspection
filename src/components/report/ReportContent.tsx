@@ -235,6 +235,7 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
   const photos = useSample ? samplePhotos : reportState!.photos;
   const cartonData = useSample ? sampleCartonData : reportState!.cartonData;
   const amazonReadiness = useSample ? sampleAmazonReadiness : reportState!.amazonReadiness;
+  const supplierProfile = useSample ? sampleSupplierProfile : reportState!.supplierProfile;
   const shipmentItems = useSample ? sampleShipmentItems : reportState!.shipmentItems;
 
   return (
