@@ -1,5 +1,4 @@
 import logo from '@/assets/inspectra-icon.png';
-import { OverallResultBadge } from './StatusBadge';
 import type { InspectionReport } from '@/data/reportData';
 
 export function ReportHeader({ report }: { report: InspectionReport }) {
@@ -15,12 +14,12 @@ export function ReportHeader({ report }: { report: InspectionReport }) {
                 <p className="text-sm text-muted-foreground mt-0.5 font-mono">{report.id}</p>
               </div>
             </div>
-            <OverallResultBadge result={report.overallResult} />
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-4">
             {[
               ['Inspection Date', report.date],
+              ['Inspection Type', report.inspectionType],
               ['Factory', report.factoryName],
               ['Supplier', report.supplierName],
               ['Product', report.productName],

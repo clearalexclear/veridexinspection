@@ -1,4 +1,3 @@
-export type OverallResult = 'APPROVED' | 'APPROVED WITH RESERVATIONS' | 'REJECTED';
 export type Severity = 'critical' | 'major' | 'minor';
 export type Status = 'pass' | 'fail' | 'warning' | 'na';
 
@@ -13,7 +12,6 @@ export interface InspectionReport {
   inspectedQuantity: number;
   destinationCountry: string;
   inspectorName: string;
-  overallResult: OverallResult;
   inspectionType: string;
   factoryAddress: string;
   supplierContact: string;
@@ -83,8 +81,6 @@ export interface PhotoItem {
   defectRef?: string;
 }
 
-// --- SHIPMENT ITEM MODEL ---
-
 export interface ItemDefect {
   description: string;
   severity: Severity;
@@ -134,7 +130,6 @@ export const sampleReport: InspectionReport = {
   inspectedQuantity: 315,
   destinationCountry: 'United States',
   inspectorName: 'David Chen',
-  overallResult: 'APPROVED WITH RESERVATIONS',
   inspectionType: 'Pre-Shipment Inspection (PSI)',
   factoryAddress: '88 Huangpu Industrial Rd, Baiyun District, Guangzhou 510440, China',
   supplierContact: 'Kevin Wang — kevin.w@brightwaytrading.cn — +86 139 2887 4412',
@@ -152,7 +147,7 @@ export const sampleDefects: DefectItem[] = [
     id: 'DEF-001',
     title: 'Label Misalignment',
     severity: 'major',
-    description: 'Product label positioned 4–6mm off-center from the designated print area. Visible misalignment affects brand presentation.',
+    description: 'Product label positioned 4–6mm off-center from the designated print area.',
     quantityAffected: 26,
     percentAffected: 8.2,
     affectedCartons: 'Cartons #12, #18, #19, #23, #31',
@@ -179,7 +174,7 @@ export const sampleDefects: DefectItem[] = [
     id: 'DEF-004',
     title: 'Color Variation on Lid',
     severity: 'minor',
-    description: 'Slight color shade difference on matte black lid compared to approved sample. Barely noticeable under normal lighting.',
+    description: 'Slight color shade difference on matte black lid compared to reference sample.',
     quantityAffected: 8,
     percentAffected: 2.5,
     affectedCartons: 'Cartons #5, #16',
@@ -193,7 +188,7 @@ export const sampleConformity: ConformityItem[] = [
   { name: 'Material Conformity', status: 'pass', note: '18/8 stainless steel confirmed. BPA-free lid verified.' },
   { name: 'Functionality', status: 'pass', note: 'Leak test passed on all 315 units. Vacuum seal intact.' },
   { name: 'Workmanship', status: 'pass', note: 'Clean welds, smooth finish, no burrs detected.' },
-  { name: 'Logo / Branding', status: 'pass', note: 'Logo print matches approved artwork. Position correct.' },
+  { name: 'Logo / Branding', status: 'pass', note: 'Logo print matches reference artwork. Position correct.' },
   { name: 'Labeling / Barcode / SKU', status: 'fail', note: 'Label misalignment on 8.2% of units. See DEF-001.' },
   { name: 'Packaging Conformity', status: 'warning', note: 'Polybag warning missing on some units. See DEF-002.' },
 ];
@@ -214,7 +209,7 @@ export const samplePackagingChecklist: ChecklistItem[] = [
   { name: 'Shipping Marks', status: 'pass', notes: 'PO number, destination, quantity printed correctly.' },
   { name: 'Barcode Readability', status: 'pass', notes: 'Scanned successfully on all tested units.' },
   { name: 'FNSKU / SKU Label', status: 'fail', notes: 'Alignment issues on 26 units.' },
-  { name: 'Country of Origin Marking', status: 'pass', notes: '"Made in China" printed on product and carton.' },
+  { name: 'Country of Origin Marking', status: 'pass', notes: '\"Made in China\" printed on product and carton.' },
   { name: 'Warning Labels', status: 'warning', notes: 'Present on product but missing on some polybags.' },
   { name: 'Polybag Suffocation Warning', status: 'fail', notes: 'Missing on 11 polybags.' },
   { name: 'Carton Strength', status: 'pass', notes: 'Burst test: 12 kg/cm² (min required: 10 kg/cm²).' },
@@ -224,7 +219,7 @@ export const samplePackagingChecklist: ChecklistItem[] = [
 export const sampleTests: TestItem[] = [
   { name: 'Leak Test (Fill & Invert)', unitsTested: 315, passed: 315, failed: 0, notes: 'No leakage after 5 min inversion.', status: 'pass' },
   { name: 'Vacuum Seal Check', unitsTested: 50, passed: 50, failed: 0, notes: 'Heat retention within spec after 6 hrs.', status: 'pass' },
-  { name: 'Lid Closure / Open Test', unitsTested: 315, passed: 313, failed: 2, notes: '2 units had stiff lid thread. Cosmetic only.', status: 'warning' },
+  { name: 'Lid Closure / Open Test', unitsTested: 315, passed: 313, failed: 2, notes: '2 units had stiff lid thread.', status: 'warning' },
   { name: 'Drop Test (1m onto concrete)', unitsTested: 10, passed: 9, failed: 1, notes: '1 unit showed base dent. See DEF-003.', status: 'warning' },
   { name: 'Capacity Verification', unitsTested: 20, passed: 20, failed: 0, notes: 'Avg 752ml. Within spec (750ml ± 5%).', status: 'pass' },
 ];
@@ -240,7 +235,7 @@ export const sampleMeasurements: MeasurementRow[] = [
 ];
 
 export const samplePhotos: PhotoItem[] = [
-  { id: 'P001', url: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&h=400&fit=crop', caption: 'Product front view – approved sample match', category: 'product' },
+  { id: 'P001', url: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&h=400&fit=crop', caption: 'Product front view – reference sample comparison', category: 'product' },
   { id: 'P002', url: 'https://images.unsplash.com/photo-1523362628745-0c100150b504?w=600&h=400&fit=crop', caption: 'Product lineup – color consistency check', category: 'product' },
   { id: 'P003', url: 'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=600&h=400&fit=crop', caption: 'Label misalignment detail – DEF-001', category: 'defect', defectRef: 'DEF-001' },
   { id: 'P004', url: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=600&h=400&fit=crop', caption: 'Base dent close-up – DEF-003', category: 'defect', defectRef: 'DEF-003' },
@@ -251,21 +246,14 @@ export const samplePhotos: PhotoItem[] = [
 ];
 
 export const sampleAmazonReadiness = {
-  overallStatus: 'READY WITH FIXES' as const,
   categories: [
     { name: 'Labeling', status: 'issue' as const, explanation: 'FNSKU labels misaligned on 8.2% of units.' },
     { name: 'Packaging', status: 'issue' as const, explanation: 'Polybag suffocation warnings missing on 11 units.' },
-    { name: 'Product Condition', status: 'ok' as const, explanation: 'Product quality is acceptable. Minor cosmetic dents on 4 units — within tolerance.' },
-    { name: 'Compliance', status: 'issue' as const, explanation: 'Missing suffocation warning labels.' },
+    { name: 'Product Condition', status: 'ok' as const, explanation: 'Minor cosmetic dents on 4 units.' },
+    { name: 'Compliance', status: 'issue' as const, explanation: 'Suffocation warning labels missing on some polybags.' },
     { name: 'Carton Quality', status: 'ok' as const, explanation: 'Cartons passed drop test and burst test.' },
   ],
-  riskSummary: 'Labeling misalignment and missing suffocation warnings noted on polybags.',
-  actionsRequired: [
-    'Fix FNSKU label alignment on affected units',
-    'Add suffocation warning labels to all polybags',
-    'Re-inspect labeling after corrections',
-    'Ensure all cartons have correct shipping marks for FBA requirements',
-  ],
+  findings: 'Labeling misalignment and missing suffocation warnings noted on polybags.',
 };
 
 export const sampleCartonData = {
