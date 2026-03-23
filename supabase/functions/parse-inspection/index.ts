@@ -39,13 +39,7 @@ function normalizeOverallResult(value: unknown) {
   return "APPROVED WITH RESERVATIONS";
 }
 
-function normalizeDecision(value: unknown) {
-  const v = String(value || "").toLowerCase();
-  if (v.includes("do-not-ship") || v.includes("do not ship") || v.includes("reject") || v.includes("high-risk") || v.includes("high risk")) return "high-risk";
-  if (v.includes("correction") || v.includes("reservation") || v.includes("fix") || v.includes("moderate") || v.includes("ship-with")) return "moderate-risk";
-  if (v.includes("ship") || v.includes("approv") || v.includes("low-risk") || v.includes("low risk") || v.includes("ready")) return "low-risk";
-  return "moderate-risk";
-}
+// Removed: normalizeDecision — no longer needed (fact-based system)
 
 function normalizeRisk(value: unknown) {
   const v = String(value || "").toLowerCase();
