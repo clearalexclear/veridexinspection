@@ -26,7 +26,7 @@ import {
   sampleReport, sampleDefects, sampleConformity, sampleAQL,
   samplePackagingChecklist, sampleTests, sampleMeasurements, samplePhotos,
   sampleCartonData, sampleShipmentItems,
-  sampleAmazonReadiness,
+  sampleAmazonReadiness, sampleSupplierProfile,
 } from '@/data/reportData';
 import type { InspectionReport, DefectItem, AQLData, ConformityItem, ChecklistItem, TestItem, MeasurementRow, PhotoItem, ShipmentItem } from '@/data/reportData';
 
