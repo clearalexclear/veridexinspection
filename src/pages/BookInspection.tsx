@@ -122,7 +122,30 @@ export default function BookInspection() {
                 </div>
               </div>
 
-              {error && (
+              <div className="pt-2 border-t">
+                <p className="text-sm font-medium mb-3">Contact Details</p>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="contactName">Your Name</Label>
+                    <Input id="contactName" value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder="e.g. John Smith" required />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="contactEmail">Email</Label>
+                      <Input id="contactEmail" type="email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="john@company.com" required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="contactPhone">Phone / WhatsApp</Label>
+                      <Input id="contactPhone" type="tel" value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="+1 234 567 890" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="notes">Additional Notes</Label>
+                    <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Any details about the inspection scope, special requirements, etc." rows={3} />
+                  </div>
+                </div>
+              </div>
+
                 <p className="text-sm text-danger font-medium bg-danger/10 px-3 py-2 rounded-lg">{error}</p>
               )}
 
