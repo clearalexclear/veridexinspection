@@ -147,6 +147,14 @@ function mapReportData(raw: any, inspectionId: string): {
     actionsRequired: [],
   };
 
+  const supplierProfile: SupplierProfileData = raw.supplierProfile || {
+    supplierName: raw.supplierName || '',
+    score: 0,
+    summary: '',
+    factors: [],
+    sources: [],
+  };
+
   const shipmentItems: ShipmentItem[] = (raw.shipmentItems || []).map((item: any) => ({
     itemName: item.itemName || '',
     colorVariant: item.colorVariant || '',
