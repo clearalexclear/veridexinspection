@@ -16,11 +16,15 @@ export type Database = {
     Tables: {
       inspections: {
         Row: {
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
           created_at: string
           decision: string | null
           factory_location: string
           id: string
           inspection_date: string
+          notes: string | null
           overall_result: string | null
           product_name: string
           quality_score: number | null
@@ -31,11 +35,15 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
           created_at?: string
           decision?: string | null
           factory_location: string
           id?: string
           inspection_date: string
+          notes?: string | null
           overall_result?: string | null
           product_name: string
           quality_score?: number | null
@@ -46,11 +54,15 @@ export type Database = {
           user_id: string
         }
         Update: {
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
           created_at?: string
           decision?: string | null
           factory_location?: string
           id?: string
           inspection_date?: string
+          notes?: string | null
           overall_result?: string | null
           product_name?: string
           quality_score?: number | null

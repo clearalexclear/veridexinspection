@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import logo from '@/assets/inspectra-icon.png';
@@ -16,6 +17,10 @@ export default function BookInspection() {
   const [factoryLocation, setFactoryLocation] = useState('');
   const [quantity, setQuantity] = useState('');
   const [inspectionDate, setInspectionDate] = useState('');
+  const [contactName, setContactName] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
+  const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -53,6 +58,10 @@ export default function BookInspection() {
       factory_location: factoryLocation.trim(),
       quantity: parseInt(quantity),
       inspection_date: inspectionDate,
+      contact_name: contactName.trim() || null,
+      contact_email: contactEmail.trim() || null,
+      contact_phone: contactPhone.trim() || null,
+      notes: notes.trim() || null,
     });
 
     if (err) {
@@ -110,6 +119,30 @@ export default function BookInspection() {
                 <div className="space-y-2">
                   <Label htmlFor="date">Inspection Date</Label>
                   <Input id="date" type="date" value={inspectionDate} onChange={(e) => setInspectionDate(e.target.value)} required />
+                </div>
+              </div>
+
+              <div className="pt-2 border-t">
+                <p className="text-sm font-medium mb-3">Contact Details</p>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="contactName">Your Name</Label>
+                    <Input id="contactName" value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder="e.g. John Smith" required />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="contactEmail">Email</Label>
+                      <Input id="contactEmail" type="email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="john@company.com" required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="contactPhone">Phone / WhatsApp</Label>
+                      <Input id="contactPhone" type="tel" value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="+1 234 567 890" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="notes">Additional Notes</Label>
+                    <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Any details about the inspection scope, special requirements, etc." rows={3} />
+                  </div>
                 </div>
               </div>
 
