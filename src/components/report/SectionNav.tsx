@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import {
   FileText, ClipboardList, Target, CheckSquare,
   AlertTriangle, Camera, Package, Zap, Ruler, Box, MessageSquare,
-  ShoppingCart, Layers
+  ShoppingCart, Layers, Building2
 } from 'lucide-react';
 
 const sections = [
