@@ -123,7 +123,6 @@ export default function ReviewReport() {
             quantity: parseInt(data.orderQuantity) || 0,
             inspection_date: data.inspectionDate || new Date().toISOString().split('T')[0],
             status: 'completed',
-            overall_result: data.overallResult || null,
             report_data: reportData as any,
           })
           .select()
