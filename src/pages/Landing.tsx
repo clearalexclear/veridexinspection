@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import logo from '@/assets/inspectra-icon.png';
 import { useAuth } from '@/hooks/useAuth';
 import {
-  ArrowRight, FileCheck, X, Check, Zap, Camera, ShieldAlert, ListChecks,
-  Package, Clock, BadgeCheck, AlertTriangle, CheckCircle, XCircle, Ban,
+  ArrowRight, FileCheck, X, Check, Zap, Camera, ClipboardList, ListChecks,
+  Package, Clock, BadgeCheck, AlertTriangle, CheckCircle, XCircle,
 } from 'lucide-react';
 
 /* ── Scroll-reveal hook ── */
@@ -25,26 +25,26 @@ function useReveal() {
   return { ref, cls: visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6' };
 }
 
-/* ── Decision badge cycling ── */
-const decisions = [
-  { label: 'HIGH RISK', icon: Ban, color: 'bg-danger/15 text-danger', glow: 'shadow-[0_0_20px_hsl(0_72%_51%/0.25)]' },
-  { label: 'MODERATE RISK', icon: AlertTriangle, color: 'bg-warning/15 text-warning', glow: 'shadow-[0_0_20px_hsl(27_96%_61%/0.25)]' },
-  { label: 'LOW RISK', icon: CheckCircle, color: 'bg-success/15 text-success', glow: 'shadow-[0_0_20px_hsl(142_71%_45%/0.25)]' },
+/* ── Cycling result badge ── */
+const results = [
+  { label: 'REJECTED', icon: XCircle, color: 'bg-danger/15 text-danger', glow: 'shadow-[0_0_20px_hsl(0_72%_51%/0.25)]' },
+  { label: 'APPROVED WITH RESERVATIONS', icon: AlertTriangle, color: 'bg-warning/15 text-warning', glow: 'shadow-[0_0_20px_hsl(27_96%_61%/0.25)]' },
+  { label: 'APPROVED', icon: CheckCircle, color: 'bg-success/15 text-success', glow: 'shadow-[0_0_20px_hsl(142_71%_45%/0.25)]' },
 ];
 
-function CyclingDecision() {
+function CyclingResult() {
   const [idx, setIdx] = useState(0);
   const [fading, setFading] = useState(false);
 
   useEffect(() => {
     const id = setInterval(() => {
       setFading(true);
-      setTimeout(() => { setIdx((i) => (i + 1) % decisions.length); setFading(false); }, 300);
+      setTimeout(() => { setIdx((i) => (i + 1) % results.length); setFading(false); }, 300);
     }, 2800);
     return () => clearInterval(id);
   }, []);
 
-  const d = decisions[idx];
+  const d = results[idx];
   const Icon = d.icon;
   return (
     <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-lg font-bold transition-all duration-300 ${d.color} ${d.glow} ${fading ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
@@ -56,26 +56,26 @@ function CyclingDecision() {
 /* ── Data ── */
 const traditionalPains = [
   '30-page PDFs nobody reads',
-  'No clear ship / reject decision',
-  'No business impact analysis',
+  'No structured data',
+  'Hard to compare inspections',
   'Takes days to understand',
 ];
 const inspectraWins = [
-  'Clear ship / fix / reject decision',
-  'Business risk explained in plain English',
-  'Action plan with timelines',
-  'Understand everything in 10 seconds',
+  'Structured, fact-based reports',
+  'Defects, AQL, and tests — clearly organized',
+  'Visual proof with categorized photos',
+  'Understand everything in seconds',
 ];
 const productFeatures = [
-  { icon: ShieldAlert, title: 'Know instantly if you should ship', desc: 'A bold decision block tells you YES, NO, or FIX — before you read anything else.' },
-  { icon: ListChecks, title: 'See what\'s wrong in seconds', desc: 'Top issues ranked by severity, with % of units affected and compliance risks.' },
-  { icon: Zap, title: 'Get an action plan, not a problem list', desc: 'Every issue comes with a fix, a timeline, and a priority level.' },
+  { icon: ClipboardList, title: 'All facts at a glance', desc: 'Defect counts, AQL results, quantities, and test outcomes — structured and clear.' },
+  { icon: ListChecks, title: 'See what failed and what passed', desc: 'Every check is categorized by status: pass, fail, or warning.' },
+  { icon: Zap, title: 'Structured data, not opinions', desc: 'Facts presented without interpretation — you decide what matters.' },
   { icon: Camera, title: 'Visual proof you can trust', desc: 'Defect photos, packaging shots, and shipping marks — categorized and captioned.' },
 ];
 const steps = [
   { num: '01', title: 'Book your inspection', desc: 'Tell us the product, factory, and date. Takes 2 minutes.' },
   { num: '02', title: 'We inspect in China', desc: 'Our inspector visits the factory, checks everything, takes photos.' },
-  { num: '03', title: 'Get your decision in 24h', desc: 'Receive a clear ship / fix / reject decision — not a boring PDF.' },
+  { num: '03', title: 'Get your report in 24h', desc: 'Receive a structured, fact-based inspection report — not a boring PDF.' },
 ];
 
 export default function Landing() {
@@ -122,7 +122,7 @@ export default function Landing() {
             Make sure your shipment is<br className="hidden sm:block" /> Amazon-ready before it leaves the factory.
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Clear decisions, real risks, and exact actions — based on your inspection.
+            Structured inspection data — defects, tests, AQL, and photos — delivered in 24h.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button className="btn-gradient h-12 px-8 rounded-lg text-base inline-flex items-center gap-2" onClick={() => navigate('/book')}>
@@ -142,7 +142,7 @@ export default function Landing() {
             Your report looks like this
           </h2>
           <p className="text-center mb-14" style={{ color: 'hsl(215 16% 60%)' }}>
-            Not a PDF. An interactive decision dashboard.
+            Not a PDF. A structured, interactive inspection report.
           </p>
 
           <div className="max-w-2xl mx-auto rounded-2xl border p-6 sm:p-8 space-y-5"
@@ -150,30 +150,30 @@ export default function Landing() {
 
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>Final Decision</p>
-                <CyclingDecision />
+                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>Overall Result</p>
+                <CyclingResult />
               </div>
               <div className="text-right">
-                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>Confidence</p>
-                <p className="text-3xl font-extrabold text-accent">78%</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>Sample Size</p>
+                <p className="text-3xl font-extrabold text-accent">315</p>
               </div>
             </div>
 
             <div className="h-px" style={{ backgroundColor: 'hsl(220 20% 18%)' }} />
 
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'hsl(215 16% 50%)' }}>Top Issues</p>
+              <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'hsl(215 16% 50%)' }}>Defects Found</p>
               <div className="space-y-2.5">
                 {[
-                  { text: 'Label misalignment — 8% of units', severity: 'high' },
-                  { text: 'Missing suffocation warnings', severity: 'high' },
-                  { text: 'Minor cosmetic dents', severity: 'low' },
-                ].map((issue, i) => (
+                  { text: 'Label misalignment — 26 units (8.2%)', severity: 'major' },
+                  { text: 'Missing suffocation warnings — 11 units', severity: 'major' },
+                  { text: 'Minor cosmetic dents — 4 units', severity: 'minor' },
+                ].map((issue) => (
                   <div key={issue.text}
                     className="flex items-center gap-3 text-sm"
                     style={{ color: 'hsl(220 13% 80%)' }}>
-                    {issue.severity === 'high'
-                      ? <XCircle className="w-4 h-4 text-danger shrink-0" />
+                    {issue.severity === 'major'
+                      ? <XCircle className="w-4 h-4 text-warning shrink-0" />
                       : <CheckCircle className="w-4 h-4 text-success shrink-0" />}
                     {issue.text}
                   </div>
@@ -185,16 +185,16 @@ export default function Landing() {
 
             <div className="flex items-center gap-6">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>Quality Score</p>
-                <p className="text-4xl font-extrabold text-accent">72<span className="text-lg" style={{ color: 'hsl(215 16% 50%)' }}>/100</span></p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>AQL Major</p>
+                <p className="text-lg font-bold text-danger">37 found <span className="text-xs" style={{ color: 'hsl(215 16% 50%)' }}>/ 7 accept</span></p>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>Risk Level</p>
-                <span className="px-3 py-1 rounded-full text-xs font-bold bg-warning/15 text-warning">MEDIUM</span>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>AQL Minor</p>
+                <p className="text-lg font-bold text-warning">12 found <span className="text-xs" style={{ color: 'hsl(215 16% 50%)' }}>/ 10 accept</span></p>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>Supplier</p>
-                <p className="text-lg font-bold" style={{ color: 'hsl(220 13% 80%)' }}>6.8<span className="text-xs" style={{ color: 'hsl(215 16% 50%)' }}>/10</span></p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>Tests</p>
+                <p className="text-lg font-bold" style={{ color: 'hsl(220 13% 80%)' }}>5 run</p>
               </div>
             </div>
           </div>
@@ -211,7 +211,7 @@ export default function Landing() {
       <section className="py-20 sm:py-24">
         <div ref={contrast.ref} className={`max-w-5xl mx-auto px-4 sm:px-6 transition-all duration-700 ease-out ${contrast.cls}`}>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground text-center mb-4">Most inspection reports are useless.</h2>
-          <p className="text-muted-foreground text-center max-w-xl mx-auto mb-14">Traditional reports bury the answer in 30 pages. Inspectra gives you a decision in seconds.</p>
+          <p className="text-muted-foreground text-center max-w-xl mx-auto mb-14">Traditional reports bury the facts in 30 pages. Inspectra structures everything clearly.</p>
 
           <div className="grid sm:grid-cols-2 gap-6">
             <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
@@ -238,8 +238,8 @@ export default function Landing() {
       {/* Product Showcase */}
       <section className="py-20 sm:py-24 bg-muted/40">
         <div ref={showcase.ref} className={`max-w-5xl mx-auto px-4 sm:px-6 transition-all duration-700 ease-out ${showcase.cls}`}>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground text-center mb-4">See exactly how it works</h2>
-          <p className="text-muted-foreground text-center max-w-xl mx-auto mb-14">Every report is built to answer one question: should you ship?</p>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground text-center mb-4">See exactly what you get</h2>
+          <p className="text-muted-foreground text-center max-w-xl mx-auto mb-14">Every report is structured to show you the facts — clearly and fast.</p>
           <div className="grid sm:grid-cols-2 gap-6">
             {productFeatures.map((f) => (
               <div key={f.title} className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg group">
@@ -257,7 +257,7 @@ export default function Landing() {
       {/* How It Works */}
       <section className="py-20 sm:py-24">
         <div ref={howIt.ref} className={`max-w-4xl mx-auto px-4 sm:px-6 transition-all duration-700 ease-out ${howIt.cls}`}>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground text-center mb-14">Three steps. One clear decision.</h2>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground text-center mb-14">Three steps. Clear inspection data.</h2>
           <div className="grid sm:grid-cols-3 gap-10">
             {steps.map((s) => (
               <div key={s.num} className="text-center">
@@ -293,9 +293,9 @@ export default function Landing() {
               <div className="mb-4"><span className="text-4xl font-extrabold text-foreground">$249</span><span className="text-muted-foreground ml-1">/inspection</span></div>
               <ul className="space-y-2.5 text-sm text-muted-foreground mb-6">
                 <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> Full product & packaging check</li>
-                <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> Decision report in 24h</li>
+                <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> Structured report in 24h</li>
                 <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> Photo gallery included</li>
-                <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> Action plan & risk analysis</li>
+                <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> AQL, defects & test results</li>
               </ul>
               <Button className="w-full" variant="outline" onClick={() => navigate('/book')}>Book Now</Button>
             </div>
@@ -322,9 +322,9 @@ export default function Landing() {
           style={{ background: 'linear-gradient(135deg, hsl(217 91% 53%), hsl(192 91% 42%))' }} />
         <div ref={cta.ref} className={`relative max-w-2xl mx-auto px-4 sm:px-6 text-center transition-all duration-700 ease-out ${cta.cls}`}>
           <h2 className="text-2xl sm:text-3xl font-extrabold mb-4" style={{ color: 'hsl(220 13% 91%)' }}>
-            Stop guessing.<br />Make clear shipping decisions.
+            Stop guessing.<br />Get the facts before you ship.
           </h2>
-          <p className="mb-8" style={{ color: 'hsl(215 16% 60%)' }}>Book your inspection and get your report in 24h.</p>
+          <p className="mb-8" style={{ color: 'hsl(215 16% 60%)' }}>Book your inspection and get your structured report in 24h.</p>
           <button className="btn-gradient h-12 px-10 rounded-lg text-base inline-flex items-center gap-2" onClick={() => navigate('/book')}>
             Book Your Inspection <ArrowRight className="w-4 h-4" />
           </button>
