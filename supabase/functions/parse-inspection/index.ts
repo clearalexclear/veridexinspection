@@ -113,7 +113,7 @@ The JSON should include keys used by the review UI:
 productName, supplierName, manufacturer, factoryName, factoryAddress, inspectionDate, poNumber,
 orderQuantity, shipmentQuantity, qtyReadyForInspection, inspectedQuantity,
 destinationCountry, inspectorName, inspectionType, productCategory, skuModel, clientName,
-overallResult, inspectorComments,
+inspectorComments,
 fieldConfidence, defects, remarks, quantityBreakdown,
 aql, tests, measurements, conformity, packagingChecklist, images.
 
