@@ -146,6 +146,7 @@ export default function BookInspection() {
                 </div>
               </div>
 
+              {error && (
                 <p className="text-sm text-danger font-medium bg-danger/10 px-3 py-2 rounded-lg">{error}</p>
               )}
 
