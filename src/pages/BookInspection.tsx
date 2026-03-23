@@ -57,6 +57,10 @@ export default function BookInspection() {
       factory_location: factoryLocation.trim(),
       quantity: parseInt(quantity),
       inspection_date: inspectionDate,
+      contact_name: contactName.trim() || null,
+      contact_email: contactEmail.trim() || null,
+      contact_phone: contactPhone.trim() || null,
+      notes: notes.trim() || null,
     });
 
     if (err) {
