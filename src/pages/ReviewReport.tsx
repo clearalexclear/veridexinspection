@@ -105,7 +105,6 @@ export default function ReviewReport() {
           .from('inspections')
           .update({
             status: 'completed',
-            overall_result: data.overallResult || null,
             report_data: reportData as any,
           })
           .eq('id', selectedInspection);
