@@ -80,7 +80,6 @@ export default function ReviewReport() {
       productCategory: data.productCategory || '',
       skuModel: data.skuModel || '',
       clientName: data.clientName || '',
-      overallResult: data.overallResult || 'APPROVED WITH RESERVATIONS',
       inspectorComments: data.inspectorComments || '',
       defects: data.defects || [],
       remarks: data.remarks || [],
