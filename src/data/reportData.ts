@@ -327,3 +327,22 @@ export const sampleShipmentItems: ShipmentItem[] = [
     ],
   },
 ];
+
+export const sampleSupplierProfile = {
+  supplierName: 'Shenzhen Brightway Trading Co.',
+  score: 6.4,
+  summary: 'Mid-sized trading company based in Shenzhen, active since 2014. Primarily exports drinkware and kitchenware to North America and Europe. Mixed online reviews with some reports of packaging inconsistencies.',
+  factors: [
+    { label: 'Business Registration', value: 'Registered since 2014, valid export license', status: 'positive' as const },
+    { label: 'Trade History', value: 'Active on major B2B platforms with 200+ transactions', status: 'positive' as const },
+    { label: 'Online Reputation', value: 'Mixed reviews — some buyers report labeling issues', status: 'negative' as const },
+    { label: 'Certifications', value: 'ISO 9001:2015, FDA registration for food-contact products', status: 'positive' as const },
+    { label: 'Packaging Track Record', value: 'Recurring packaging compliance issues across inspections', status: 'negative' as const },
+    { label: 'Response Time', value: 'Generally responsive within 24h during business hours', status: 'neutral' as const },
+  ],
+  sources: [
+    'Alibaba supplier profile & transaction history',
+    'Global Sources verified manufacturer listing',
+    'Import Genius shipment records (US customs data)',
+  ],
+};

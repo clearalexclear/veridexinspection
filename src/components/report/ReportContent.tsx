@@ -275,6 +275,7 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
         <MeasurementsSection rows={measurements} />
         <CartonsSection data={cartonData} />
         <AmazonReadinessSection data={amazonReadiness} />
+        <SupplierProfileSection data={supplierProfile} />
         <CommentsSection comments={report.inspectorComments} />
       </main>
 

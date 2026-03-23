@@ -20,6 +20,7 @@ const sections = [
   { id: 'measurements', label: 'Specs', icon: Ruler },
   { id: 'cartons', label: 'Cartons', icon: Box },
   { id: 'amazon-readiness', label: 'Amazon', icon: ShoppingCart },
+  { id: 'supplier-profile', label: 'Supplier', icon: Building2 },
   { id: 'comments', label: 'Comments', icon: MessageSquare },
 ];
 
