@@ -197,7 +197,6 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
           factoryName: data.factory_location,
           inspectionDate: data.inspection_date,
           orderQuantity: data.quantity,
-          overallResult: data.overall_result,
         }, data.id));
       }
       setLoading(false);

@@ -217,7 +217,7 @@ export default function ReviewReport() {
         <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t border-border z-40">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
             <p className="text-xs text-muted-foreground hidden sm:block">
-              Final report will be generated and visible to the client after approval.
+              Report will be generated and visible to the client.
             </p>
             <Button
               size="lg"
