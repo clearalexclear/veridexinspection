@@ -16,6 +16,8 @@ import { CartonsSection } from './CartonsSection';
 import { CommentsSection } from './CommentsSection';
 import { AmazonReadinessSection } from './AmazonReadinessSection';
 import type { AmazonReadinessData } from './AmazonReadinessSection';
+import { SupplierProfileSection } from './SupplierProfileSection';
+import type { SupplierProfileData } from './SupplierProfileSection';
 import { ShipmentItemsSection } from './ShipmentItemsSection';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2 } from 'lucide-react';
@@ -24,7 +26,7 @@ import {
   sampleReport, sampleDefects, sampleConformity, sampleAQL,
   samplePackagingChecklist, sampleTests, sampleMeasurements, samplePhotos,
   sampleCartonData, sampleShipmentItems,
-  sampleAmazonReadiness,
+  sampleAmazonReadiness, sampleSupplierProfile,
 } from '@/data/reportData';
 import type { InspectionReport, DefectItem, AQLData, ConformityItem, ChecklistItem, TestItem, MeasurementRow, PhotoItem, ShipmentItem } from '@/data/reportData';
 
@@ -45,6 +47,7 @@ function mapReportData(raw: any, inspectionId: string): {
   photos: PhotoItem[];
   cartonData: any;
   amazonReadiness: AmazonReadinessData;
+  supplierProfile: SupplierProfileData;
   shipmentItems: ShipmentItem[];
 } {
   const report: InspectionReport = {
@@ -144,6 +147,14 @@ function mapReportData(raw: any, inspectionId: string): {
     actionsRequired: [],
   };
 
+  const supplierProfile: SupplierProfileData = raw.supplierProfile || {
+    supplierName: raw.supplierName || '',
+    score: 0,
+    summary: '',
+    factors: [],
+    sources: [],
+  };
+
   const shipmentItems: ShipmentItem[] = (raw.shipmentItems || []).map((item: any) => ({
     itemName: item.itemName || '',
     colorVariant: item.colorVariant || '',
@@ -166,7 +177,7 @@ function mapReportData(raw: any, inspectionId: string): {
     tests: (item.tests || []).map((t: any) => ({ name: t.name || '', result: t.result || 'pass', comments: t.comments || '' })),
   }));
 
-  return { report, defects, aql, conformity, packagingChecklist, tests, measurements, photos, cartonData, amazonReadiness, shipmentItems };
+  return { report, defects, aql, conformity, packagingChecklist, tests, measurements, photos, cartonData, amazonReadiness, supplierProfile, shipmentItems };
 }
 
 export default function ReportContent({ inspectionId, showBackButton, isSample }: ReportContentProps) {
@@ -224,6 +235,7 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
   const photos = useSample ? samplePhotos : reportState!.photos;
   const cartonData = useSample ? sampleCartonData : reportState!.cartonData;
   const amazonReadiness = useSample ? sampleAmazonReadiness : reportState!.amazonReadiness;
+  const supplierProfile = useSample ? sampleSupplierProfile : reportState!.supplierProfile;
   const shipmentItems = useSample ? sampleShipmentItems : reportState!.shipmentItems;
 
   return (
@@ -263,6 +275,7 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
         <MeasurementsSection rows={measurements} />
         <CartonsSection data={cartonData} />
         <AmazonReadinessSection data={amazonReadiness} />
+        <SupplierProfileSection data={supplierProfile} />
         <CommentsSection comments={report.inspectorComments} />
       </main>
 
