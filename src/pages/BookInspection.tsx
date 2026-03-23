@@ -16,6 +16,10 @@ export default function BookInspection() {
   const [factoryLocation, setFactoryLocation] = useState('');
   const [quantity, setQuantity] = useState('');
   const [inspectionDate, setInspectionDate] = useState('');
+  const [contactName, setContactName] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
+  const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
