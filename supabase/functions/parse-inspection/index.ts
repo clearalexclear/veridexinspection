@@ -41,12 +41,7 @@ function normalizeOverallResult(value: unknown) {
 
 // Removed: normalizeDecision — no longer needed (fact-based system)
 
-function normalizeRisk(value: unknown) {
-  const v = String(value || "").toLowerCase();
-  if (v.includes("high")) return "high";
-  if (v.includes("low")) return "low";
-  return "medium";
-}
+// Removed: normalizeRisk — no longer needed (fact-based system)
 
 function normalizeParsedData(raw: Record<string, any>) {
   return {
