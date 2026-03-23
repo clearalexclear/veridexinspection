@@ -52,7 +52,6 @@ function normalizeParsedData(raw: Record<string, any>) {
     productCategory: raw.productCategory ?? "",
     skuModel: raw.skuModel ?? "",
     clientName: raw.clientName ?? "",
-    overallResult: normalizeOverallResult(raw.overallResult),
     inspectorComments: raw.inspectorComments ?? "",
     fieldConfidence: {
       ...defaultConfidence,
