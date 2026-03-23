@@ -1,18 +1,14 @@
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import {
-  FileText, BarChart3, ClipboardList, Target, CheckSquare,
-  AlertTriangle, Camera, Package, Zap, Ruler, Box, MessageSquare, Shield,
-  Flame, ListChecks, Building2, Clock, ShoppingCart, Layers
+  FileText, ClipboardList, Target, CheckSquare,
+  AlertTriangle, Camera, Package, Zap, Ruler, Box, MessageSquare,
+  ShoppingCart, Layers
 } from 'lucide-react';
 
 const sections = [
   { id: 'header', label: 'Report', icon: FileText },
-  { id: 'decision', label: 'Assessment', icon: Shield },
-  { id: 'key-issues', label: 'Issues', icon: Flame },
-  { id: 'action-plan', label: 'Actions', icon: ListChecks },
-  { id: 'summary', label: 'Summary', icon: BarChart3 },
-  { id: 'supplier', label: 'Supplier', icon: Building2 },
+  { id: 'inspection-summary', label: 'Summary', icon: ClipboardList },
   { id: 'overview', label: 'Overview', icon: ClipboardList },
   { id: 'items', label: 'Items', icon: Layers },
   { id: 'aql', label: 'AQL', icon: Target },
@@ -23,10 +19,8 @@ const sections = [
   { id: 'testing', label: 'Testing', icon: Zap },
   { id: 'measurements', label: 'Specs', icon: Ruler },
   { id: 'cartons', label: 'Cartons', icon: Box },
-  { id: 'time-to-fix', label: 'Timeline', icon: Clock },
   { id: 'amazon-readiness', label: 'Amazon', icon: ShoppingCart },
   { id: 'comments', label: 'Comments', icon: MessageSquare },
-  { id: 'recommendation', label: 'Final', icon: Shield },
 ];
 
 export function SectionNav() {

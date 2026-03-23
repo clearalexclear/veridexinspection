@@ -3,11 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { SectionNav } from './SectionNav';
 import { ReportHeader } from './ReportHeader';
-import { DecisionBlock } from './DecisionBlock';
-import { KeyIssuesBlock } from './KeyIssuesBlock';
-import { ActionPlanSection } from './ActionPlanSection';
-import { ExecutiveSummary } from './ExecutiveSummary';
-import { SupplierScoreSection } from './SupplierScoreSection';
+import { InspectionSummary } from './InspectionSummary';
 import { InspectionOverview } from './InspectionOverview';
 import { AQLSection } from './AQLSection';
 import { ConformitySection } from './ConformitySection';
@@ -17,9 +13,7 @@ import { PackagingSection } from './PackagingSection';
 import { TestingSection } from './TestingSection';
 import { MeasurementsSection } from './MeasurementsSection';
 import { CartonsSection } from './CartonsSection';
-import { TimeToFixSection } from './TimeToFixSection';
 import { CommentsSection } from './CommentsSection';
-import { FinalRecommendation } from './FinalRecommendation';
 import { AmazonReadinessSection } from './AmazonReadinessSection';
 import type { AmazonReadinessData } from './AmazonReadinessSection';
 import { ShipmentItemsSection } from './ShipmentItemsSection';
@@ -29,10 +23,10 @@ import { Badge } from '@/components/ui/badge';
 import {
   sampleReport, sampleDefects, sampleConformity, sampleAQL,
   samplePackagingChecklist, sampleTests, sampleMeasurements, samplePhotos,
-  sampleCartonData, sampleKeyIssues, sampleActionPlan, sampleSupplierScore, sampleTimeToFix,
-  sampleAmazonReadiness, sampleShipmentItems,
+  sampleCartonData, sampleShipmentItems,
+  sampleAmazonReadiness,
 } from '@/data/reportData';
-import type { InspectionReport, DefectItem, KeyIssue, ActionPlanItem, AQLData, ConformityItem, ChecklistItem, TestItem, MeasurementRow, PhotoItem, SupplierScore, TimeToFixItem, ShipmentItem } from '@/data/reportData';
+import type { InspectionReport, DefectItem, AQLData, ConformityItem, ChecklistItem, TestItem, MeasurementRow, PhotoItem, ShipmentItem } from '@/data/reportData';
 
 interface ReportContentProps {
   inspectionId?: string;
@@ -43,16 +37,12 @@ interface ReportContentProps {
 function mapReportData(raw: any, inspectionId: string): {
   report: InspectionReport;
   defects: DefectItem[];
-  keyIssues: KeyIssue[];
-  actionPlan: ActionPlanItem[];
   aql: AQLData;
   conformity: ConformityItem[];
   packagingChecklist: ChecklistItem[];
   tests: TestItem[];
   measurements: MeasurementRow[];
   photos: PhotoItem[];
-  supplierScore: SupplierScore;
-  timeToFix: TimeToFixItem[];
   cartonData: any;
   amazonReadiness: AmazonReadinessData;
   shipmentItems: ShipmentItem[];
@@ -69,9 +59,6 @@ function mapReportData(raw: any, inspectionId: string): {
     destinationCountry: raw.destinationCountry || '',
     inspectorName: raw.inspectorName || '',
     overallResult: raw.overallResult || 'APPROVED WITH RESERVATIONS',
-    qualityScore: Number(raw.qualityScore) || 0,
-    riskLevel: raw.riskLevel || 'medium',
-    decision: raw.decision || 'moderate-risk',
     inspectionType: raw.inspectionType || '',
     factoryAddress: raw.factoryAddress || '',
     supplierContact: '',
@@ -81,13 +68,7 @@ function mapReportData(raw: any, inspectionId: string): {
     quantityAvailable: Number(raw.qtyReadyForInspection) || 0,
     samplingStandard: raw.aql?.inspectionLevel || '',
     inspectionScope: '',
-    recommendation: raw.recommendation || '',
-    topReasons: raw.topReasons || [],
-    nextStep: raw.nextStep || '',
     inspectorComments: raw.inspectorComments || '',
-    confidenceScore: Number(raw.confidenceScore) || 0,
-    businessImpact: raw.businessImpact || '',
-    quickSummary: raw.quickSummary || '',
   };
 
   const defects: DefectItem[] = (raw.defects || []).map((d: any, i: number) => ({
@@ -97,24 +78,7 @@ function mapReportData(raw: any, inspectionId: string): {
     description: d.description || '',
     quantityAffected: Number(d.quantityAffected) || 0,
     percentAffected: Number(d.percentAffected) || 0,
-    recommendedAction: d.recommendedAction || '',
     affectedCartons: d.affectedCartons || '',
-    impactDescription: d.impactDescription || '',
-    businessImpact: d.businessImpact || { customerExperience: 'low', compliance: 'low', returnRefund: 'low' },
-  }));
-
-  const keyIssues: KeyIssue[] = (raw.keyIssues || []).map((k: any) => ({
-    title: k.title || '',
-    severity: k.severity || 'minor',
-    percentAffected: Number(k.percentAffected) || 0,
-    impactDescription: k.impactDescription || '',
-  }));
-
-  const actionPlan: ActionPlanItem[] = (raw.actionPlan || []).map((a: any) => ({
-    issue: a.issue || '',
-    action: a.action || '',
-    estimatedDays: a.estimatedDays || '',
-    priority: a.priority || 'medium',
   }));
 
   const aqlRaw = raw.aql || {};
@@ -165,21 +129,6 @@ function mapReportData(raw: any, inspectionId: string): {
     defectRef: p.defectRef,
   }));
 
-  const ssRaw = raw.supplierScore || {};
-  const supplierScore: SupplierScore = {
-    overall: Number(ssRaw.overall) || 0,
-    qualityConsistency: Number(ssRaw.qualityConsistency) || 0,
-    packagingAccuracy: Number(ssRaw.packagingAccuracy) || 0,
-    defectRate: Number(ssRaw.defectRate) || 0,
-    professionalism: Number(ssRaw.professionalism) || 0,
-    insight: ssRaw.insight || '',
-  };
-
-  const timeToFix: TimeToFixItem[] = (raw.timeToFix || []).map((t: any) => ({
-    task: t.task || '',
-    estimatedDays: t.estimatedDays || '',
-  }));
-
   const cartonData = {
     cartonsAvailable: Number(raw.cartonsAvailable) || 0,
     quantityPerCarton: Number(raw.quantityPerCarton) || 0,
@@ -218,7 +167,7 @@ function mapReportData(raw: any, inspectionId: string): {
     tests: (item.tests || []).map((t: any) => ({ name: t.name || '', result: t.result || 'pass', comments: t.comments || '' })),
   }));
 
-  return { report, defects, keyIssues, actionPlan, aql, conformity, packagingChecklist, tests, measurements, photos, supplierScore, timeToFix, cartonData, amazonReadiness, shipmentItems };
+  return { report, defects, aql, conformity, packagingChecklist, tests, measurements, photos, cartonData, amazonReadiness, shipmentItems };
 }
 
 export default function ReportContent({ inspectionId, showBackButton, isSample }: ReportContentProps) {
@@ -244,15 +193,12 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
       if (data.report_data) {
         setReportState(mapReportData(data.report_data as any, data.id));
       } else {
-        // Fallback: build minimal report from inspection columns
         setReportState(mapReportData({
           productName: data.product_name,
           factoryName: data.factory_location,
           inspectionDate: data.inspection_date,
           orderQuantity: data.quantity,
           overallResult: data.overall_result,
-          qualityScore: data.quality_score,
-          decision: data.decision,
         }, data.id));
       }
       setLoading(false);
@@ -269,20 +215,15 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
     );
   }
 
-  // Use real data or sample data
   const useSample = isSample || !reportState;
   const report = useSample ? sampleReport : reportState!.report;
   const defects = useSample ? sampleDefects : reportState!.defects;
-  const keyIssues = useSample ? sampleKeyIssues : reportState!.keyIssues;
-  const actionPlan = useSample ? sampleActionPlan : reportState!.actionPlan;
   const aql = useSample ? sampleAQL : reportState!.aql;
   const conformity = useSample ? sampleConformity : reportState!.conformity;
   const packagingChecklist = useSample ? samplePackagingChecklist : reportState!.packagingChecklist;
   const tests = useSample ? sampleTests : reportState!.tests;
   const measurements = useSample ? sampleMeasurements : reportState!.measurements;
   const photos = useSample ? samplePhotos : reportState!.photos;
-  const supplierScore = useSample ? sampleSupplierScore : reportState!.supplierScore;
-  const timeToFix = useSample ? sampleTimeToFix : reportState!.timeToFix;
   const cartonData = useSample ? sampleCartonData : reportState!.cartonData;
   const amazonReadiness = useSample ? sampleAmazonReadiness : reportState!.amazonReadiness;
   const shipmentItems = useSample ? sampleShipmentItems : reportState!.shipmentItems;
@@ -312,11 +253,7 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
         </div>
 
         <ReportHeader report={report} />
-        <DecisionBlock report={report} />
-        <KeyIssuesBlock issues={keyIssues} />
-        <ActionPlanSection items={actionPlan} />
-        <ExecutiveSummary report={report} defects={defects} aql={aql} />
-        <SupplierScoreSection score={supplierScore} />
+        <InspectionSummary report={report} defects={defects} aql={aql} tests={tests} />
         <InspectionOverview report={report} />
         <ShipmentItemsSection items={shipmentItems} />
         <AQLSection aql={aql} />
@@ -327,15 +264,14 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
         <TestingSection tests={tests} />
         <MeasurementsSection rows={measurements} />
         <CartonsSection data={cartonData} />
-        {timeToFix.length > 0 && <TimeToFixSection items={timeToFix} />}
         <AmazonReadinessSection data={amazonReadiness} />
         <CommentsSection comments={report.inspectorComments} />
-        <FinalRecommendation report={report} />
       </main>
 
       <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
         <p>Confidential — Inspectra Quality Services © {new Date().getFullYear()}</p>
         <p className="mt-1">Report {report.id} — Generated {report.date}</p>
+        <p className="mt-2 italic text-[10px]">This report presents structured inspection data without interpretation. Final decisions remain the responsibility of the client.</p>
       </footer>
     </div>
   );

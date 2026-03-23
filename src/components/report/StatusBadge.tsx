@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { Status, Severity, OverallResult, RiskLevel, Decision } from '@/data/reportData';
+import type { Status, Severity, OverallResult } from '@/data/reportData';
 
 interface StatusBadgeProps {
   status: Status;
@@ -45,33 +45,6 @@ export function OverallResultBadge({ result, className }: { result: OverallResul
   return (
     <span className={cn('inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider', classes, className)}>
       <span>{icon}</span> {result}
-    </span>
-  );
-}
-
-export function RiskBadge({ level, className }: { level: RiskLevel; className?: string }) {
-  const config = {
-    low: 'bg-success/10 text-success border border-success/20',
-    medium: 'bg-warning/10 text-warning border border-warning/20',
-    high: 'bg-danger/10 text-danger border border-danger/20',
-  };
-  return (
-    <span className={cn('inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide', config[level], className)}>
-      {level} risk
-    </span>
-  );
-}
-
-export function DecisionBadge({ decision, className }: { decision: Decision; className?: string }) {
-  const config = {
-    'low-risk': { label: 'Low Risk – Ready', classes: 'bg-success text-success-foreground', icon: '✓' },
-    'moderate-risk': { label: 'Moderate Risk – Improvements Recommended', classes: 'bg-warning text-warning-foreground', icon: '⚠' },
-    'high-risk': { label: 'High Risk – Action Required', classes: 'bg-danger text-danger-foreground', icon: '✕' },
-  };
-  const { label, classes, icon } = config[decision];
-  return (
-    <span className={cn('inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wider', classes, className)}>
-      <span className="text-base">{icon}</span> {label}
     </span>
   );
 }
