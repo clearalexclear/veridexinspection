@@ -31,17 +31,7 @@ function parseNestedJson(raw: string) {
   }
 }
 
-function normalizeOverallResult(value: unknown) {
-  const v = String(value || "").toUpperCase();
-  if (v.includes("RESERV")) return "APPROVED WITH RESERVATIONS";
-  if (v.includes("REJECT") || v.includes("FAIL")) return "REJECTED";
-  if (v.includes("APPROV")) return "APPROVED";
-  return "APPROVED WITH RESERVATIONS";
-}
-
-// Removed: normalizeDecision — no longer needed (fact-based system)
-
-// Removed: normalizeRisk — no longer needed (fact-based system)
+// All subjective functions removed (fact-based system)
 
 function normalizeParsedData(raw: Record<string, any>) {
   return {
