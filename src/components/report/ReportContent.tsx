@@ -47,6 +47,7 @@ function mapReportData(raw: any, inspectionId: string): {
   photos: PhotoItem[];
   cartonData: any;
   amazonReadiness: AmazonReadinessData;
+  supplierProfile: SupplierProfileData;
   shipmentItems: ShipmentItem[];
 } {
   const report: InspectionReport = {
