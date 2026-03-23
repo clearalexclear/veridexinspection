@@ -124,10 +124,11 @@ The JSON should include keys used by the review UI:
 productName, supplierName, manufacturer, factoryName, factoryAddress, inspectionDate, poNumber,
 orderQuantity, shipmentQuantity, qtyReadyForInspection, inspectedQuantity,
 destinationCountry, inspectorName, inspectionType, productCategory, skuModel, clientName,
-overallResult, qualityScore, riskLevel, decision, confidenceScore,
-recommendation, quickSummary, businessImpact, inspectorComments,
-fieldConfidence, defects, keyIssues, actionPlan, remarks, quantityBreakdown,
-aql, tests, measurements, conformity, packagingChecklist, supplierScore, timeToFix, images.`;
+overallResult, inspectorComments,
+fieldConfidence, defects, remarks, quantityBreakdown,
+aql, tests, measurements, conformity, packagingChecklist, images.
+
+IMPORTANT: Do NOT include any subjective interpretation such as decisions, risk levels, recommendations, business impact, action plans, or supplier scores. Only extract factual inspection data.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
