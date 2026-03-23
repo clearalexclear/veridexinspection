@@ -150,8 +150,8 @@ export default function Landing() {
 
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>Overall Result</p>
-                <CyclingResult />
+                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>Inspection Status</p>
+                <CyclingStatus />
               </div>
               <div className="text-right">
                 <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'hsl(215 16% 50%)' }}>Sample Size</p>
