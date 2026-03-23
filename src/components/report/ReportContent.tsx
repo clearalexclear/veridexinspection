@@ -58,7 +58,6 @@ function mapReportData(raw: any, inspectionId: string): {
     inspectedQuantity: Number(raw.inspectedQuantity) || 0,
     destinationCountry: raw.destinationCountry || '',
     inspectorName: raw.inspectorName || '',
-    overallResult: raw.overallResult || 'APPROVED WITH RESERVATIONS',
     inspectionType: raw.inspectionType || '',
     factoryAddress: raw.factoryAddress || '',
     supplierContact: '',
