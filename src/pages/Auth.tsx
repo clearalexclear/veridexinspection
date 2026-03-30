@@ -47,7 +47,7 @@ export default function Auth() {
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <img src={logo} alt="Inspectra" className="w-10 h-10 mx-auto mb-4" />
+            
             <CardTitle className="text-xl">Check your email</CardTitle>
             <CardDescription>
               We sent a confirmation link to <strong>{email}</strong>. Click the link to activate your account.
