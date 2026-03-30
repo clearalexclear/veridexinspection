@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import logo from '@/assets/inspectra-icon.png';
+
 import { ArrowLeft, Loader2, CheckCircle } from 'lucide-react';
 
 export default function BookInspection() {
@@ -31,7 +31,7 @@ export default function BookInspection() {
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <img src={logo} alt="Inspectra" className="w-10 h-10 mx-auto mb-2" />
+            
             <CardTitle className="text-xl">Sign in to book</CardTitle>
             <CardDescription>You need an account to book an inspection.</CardDescription>
           </CardHeader>

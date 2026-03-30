@@ -1,4 +1,4 @@
-import logo from '@/assets/inspectra-icon.png';
+
 import type { InspectionReport } from '@/data/reportData';
 
 export function ReportHeader({ report }: { report: InspectionReport }) {
@@ -6,14 +6,9 @@ export function ReportHeader({ report }: { report: InspectionReport }) {
     <section id="header" className="report-section pt-8">
       <div className="report-card">
         <div className="p-8 md:p-10">
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8">
-            <div className="flex items-center gap-5">
-              <img src={logo} alt="Inspectra" className="h-14 object-contain" />
-              <div>
-                <h1 className="text-2xl font-bold text-foreground leading-tight">Inspection Report</h1>
-                <p className="text-sm text-muted-foreground mt-0.5 font-mono">{report.id}</p>
-              </div>
-            </div>
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold text-foreground leading-tight">Inspection Report</h1>
+            <p className="text-sm text-muted-foreground mt-0.5 font-mono">{report.id}</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-4">

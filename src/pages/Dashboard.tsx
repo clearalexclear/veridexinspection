@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import logo from '@/assets/inspectra-icon.png';
+
 import {
   Plus, LogOut, Loader2, ClipboardCheck, Clock, CheckCircle,
   ArrowRight, Package, MapPin, Calendar, Upload, Shield,
@@ -72,7 +72,6 @@ export default function Dashboard() {
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <img src={logo} alt="Inspectra" className="w-7 h-7" />
             <span className="font-semibold text-foreground text-sm">Inspectra</span>
           </div>
           <div className="flex items-center gap-3">
