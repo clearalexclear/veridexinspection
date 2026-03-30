@@ -1,4 +1,4 @@
-import logo from '@/assets/inspectra-icon.png';
+
 import type { InspectionReport } from '@/data/reportData';
 
 export function ReportHeader({ report }: { report: InspectionReport }) {
