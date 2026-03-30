@@ -7,8 +7,8 @@ export function ReportHeader({ report }: { report: InspectionReport }) {
       <div className="report-card">
         <div className="p-8 md:p-10">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8">
-            <div className="flex items-center gap-4">
-              <img src={logo} alt="Inspectra" className="w-12 h-12 object-contain" />
+            <div className="flex items-center gap-5">
+              <img src={logo} alt="Inspectra" className="h-14 object-contain" />
               <div>
                 <h1 className="text-2xl font-bold text-foreground leading-tight">Inspection Report</h1>
                 <p className="text-sm text-muted-foreground mt-0.5 font-mono">{report.id}</p>
