@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import logo from '@/assets/inspectra-icon.png';
+
 import {
   Plus, LogOut, Loader2, ClipboardCheck, Clock, CheckCircle,
   ArrowRight, Package, MapPin, Calendar, Upload, Shield,
