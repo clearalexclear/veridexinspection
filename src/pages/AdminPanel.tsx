@@ -87,7 +87,6 @@ export default function AdminPanel() {
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <img src={logo} alt="Inspectra" className="w-7 h-7" />
             <span className="font-semibold text-foreground text-sm">Inspectra</span>
             <Badge className="bg-primary/10 text-primary text-[10px]">Admin</Badge>
           </div>

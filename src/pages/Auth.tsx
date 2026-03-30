@@ -72,7 +72,7 @@ export default function Auth() {
 
         <Card>
           <CardHeader className="text-center">
-            <img src={logo} alt="Inspectra" className="w-10 h-10 mx-auto mb-2" />
+            
             <CardTitle className="text-xl">{isSignUp ? 'Create your account' : 'Welcome back'}</CardTitle>
             <CardDescription>
               {isSignUp ? 'Start managing your inspections' : 'Sign in to your Inspectra dashboard'}

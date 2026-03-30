@@ -334,7 +334,6 @@ export default function Landing() {
       <footer className="border-t border-border py-8 bg-background">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <img src={logo} alt="Inspectra" className="w-5 h-5" />
             <span className="text-xs text-muted-foreground">© {new Date().getFullYear()} Inspectra</span>
           </div>
           <div className="flex gap-6 text-xs text-muted-foreground">
