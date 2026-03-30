@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import logo from '@/assets/inspectra-icon.png';
+
 import {
   ArrowLeft, Loader2, Shield, Users, Crown, User,
 } from 'lucide-react';
