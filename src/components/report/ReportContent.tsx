@@ -19,6 +19,7 @@ import type { AmazonReadinessData } from './AmazonReadinessSection';
 import { SupplierProfileSection } from './SupplierProfileSection';
 import type { SupplierProfileData } from './SupplierProfileSection';
 import { ShipmentItemsSection } from './ShipmentItemsSection';
+import { InspectionAssistant } from './InspectionAssistant';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -284,6 +285,21 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
         <p className="mt-1">Report {report.id} — Generated {report.date}</p>
         <p className="mt-2 italic text-[10px]">This report presents structured inspection data without interpretation. Final decisions remain the responsibility of the client.</p>
       </footer>
+
+      <InspectionAssistant
+        reportContext={{
+          report,
+          defects,
+          aql,
+          conformity,
+          packagingChecklist,
+          tests,
+          measurements,
+          photos,
+          cartonData,
+          shipmentItems,
+        }}
+      />
     </div>
   );
 }
