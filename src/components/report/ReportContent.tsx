@@ -19,6 +19,7 @@ import type { AmazonReadinessData } from './AmazonReadinessSection';
 import { SupplierProfileSection } from './SupplierProfileSection';
 import type { SupplierProfileData } from './SupplierProfileSection';
 import { ShipmentItemsSection } from './ShipmentItemsSection';
+import { InspectionAssistant } from './InspectionAssistant';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
