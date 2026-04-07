@@ -51,21 +51,17 @@ export default function UploadReport() {
     if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
   }, [handleFile]);
 
-  const readFileAsText = async (f: File): Promise<string> => {
-    // For now, read as text. PDF binary will be sent as base64 hint.
-    return new Promise((resolve) => {
+  const readFileAsBase64 = async (f: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => {
         const result = reader.result as string;
-        resolve(result);
+        // Strip the data URL prefix to get raw base64
+        const base64 = result.split(',')[1] || result;
+        resolve(base64);
       };
-      reader.onerror = () => resolve(`[Unable to read file: ${f.name}]`);
-      if (f.type === 'application/pdf') {
-        // Send raw text extraction attempt
-        reader.readAsText(f);
-      } else {
-        reader.readAsText(f);
-      }
+      reader.onerror = () => reject(new Error(`Unable to read file: ${f.name}`));
+      reader.readAsDataURL(f);
     });
   };
 
@@ -82,12 +78,13 @@ export default function UploadReport() {
 
       if (uploadError) throw uploadError;
 
-      // Read file content for AI parsing
-      const fileContent = await readFileAsText(file);
+      // Read file as base64 for AI parsing
+      const fileBase64 = await readFileAsBase64(file);
+      const mimeType = file.type || 'application/pdf';
 
       // Call AI parsing edge function
       const { data, error } = await supabase.functions.invoke('parse-inspection', {
-        body: { fileContent, fileName: file.name },
+        body: { fileBase64, mimeType, fileName: file.name },
       });
 
       if (error) throw error;
