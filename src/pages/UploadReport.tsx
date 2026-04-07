@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import mammoth from 'mammoth';
 
 import {
   Upload, FileText, Loader2, ArrowLeft, Sparkles, X, AlertTriangle,
@@ -51,18 +52,25 @@ export default function UploadReport() {
     if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
   }, [handleFile]);
 
-  const readFileAsBase64 = async (f: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = reader.result as string;
-        // Strip the data URL prefix to get raw base64
-        const base64 = result.split(',')[1] || result;
-        resolve(base64);
-      };
-      reader.onerror = () => reject(new Error(`Unable to read file: ${f.name}`));
-      reader.readAsDataURL(f);
-    });
+  const readFileForParsing = async (f: File): Promise<{ fileBase64?: string; fileContent?: string; mimeType: string }> => {
+    if (f.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      // DOCX: extract text with mammoth (Gemini can't read DOCX binary)
+      const arrayBuffer = await f.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      return { fileContent: result.value, mimeType: f.type };
+    } else {
+      // PDF: send as base64 for Gemini multimodal processing
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataUrl = reader.result as string;
+          const base64 = dataUrl.split(',')[1] || dataUrl;
+          resolve({ fileBase64: base64, mimeType: f.type || 'application/pdf' });
+        };
+        reader.onerror = () => reject(new Error(`Unable to read file: ${f.name}`));
+        reader.readAsDataURL(f);
+      });
+    }
   };
 
   const handleUploadAndParse = async () => {
@@ -78,13 +86,12 @@ export default function UploadReport() {
 
       if (uploadError) throw uploadError;
 
-      // Read file as base64 for AI parsing
-      const fileBase64 = await readFileAsBase64(file);
-      const mimeType = file.type || 'application/pdf';
+      // Read file for AI parsing (DOCX → text, PDF → base64)
+      const parsePayload = await readFileForParsing(file);
 
       // Call AI parsing edge function
       const { data, error } = await supabase.functions.invoke('parse-inspection', {
-        body: { fileBase64, mimeType, fileName: file.name },
+        body: { ...parsePayload, fileName: file.name },
       });
 
       if (error) throw error;
