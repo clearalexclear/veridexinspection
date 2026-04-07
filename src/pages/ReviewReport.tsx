@@ -73,6 +73,7 @@ export default function ReviewReport() {
       poNumber: data.poNumber || '',
       orderQuantity: Number(data.orderQuantity) || 0,
       shipmentQuantity: Number(data.shipmentQuantity) || 0,
+      packedQuantity: Number(data.packedQuantity) || 0,
       qtyReadyForInspection: Number(data.qtyReadyForInspection) || 0,
       inspectedQuantity: Number(data.inspectedQuantity) || 0,
       destinationCountry: data.destinationCountry || '',
