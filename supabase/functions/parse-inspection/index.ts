@@ -184,8 +184,8 @@ serve(async (req) => {
         },
       });
     } else {
-      // Legacy text mode fallback
-      const maxChars = 600_000;
+      // Text mode (DOCX extracted text)
+      const maxChars = 200_000;
       const trimmedContent = fileContent.length > maxChars
         ? fileContent.slice(0, maxChars) + "\n\n[Content truncated due to length]"
         : fileContent;
@@ -195,7 +195,7 @@ serve(async (req) => {
       });
     }
 
-    console.log(`Processing file: ${fileName}, mode: ${hasBase64 ? "base64-multimodal" : "text"}, mimeType: ${mimeType || "n/a"}`);
+    console.log(`Processing file: ${fileName}, mode: ${hasBase64 ? "base64-multimodal" : "text"}, contentLength: ${hasText ? fileContent.length : "n/a"}`);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -205,6 +205,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
+        max_tokens: 16000,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userParts },
