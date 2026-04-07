@@ -17,6 +17,7 @@ import RemarksSection from '@/components/review/RemarksSection';
 import QuantityBreakdownSection from '@/components/review/QuantityBreakdownSection';
 import TestsSection from '@/components/review/TestsSection';
 import DefectsReviewSection from '@/components/review/DefectsReviewSection';
+import ImageReviewSection from '@/components/review/ImageReviewSection';
 
 type InspectionOption = { id: string; product_name: string; user_id: string; status: string };
 
@@ -72,6 +73,7 @@ export default function ReviewReport() {
       poNumber: data.poNumber || '',
       orderQuantity: Number(data.orderQuantity) || 0,
       shipmentQuantity: Number(data.shipmentQuantity) || 0,
+      packedQuantity: Number(data.packedQuantity) || 0,
       qtyReadyForInspection: Number(data.qtyReadyForInspection) || 0,
       inspectedQuantity: Number(data.inspectedQuantity) || 0,
       destinationCountry: data.destinationCountry || '',
@@ -156,6 +158,10 @@ export default function ReviewReport() {
   const fc = data.fieldConfidence || {};
   const lowConfCount = Object.values(fc).filter((v) => v === 'low').length;
 
+  // Count empty required fields
+  const requiredFields = ['productName', 'supplierName', 'inspectionDate', 'inspectorName', 'orderQuantity', 'inspectedQuantity'];
+  const emptyCount = requiredFields.filter((f) => !data[f] || data[f] === 0).length;
+
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
@@ -178,9 +184,18 @@ export default function ReviewReport() {
           <p className="text-sm text-muted-foreground mt-1">
             Review and correct the data extracted from <span className="font-medium text-foreground">{state?.fileName}</span>
           </p>
-          {lowConfCount > 0 && (
-            <div className="mt-3 p-3 rounded-lg border border-danger/20 bg-danger/5 flex items-center gap-2">
-              <span className="text-danger text-sm font-medium">⚠️ {lowConfCount} field{lowConfCount > 1 ? 's' : ''} flagged as low confidence — please verify</span>
+          {(lowConfCount > 0 || emptyCount > 0) && (
+            <div className="mt-3 space-y-2">
+              {lowConfCount > 0 && (
+                <div className="p-3 rounded-lg border border-danger/20 bg-danger/5 flex items-center gap-2">
+                  <span className="text-danger text-sm font-medium">⚠️ {lowConfCount} field{lowConfCount > 1 ? 's' : ''} flagged as low confidence — please verify</span>
+                </div>
+              )}
+              {emptyCount > 0 && (
+                <div className="p-3 rounded-lg border border-warning/20 bg-warning/5 flex items-center gap-2">
+                  <span className="text-warning text-sm font-medium">📝 {emptyCount} required field{emptyCount > 1 ? 's' : ''} empty — needs review before generating</span>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -211,6 +226,7 @@ export default function ReviewReport() {
           <RemarksSection data={data} onUpdate={updateField} />
           <QuantityBreakdownSection data={data} onUpdate={updateField} />
           <TestsSection data={data} onUpdate={updateField} />
+          <ImageReviewSection data={data} onUpdate={updateField} />
         </div>
 
         <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t border-border z-40">

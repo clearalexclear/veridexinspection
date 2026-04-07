@@ -5,19 +5,6 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const defaultConfidence = {
-  inspectionDate: "low",
-  inspectorName: "low",
-  orderQuantity: "low",
-  shipmentQuantity: "low",
-  qtyReadyForInspection: "low",
-  inspectedQuantity: "low",
-  overallResult: "low",
-  supplierName: "low",
-  manufacturer: "low",
-  productName: "low",
-};
-
 function parseNestedJson(raw: string) {
   try {
     return JSON.parse(raw);
@@ -31,10 +18,16 @@ function parseNestedJson(raw: string) {
   }
 }
 
-// All subjective functions removed (fact-based system)
-
 function normalizeParsedData(raw: Record<string, any>) {
-  return {
+  const fc = raw.fieldConfidence || {};
+
+  // Helper: mark confidence as "low" if field is empty/missing
+  const conf = (key: string, value: any) => {
+    if (value === null || value === undefined || value === "" || value === 0) return "low";
+    return fc[key] || "medium";
+  };
+
+  const result: Record<string, any> = {
     productName: raw.productName ?? "",
     supplierName: raw.supplierName ?? "",
     manufacturer: raw.manufacturer ?? "",
@@ -46,6 +39,7 @@ function normalizeParsedData(raw: Record<string, any>) {
     shipmentQuantity: Number(raw.shipmentQuantity ?? 0),
     qtyReadyForInspection: Number(raw.qtyReadyForInspection ?? 0),
     inspectedQuantity: Number(raw.inspectedQuantity ?? 0),
+    packedQuantity: Number(raw.packedQuantity ?? raw.shipmentQuantity ?? 0),
     destinationCountry: raw.destinationCountry ?? "",
     inspectorName: raw.inspectorName ?? "",
     inspectionType: raw.inspectionType ?? "",
@@ -53,10 +47,6 @@ function normalizeParsedData(raw: Record<string, any>) {
     skuModel: raw.skuModel ?? "",
     clientName: raw.clientName ?? "",
     inspectorComments: raw.inspectorComments ?? "",
-    fieldConfidence: {
-      ...defaultConfidence,
-      ...(raw.fieldConfidence || {}),
-    },
     defects: Array.isArray(raw.defects) ? raw.defects : [],
     remarks: Array.isArray(raw.remarks) ? raw.remarks : [],
     quantityBreakdown: Array.isArray(raw.quantityBreakdown) ? raw.quantityBreakdown : [],
@@ -65,8 +55,30 @@ function normalizeParsedData(raw: Record<string, any>) {
     measurements: Array.isArray(raw.measurements) ? raw.measurements : [],
     conformity: Array.isArray(raw.conformity) ? raw.conformity : [],
     packagingChecklist: Array.isArray(raw.packagingChecklist) ? raw.packagingChecklist : [],
-    images: Array.isArray(raw.images) ? raw.images : [],
+    images: Array.isArray(raw.images) ? raw.images.map((img: any) => ({
+      url: img.url || img.src || "",
+      caption: img.caption || img.description || "",
+      category: img.category || "uncategorized",
+      reference: img.reference || img.pageNumber || "",
+    })) : [],
   };
+
+  // Build field confidence with auto-low for empty values
+  result.fieldConfidence = {
+    productName: conf("productName", result.productName),
+    supplierName: conf("supplierName", result.supplierName),
+    manufacturer: conf("manufacturer", result.manufacturer),
+    inspectionDate: conf("inspectionDate", result.inspectionDate),
+    inspectorName: conf("inspectorName", result.inspectorName),
+    orderQuantity: conf("orderQuantity", result.orderQuantity),
+    shipmentQuantity: conf("shipmentQuantity", result.shipmentQuantity),
+    qtyReadyForInspection: conf("qtyReadyForInspection", result.qtyReadyForInspection),
+    inspectedQuantity: conf("inspectedQuantity", result.inspectedQuantity),
+    packedQuantity: conf("packedQuantity", result.packedQuantity),
+    clientName: conf("clientName", result.clientName),
+  };
+
+  return result;
 }
 
 serve(async (req) => {
@@ -100,6 +112,7 @@ CRITICAL MAPPING RULES:
   2) shipmentQuantity = planned/actual shipment quantity
   3) qtyReadyForInspection = quantity ready at factory during inspection
   4) inspectedQuantity = quantity sampled/inspected
+  5) packedQuantity = quantity packed
 - Keep these entities distinct:
   - supplierName (vendor)
   - manufacturer (factory/manufacturer company)
@@ -108,10 +121,15 @@ CRITICAL MAPPING RULES:
 
 For key fields, include confidence levels in fieldConfidence using only "high", "medium", or "low".
 
+If a field is unclear or not found in the document, leave it as empty string or 0. NEVER guess values.
+
+For images: extract any image references, photo descriptions, or figure captions found in the document.
+Each image should have: url (if available), caption, category (one of: product, defect, packaging, shipping_mark, test, uncategorized), reference.
+
 Return your full extraction as a JSON STRING in the function argument "result".
-The JSON should include keys used by the review UI:
+The JSON should include keys:
 productName, supplierName, manufacturer, factoryName, factoryAddress, inspectionDate, poNumber,
-orderQuantity, shipmentQuantity, qtyReadyForInspection, inspectedQuantity,
+orderQuantity, shipmentQuantity, qtyReadyForInspection, inspectedQuantity, packedQuantity,
 destinationCountry, inspectorName, inspectionType, productCategory, skuModel, clientName,
 inspectorComments,
 fieldConfidence, defects, remarks, quantityBreakdown,
@@ -170,7 +188,6 @@ IMPORTANT: Do NOT include any subjective interpretation such as decisions, risk 
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-
       const errText = await response.text();
       console.error("AI gateway error:", response.status, errText);
       throw new Error("AI parsing failed");
@@ -180,9 +197,7 @@ IMPORTANT: Do NOT include any subjective interpretation such as decisions, risk 
     const toolCall = aiResult.choices?.[0]?.message?.tool_calls?.[0];
     const rawArguments = toolCall?.function?.arguments;
 
-    if (!rawArguments) {
-      throw new Error("AI did not return structured data");
-    }
+    if (!rawArguments) throw new Error("AI did not return structured data");
 
     const outerArgs = JSON.parse(rawArguments);
     if (!outerArgs?.result || typeof outerArgs.result !== "string") {
