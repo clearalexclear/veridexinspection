@@ -231,13 +231,32 @@ serve(async (req) => {
       throw new Error(`AI parsing failed: ${response.status}`);
     }
 
-    const aiResult = await response.json();
+    const responseText = await response.text();
+    let aiResult;
+    try {
+      aiResult = JSON.parse(responseText);
+    } catch {
+      console.error("Failed to parse AI gateway response, length:", responseText.length, "preview:", responseText.slice(0, 200));
+      throw new Error("AI returned an incomplete response. The document may be too large — try a shorter report.");
+    }
+
     const toolCall = aiResult.choices?.[0]?.message?.tool_calls?.[0];
     const rawArguments = toolCall?.function?.arguments;
 
-    if (!rawArguments) throw new Error("AI did not return structured data");
+    if (!rawArguments) {
+      console.error("No tool call in response:", JSON.stringify(aiResult.choices?.[0]?.message).slice(0, 500));
+      throw new Error("AI did not return structured data");
+    }
 
-    const outerArgs = JSON.parse(rawArguments);
+    let outerArgs;
+    try {
+      outerArgs = JSON.parse(rawArguments);
+    } catch {
+      // Clean control chars from the arguments string
+      const cleanedArgs = rawArguments.replace(/[\x00-\x1F\x7F]/g, "");
+      outerArgs = JSON.parse(cleanedArgs);
+    }
+
     if (!outerArgs?.result || typeof outerArgs.result !== "string") {
       throw new Error("AI returned invalid extraction payload");
     }
