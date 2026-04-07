@@ -20,8 +20,6 @@ function parseNestedJson(raw: string) {
 
 function normalizeParsedData(raw: Record<string, any>) {
   const fc = raw.fieldConfidence || {};
-
-  // Helper: mark confidence as "low" if field is empty/missing
   const conf = (key: string, value: any) => {
     if (value === null || value === undefined || value === "" || value === 0) return "low";
     return fc[key] || "medium";
@@ -63,7 +61,6 @@ function normalizeParsedData(raw: Record<string, any>) {
     })) : [],
   };
 
-  // Build field confidence with auto-low for empty values
   result.fieldConfidence = {
     productName: conf("productName", result.productName),
     supplierName: conf("supplierName", result.supplierName),
@@ -81,30 +78,9 @@ function normalizeParsedData(raw: Record<string, any>) {
   return result;
 }
 
-serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+const systemPrompt = `You are an expert inspection report parser for quality control reports.
 
-  try {
-    const { fileContent, fileName } = await req.json();
-
-    if (!fileContent) {
-      return new Response(JSON.stringify({ error: "No file content provided" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    const maxChars = 600_000;
-    const trimmedContent = fileContent.length > maxChars
-      ? fileContent.slice(0, maxChars) + "\n\n[Content truncated due to length]"
-      : fileContent;
-
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
-
-    const systemPrompt = `You are an expert inspection report parser for quality control reports.
-
-Extract structured data from this inspection report.
+Extract structured data from this inspection report document.
 
 CRITICAL MAPPING RULES:
 - Keep these quantities distinct:
@@ -137,6 +113,76 @@ aql, tests, measurements, conformity, packagingChecklist, images.
 
 IMPORTANT: Do NOT include any subjective interpretation such as decisions, risk levels, recommendations, business impact, action plans, or supplier scores. Only extract factual inspection data.`;
 
+const tools = [
+  {
+    type: "function",
+    function: {
+      name: "extract_inspection_data",
+      description: "Return extracted inspection data as JSON string",
+      parameters: {
+        type: "object",
+        properties: {
+          result: {
+            type: "string",
+            description: "A JSON string containing all extracted fields",
+          },
+        },
+        required: ["result"],
+      },
+    },
+  },
+];
+
+serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+
+  try {
+    const body = await req.json();
+    const { fileBase64, mimeType, fileName, fileContent } = body;
+
+    // Support both base64 (new) and text (legacy) modes
+    const hasBase64 = !!fileBase64;
+    const hasText = !!fileContent;
+
+    if (!hasBase64 && !hasText) {
+      return new Response(JSON.stringify({ error: "No file content provided" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+
+    // Build message content parts
+    const userParts: any[] = [];
+
+    if (hasBase64) {
+      // Send the document as multimodal inline data (Gemini can read PDFs/images directly)
+      userParts.push({
+        type: "text",
+        text: `Parse this inspection report and extract structured data. File name: ${fileName}`,
+      });
+      userParts.push({
+        type: "image_url",
+        image_url: {
+          url: `data:${mimeType || "application/pdf"};base64,${fileBase64}`,
+        },
+      });
+    } else {
+      // Legacy text mode fallback
+      const maxChars = 600_000;
+      const trimmedContent = fileContent.length > maxChars
+        ? fileContent.slice(0, maxChars) + "\n\n[Content truncated due to length]"
+        : fileContent;
+      userParts.push({
+        type: "text",
+        text: `Parse this inspection report and extract structured data. File name: ${fileName}\n\nContent:\n${trimmedContent}`,
+      });
+    }
+
+    console.log(`Processing file: ${fileName}, mode: ${hasBase64 ? "base64-multimodal" : "text"}, mimeType: ${mimeType || "n/a"}`);
+
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -147,30 +193,9 @@ IMPORTANT: Do NOT include any subjective interpretation such as decisions, risk 
         model: "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
-          {
-            role: "user",
-            content: `Parse this inspection report and extract structured data. File name: ${fileName}\n\nContent:\n${trimmedContent}`,
-          },
+          { role: "user", content: userParts },
         ],
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "extract_inspection_data",
-              description: "Return extracted inspection data as JSON string",
-              parameters: {
-                type: "object",
-                properties: {
-                  result: {
-                    type: "string",
-                    description: "A JSON string containing all extracted fields",
-                  },
-                },
-                required: ["result"],
-              },
-            },
-          },
-        ],
+        tools,
         tool_choice: { type: "function", function: { name: "extract_inspection_data" } },
       }),
     });
@@ -178,19 +203,17 @@ IMPORTANT: Do NOT include any subjective interpretation such as decisions, risk 
     if (!response.ok) {
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again in a moment." }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
         return new Response(JSON.stringify({ error: "AI credits exhausted. Please add funds." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       const errText = await response.text();
       console.error("AI gateway error:", response.status, errText);
-      throw new Error("AI parsing failed");
+      throw new Error(`AI parsing failed: ${response.status}`);
     }
 
     const aiResult = await response.json();
