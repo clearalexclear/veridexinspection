@@ -17,6 +17,7 @@ import RemarksSection from '@/components/review/RemarksSection';
 import QuantityBreakdownSection from '@/components/review/QuantityBreakdownSection';
 import TestsSection from '@/components/review/TestsSection';
 import DefectsReviewSection from '@/components/review/DefectsReviewSection';
+import ImageReviewSection from '@/components/review/ImageReviewSection';
 
 type InspectionOption = { id: string; product_name: string; user_id: string; status: string };
 
@@ -155,6 +156,10 @@ export default function ReviewReport() {
 
   const fc = data.fieldConfidence || {};
   const lowConfCount = Object.values(fc).filter((v) => v === 'low').length;
+
+  // Count empty required fields
+  const requiredFields = ['productName', 'supplierName', 'inspectionDate', 'inspectorName', 'orderQuantity', 'inspectedQuantity'];
+  const emptyCount = requiredFields.filter((f) => !data[f] || data[f] === 0).length;
 
   return (
     <div className="min-h-screen bg-background">
