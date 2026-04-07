@@ -86,13 +86,12 @@ export default function UploadReport() {
 
       if (uploadError) throw uploadError;
 
-      // Read file as base64 for AI parsing
-      const fileBase64 = await readFileAsBase64(file);
-      const mimeType = file.type || 'application/pdf';
+      // Read file for AI parsing (DOCX → text, PDF → base64)
+      const parsePayload = await readFileForParsing(file);
 
       // Call AI parsing edge function
       const { data, error } = await supabase.functions.invoke('parse-inspection', {
-        body: { fileBase64, mimeType, fileName: file.name },
+        body: { ...parsePayload, fileName: file.name },
       });
 
       if (error) throw error;
