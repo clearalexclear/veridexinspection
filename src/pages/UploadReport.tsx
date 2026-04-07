@@ -52,18 +52,25 @@ export default function UploadReport() {
     if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
   }, [handleFile]);
 
-  const readFileAsBase64 = async (f: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = reader.result as string;
-        // Strip the data URL prefix to get raw base64
-        const base64 = result.split(',')[1] || result;
-        resolve(base64);
-      };
-      reader.onerror = () => reject(new Error(`Unable to read file: ${f.name}`));
-      reader.readAsDataURL(f);
-    });
+  const readFileForParsing = async (f: File): Promise<{ fileBase64?: string; fileContent?: string; mimeType: string }> => {
+    if (f.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      // DOCX: extract text with mammoth (Gemini can't read DOCX binary)
+      const arrayBuffer = await f.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      return { fileContent: result.value, mimeType: f.type };
+    } else {
+      // PDF: send as base64 for Gemini multimodal processing
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataUrl = reader.result as string;
+          const base64 = dataUrl.split(',')[1] || dataUrl;
+          resolve({ fileBase64: base64, mimeType: f.type || 'application/pdf' });
+        };
+        reader.onerror = () => reject(new Error(`Unable to read file: ${f.name}`));
+        reader.readAsDataURL(f);
+      });
+    }
   };
 
   const handleUploadAndParse = async () => {
