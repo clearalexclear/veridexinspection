@@ -6,14 +6,28 @@ const corsHeaders = {
 };
 
 function parseNestedJson(raw: string) {
+  // Strip markdown fences
+  let cleaned = raw
+    .replace(/^```json\s*/i, "")
+    .replace(/^```/i, "")
+    .replace(/```$/i, "")
+    .trim();
+
+  // Find JSON boundaries
+  const jsonStart = cleaned.search(/[\{\[]/);
+  const jsonEnd = cleaned.lastIndexOf(jsonStart !== -1 && cleaned[jsonStart] === '[' ? ']' : '}');
+  if (jsonStart !== -1 && jsonEnd !== -1) {
+    cleaned = cleaned.substring(jsonStart, jsonEnd + 1);
+  }
+
   try {
-    return JSON.parse(raw);
+    return JSON.parse(cleaned);
   } catch {
-    const cleaned = raw
-      .replace(/^```json\s*/i, "")
-      .replace(/^```/i, "")
-      .replace(/```$/i, "")
-      .trim();
+    // Remove control characters and fix trailing commas
+    cleaned = cleaned
+      .replace(/[\x00-\x1F\x7F]/g, "")
+      .replace(/,\s*}/g, "}")
+      .replace(/,\s*]/g, "]");
     return JSON.parse(cleaned);
   }
 }
