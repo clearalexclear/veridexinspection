@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import mammoth from 'mammoth';
 
 import {
   Upload, FileText, Loader2, ArrowLeft, Sparkles, X, AlertTriangle,
