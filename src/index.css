@@ -158,3 +158,39 @@
   from { opacity: 0; transform: translateY(16px); filter: blur(4px); }
   to { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
+
+@media print {
+  /* Hide navigation, buttons, and interactive elements */
+  nav, .print\\:hidden, button:not(.print-visible), footer {
+    display: none !important;
+  }
+
+  /* Reset backgrounds for clean printing */
+  body, .min-h-screen {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Remove shadows and borders for cleaner look */
+  .report-card {
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+    break-inside: avoid;
+  }
+
+  /* Ensure sections don't break awkwardly */
+  section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Show full content */
+  * {
+    overflow: visible !important;
+  }
+
+  @page {
+    margin: 1cm;
+    size: A4;
+  }
+}
