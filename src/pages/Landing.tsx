@@ -95,9 +95,9 @@ export default function Landing() {
     <div className="min-h-screen bg-background">
       {/* Nav */}
       <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
           <button onClick={() => navigate('/')} className="flex items-center gap-2.5" aria-label="Inspectra home">
-            <img src={inspectraLogo} alt="Inspectra logo" className="h-8 w-auto" />
+            <img src={inspectraLogo} alt="Inspectra logo" className="h-14 w-auto" />
           </button>
           <div className="flex items-center gap-3">
             {user ? (
