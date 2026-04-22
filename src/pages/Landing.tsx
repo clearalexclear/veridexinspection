@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
+import inspectraLogo from '@/assets/inspectra-logo-full.png';
 
 import { useAuth } from '@/hooks/useAuth';
 import {
@@ -95,8 +96,9 @@ export default function Landing() {
       {/* Nav */}
       <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-          </div>
+          <button onClick={() => navigate('/')} className="flex items-center gap-2.5" aria-label="Inspectra home">
+            <img src={inspectraLogo} alt="Inspectra logo" className="h-8 w-auto" />
+          </button>
           <div className="flex items-center gap-3">
             {user ? (
               <Button size="sm" className="btn-gradient" onClick={() => navigate('/dashboard')}>Dashboard</Button>
