@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import inspectraLogo from '@/assets/inspectra-logo-full.png';
+import veridexLogo from '@/assets/veridex-logo-full.png';
 
 import { useAuth } from '@/hooks/useAuth';
 import {
@@ -61,7 +61,7 @@ const traditionalPains = [
   'Hard to compare inspections',
   'Takes days to understand',
 ];
-const inspectraWins = [
+const veridexWins = [
   'Structured, fact-based reports',
   'Defects, AQL, and tests — clearly organized',
   'Visual proof with categorized photos',
@@ -96,8 +96,8 @@ export default function Landing() {
       {/* Nav */}
       <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-36 flex items-center justify-between">
-          <button onClick={() => navigate('/')} className="flex items-center gap-2.5" aria-label="Inspectra home">
-            <img src={inspectraLogo} alt="Inspectra logo" className="h-28 w-auto" />
+          <button onClick={() => navigate('/')} className="flex items-center gap-2.5" aria-label="Veridex home">
+            <img src={veridexLogo} alt="Veridex logo" className="h-28 w-auto" />
           </button>
           <div className="flex items-center gap-3">
             {user ? (
@@ -119,10 +119,10 @@ export default function Landing() {
 
         <div ref={hero.ref} className={`relative max-w-4xl mx-auto px-4 sm:px-6 text-center transition-all duration-700 ease-out ${hero.cls}`}>
           <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-foreground leading-[1.08] mb-6">
-            Make sure your shipment is<br className="hidden sm:block" /> Amazon-ready before it leaves the factory.
+            The clarity layer for<br className="hidden sm:block" /> inspection data.
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Structured inspection data — defects, tests, AQL, and photos — delivered in 24h.
+            Veridex turns factory inspections into structured, fact-based data — defects, AQL, tests, and photos — delivered in 24h.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button className="btn-gradient h-12 px-8 rounded-lg text-base inline-flex items-center gap-2" onClick={() => navigate('/book')}>
@@ -211,7 +211,7 @@ export default function Landing() {
       <section className="py-20 sm:py-24">
         <div ref={contrast.ref} className={`max-w-5xl mx-auto px-4 sm:px-6 transition-all duration-700 ease-out ${contrast.cls}`}>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground text-center mb-4">Most inspection reports are useless.</h2>
-          <p className="text-muted-foreground text-center max-w-xl mx-auto mb-14">Traditional reports bury the facts in 30 pages. Inspectra structures everything clearly.</p>
+          <p className="text-muted-foreground text-center max-w-xl mx-auto mb-14">Traditional reports bury the facts in 30 pages. Veridex structures everything clearly.</p>
 
           <div className="grid sm:grid-cols-2 gap-6">
             <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
@@ -223,10 +223,10 @@ export default function Landing() {
               </ul>
             </div>
             <div className="rounded-2xl border-2 border-primary bg-card p-6 sm:p-8 shadow-md relative transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
-              <div className="absolute -top-3 left-6 px-3 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-semibold shadow-sm">Inspectra</div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-6">Inspectra Reports</p>
+              <div className="absolute -top-3 left-6 px-3 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-semibold shadow-sm">Veridex</div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-6">Veridex Reports</p>
               <ul className="space-y-4">
-                {inspectraWins.map((item) => (
+                {veridexWins.map((item) => (
                   <li key={item} className="flex items-start gap-3 text-foreground"><Check className="w-5 h-5 text-success shrink-0 mt-0.5" /><span>{item}</span></li>
                 ))}
               </ul>
@@ -335,7 +335,7 @@ export default function Landing() {
       <footer className="border-t border-border py-8 bg-background">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">© {new Date().getFullYear()} Inspectra</span>
+            <span className="text-xs text-muted-foreground">© {new Date().getFullYear()} Veridex</span>
           </div>
           <div className="flex gap-6 text-xs text-muted-foreground">
             <button onClick={() => navigate('/sample-report')} className="hover:text-foreground transition-colors">Sample Report</button>

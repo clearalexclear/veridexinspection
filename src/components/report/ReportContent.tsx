@@ -281,7 +281,7 @@ export default function ReportContent({ inspectionId, showBackButton, isSample }
       </main>
 
       <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
-        <p>Confidential — Inspectra Quality Services © {new Date().getFullYear()}</p>
+        <p>Confidential — Veridex © {new Date().getFullYear()}</p>
         <p className="mt-1">Report {report.id} — Generated {report.date}</p>
         <p className="mt-2 italic text-[10px]">This report presents structured inspection data without interpretation. Final decisions remain the responsibility of the client.</p>
       </footer>

@@ -75,7 +75,7 @@ export default function Auth() {
             
             <CardTitle className="text-xl">{isSignUp ? 'Create your account' : 'Welcome back'}</CardTitle>
             <CardDescription>
-              {isSignUp ? 'Start managing your inspections' : 'Sign in to your Inspectra dashboard'}
+              {isSignUp ? 'Start managing your inspections' : 'Sign in to your Veridex dashboard'}
             </CardDescription>
           </CardHeader>
           <CardContent>
