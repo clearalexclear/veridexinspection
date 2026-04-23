@@ -123,7 +123,7 @@ export default function UploadReport() {
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <span className="font-semibold text-foreground text-sm">Inspectra</span>
+            <span className="font-semibold text-foreground text-sm">Veridex</span>
           </div>
           <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
             <ArrowLeft className="w-4 h-4 mr-1" /> Dashboard
@@ -253,7 +253,7 @@ export default function UploadReport() {
             <AlertTriangle className="w-4 h-4 text-warning shrink-0 mt-0.5" />
             <div className="text-xs text-muted-foreground">
               <p className="font-medium text-foreground mb-1">How it works</p>
-              <p>Our AI reads your inspection report and extracts key data — defects, measurements, AQL results, and more. You'll review and edit everything before generating your Inspectra report.</p>
+              <p>Our AI reads your inspection report and extracts key data — defects, measurements, AQL results, and more. You'll review and edit everything before generating your Veridex report.</p>
             </div>
           </CardContent>
         </Card>

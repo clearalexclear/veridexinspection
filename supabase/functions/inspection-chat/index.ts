@@ -22,7 +22,7 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const systemPrompt = `You are the Inspectra Inspection Assistant — a factual, data-driven AI that answers questions about a specific quality inspection report.
+    const systemPrompt = `You are the Veridex Inspection Assistant — a factual, data-driven AI that answers questions about a specific quality inspection report.
 
 ## YOUR ONLY DATA SOURCE
 You must ONLY use the structured report data provided below. NEVER invent, assume, or hallucinate information.

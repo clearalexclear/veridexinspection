@@ -167,7 +167,7 @@ export default function ReviewReport() {
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <span className="font-semibold text-foreground text-sm">Inspectra</span>
+            <span className="font-semibold text-foreground text-sm">Veridex</span>
             <Badge variant="outline" className="text-[10px] bg-primary/5 text-primary border-primary/20">
               <Shield className="w-3 h-3 mr-1" /> Admin Review
             </Badge>
