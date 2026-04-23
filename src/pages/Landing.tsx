@@ -119,7 +119,7 @@ export default function Landing() {
 
         <div ref={hero.ref} className={`relative max-w-4xl mx-auto px-4 sm:px-6 text-center transition-all duration-700 ease-out ${hero.cls}`}>
           <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-foreground leading-[1.08] mb-6">
-            The clarity layer for<br className="hidden sm:block" /> inspection data.
+            Make sure your shipment is<br className="hidden sm:block" /> Amazon-ready before it leaves the factory.
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
             Veridex turns factory inspections into structured, fact-based data — defects, AQL, tests, and photos — delivered in 24h.
