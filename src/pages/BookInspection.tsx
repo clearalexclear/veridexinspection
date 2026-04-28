@@ -70,11 +70,22 @@ export default function BookInspection() {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <CheckCircle className="w-12 h-12 text-success mx-auto mb-3" />
-            <CardTitle className="text-xl">Inspection Booked!</CardTitle>
-            <CardDescription>Your inspection has been scheduled. You can track it in your dashboard.</CardDescription>
+            <CardTitle className="text-xl">Inspection Request Received!</CardTitle>
+            <CardDescription>
+              {user
+                ? 'Your inspection has been scheduled. You can track it in your dashboard.'
+                : "Thanks! We've received your request and will contact you shortly by email."}
+            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <Button className="w-full" onClick={() => navigate('/dashboard')}>Go to Dashboard</Button>
+          <CardContent className="space-y-2">
+            {user ? (
+              <Button className="w-full" onClick={() => navigate('/dashboard')}>Go to Dashboard</Button>
+            ) : (
+              <>
+                <Button className="w-full" onClick={() => navigate('/')}>Back to Home</Button>
+                <Button variant="outline" className="w-full" onClick={() => navigate('/auth')}>Create an account to track</Button>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
