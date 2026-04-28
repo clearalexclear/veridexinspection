@@ -25,44 +25,36 @@ export default function BookInspection() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
-  // Redirect to auth if not logged in
-  if (!authLoading && !user) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            
-            <CardTitle className="text-xl">Sign in to book</CardTitle>
-            <CardDescription>You need an account to book an inspection.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button className="w-full" onClick={() => navigate('/auth')}>Sign In / Sign Up</Button>
-            <Button variant="outline" className="w-full" onClick={() => navigate('/')}>
-              <ArrowLeft className="w-4 h-4 mr-1" /> Back to website
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
     setLoading(true);
     setError('');
 
-    const { error: err } = await supabase.from('inspections').insert({
-      user_id: user.id,
-      product_name: productName.trim(),
-      factory_location: factoryLocation.trim(),
-      quantity: parseInt(quantity),
-      inspection_date: inspectionDate,
-      contact_name: contactName.trim() || null,
-      contact_email: contactEmail.trim() || null,
-      contact_phone: contactPhone.trim() || null,
-      notes: notes.trim() || null,
-    });
+    let err;
+    if (user) {
+      ({ error: err } = await supabase.from('inspections').insert({
+        user_id: user.id,
+        product_name: productName.trim(),
+        factory_location: factoryLocation.trim(),
+        quantity: parseInt(quantity),
+        inspection_date: inspectionDate,
+        contact_name: contactName.trim() || null,
+        contact_email: contactEmail.trim() || null,
+        contact_phone: contactPhone.trim() || null,
+        notes: notes.trim() || null,
+      }));
+    } else {
+      ({ error: err } = await supabase.from('guest_inspection_requests').insert({
+        product_name: productName.trim(),
+        factory_location: factoryLocation.trim(),
+        quantity: parseInt(quantity),
+        inspection_date: inspectionDate,
+        contact_name: contactName.trim(),
+        contact_email: contactEmail.trim(),
+        contact_phone: contactPhone.trim() || null,
+        notes: notes.trim() || null,
+      }));
+    }
 
     if (err) {
       setError(err.message);
@@ -78,11 +70,22 @@ export default function BookInspection() {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <CheckCircle className="w-12 h-12 text-success mx-auto mb-3" />
-            <CardTitle className="text-xl">Inspection Booked!</CardTitle>
-            <CardDescription>Your inspection has been scheduled. You can track it in your dashboard.</CardDescription>
+            <CardTitle className="text-xl">Inspection Request Received!</CardTitle>
+            <CardDescription>
+              {user
+                ? 'Your inspection has been scheduled. You can track it in your dashboard.'
+                : "Thanks! We've received your request and will contact you shortly by email."}
+            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <Button className="w-full" onClick={() => navigate('/dashboard')}>Go to Dashboard</Button>
+          <CardContent className="space-y-2">
+            {user ? (
+              <Button className="w-full" onClick={() => navigate('/dashboard')}>Go to Dashboard</Button>
+            ) : (
+              <>
+                <Button className="w-full" onClick={() => navigate('/')}>Back to Home</Button>
+                <Button variant="outline" className="w-full" onClick={() => navigate('/auth')}>Create an account to track</Button>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
