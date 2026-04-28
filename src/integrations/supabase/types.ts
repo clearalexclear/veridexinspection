@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      guest_inspection_requests: {
+        Row: {
+          contact_email: string
+          contact_name: string
+          contact_phone: string | null
+          created_at: string
+          factory_location: string
+          id: string
+          inspection_date: string
+          notes: string | null
+          product_name: string
+          quantity: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          contact_email: string
+          contact_name: string
+          contact_phone?: string | null
+          created_at?: string
+          factory_location: string
+          id?: string
+          inspection_date: string
+          notes?: string | null
+          product_name: string
+          quantity: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          contact_email?: string
+          contact_name?: string
+          contact_phone?: string | null
+          created_at?: string
+          factory_location?: string
+          id?: string
+          inspection_date?: string
+          notes?: string | null
+          product_name?: string
+          quantity?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       inspections: {
         Row: {
           contact_email: string | null
