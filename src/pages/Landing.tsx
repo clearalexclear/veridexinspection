@@ -92,6 +92,45 @@ export default function Landing() {
   const pricing = useReveal();
   const cta = useReveal();
 
+  // Scroll-depth tracking (once per session)
+  useEffect(() => {
+    const onScroll = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      if (max <= 0) return;
+      const pct = (h.scrollTop / max) * 100;
+      const tiers: Array<[number, string]> = [
+        [25, 'Homepage 25 Percent Scroll'],
+        [50, 'Homepage 50 Percent Scroll'],
+        [75, 'Homepage 75 Percent Scroll'],
+        [90, 'Homepage 90 Percent Scroll'],
+      ];
+      for (const [t, name] of tiers) {
+        if (pct >= t) ttqTrackOnce(`scroll-${t}`, 'ViewContent', { content_name: name, content_type: 'scroll' });
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Pricing section in-view
+  useEffect(() => {
+    const el = pricing.ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        ttqTrackOnce('pricing-view', 'ViewContent', { content_name: 'Pricing Section Viewed', content_type: 'pricing' });
+        io.disconnect();
+      }
+    }, { threshold: 0.3 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [pricing.ref]);
+
+  const trackCta = (text: string) => ttqTrack('ClickButton', { content_name: 'Primary CTA Click', button_text: text });
+  const trackPricing = (plan: string) => ttqTrack('ClickButton', { content_name: 'Pricing Plan Click', plan_name: plan });
+  const trackSample = () => ttqTrack('ClickButton', { content_name: 'View Sample Report Click', content_type: 'cta' });
+
   return (
     <div className="min-h-screen bg-background">
       {/* Nav */}
