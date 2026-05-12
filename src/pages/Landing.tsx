@@ -145,7 +145,7 @@ export default function Landing() {
             ) : (
               <>
                 <Button variant="ghost" size="sm" onClick={() => navigate('/auth')}>Sign In</Button>
-                <Button size="sm" className="btn-gradient" onClick={() => navigate('/auth')}>Get Started</Button>
+                <Button size="sm" className="btn-gradient" onClick={() => { trackCta('Get Started'); navigate('/auth'); }}>Get Started</Button>
               </>
             )}
           </div>
