@@ -13,6 +13,7 @@ import SampleReport from "./pages/SampleReport";
 import UploadReport from "./pages/UploadReport";
 import ReviewReport from "./pages/ReviewReport";
 import AdminPanel from "./pages/AdminPanel";
+import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/upload" element={<UploadReport />} />
             <Route path="/review-report" element={<ReviewReport />} />
             <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/unsubscribe" element={<Unsubscribe />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
