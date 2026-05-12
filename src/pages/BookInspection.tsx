@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ttqTrack } from '@/lib/tiktok';
+import { ttqTrack, ttqTrackOnce } from '@/lib/tiktok';
 
 import { ArrowLeft, Loader2, CheckCircle } from 'lucide-react';
 
