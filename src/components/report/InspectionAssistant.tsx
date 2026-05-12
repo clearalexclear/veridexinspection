@@ -110,6 +110,7 @@ export function InspectionAssistant({ reportContext }: { reportContext: ReportCo
 
   const send = async (text: string) => {
     if (!text.trim() || loading) return;
+    ttqTrack('ClickButton', { content_name: 'Report Assistant Question Asked', content_type: 'assistant' });
     const userMsg: Msg = { role: 'user', content: text.trim() };
     const updated = [...messages, userMsg];
     setMessages(updated);
