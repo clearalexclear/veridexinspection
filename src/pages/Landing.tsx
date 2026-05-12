@@ -365,7 +365,7 @@ export default function Landing() {
             Stop guessing.<br />Get the facts before you ship.
           </h2>
           <p className="mb-8" style={{ color: 'hsl(215 16% 60%)' }}>Book your inspection and get your structured report in 24h.</p>
-          <button className="btn-gradient h-12 px-10 rounded-lg text-base inline-flex items-center gap-2" onClick={() => navigate('/book')}>
+          <button className="btn-gradient h-12 px-10 rounded-lg text-base inline-flex items-center gap-2" onClick={() => { trackCta('Book Your Inspection'); navigate('/book'); }}>
             Book Your Inspection <ArrowRight className="w-4 h-4" />
           </button>
         </div>
