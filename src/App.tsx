@@ -15,6 +15,7 @@ import ReviewReport from "./pages/ReviewReport";
 import AdminPanel from "./pages/AdminPanel";
 import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
+import TikTokRouteTracker from "./components/TikTokRouteTracker";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
+          <TikTokRouteTracker />
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/auth" element={<Auth />} />
