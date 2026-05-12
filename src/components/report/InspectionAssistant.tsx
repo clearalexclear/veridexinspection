@@ -149,7 +149,7 @@ export function InspectionAssistant({ reportContext }: { reportContext: ReportCo
   if (!open) {
     return (
       <Button
-        onClick={() => setOpen(true)}
+        onClick={() => { ttqTrack('ClickButton', { content_name: 'Report Assistant Opened', content_type: 'assistant' }); setOpen(true); }}
         className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full shadow-lg"
         size="icon"
       >
