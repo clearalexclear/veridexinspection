@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import veridexLogo from '@/assets/veridex-logo-full.png';
-import { ttqTrack } from '@/lib/tiktok';
+import { ttqTrack, ttqTrackOnce } from '@/lib/tiktok';
 
 import { useAuth } from '@/hooks/useAuth';
 import {
