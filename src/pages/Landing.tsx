@@ -165,10 +165,10 @@ export default function Landing() {
             Veridex turns factory inspections into structured, fact-based data — defects, AQL, tests, and photos — delivered in 24h.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button className="btn-gradient h-12 px-8 rounded-lg text-base inline-flex items-center gap-2" onClick={() => navigate('/book')}>
+            <button className="btn-gradient h-12 px-8 rounded-lg text-base inline-flex items-center gap-2" onClick={() => { trackCta('Book Inspection'); navigate('/book'); }}>
               Book Inspection <ArrowRight className="w-4 h-4" />
             </button>
-            <Button variant="outline" size="lg" className="px-8 h-12 text-base border-primary/30 text-primary hover:bg-primary/5" onClick={() => navigate('/sample-report')}>
+            <Button variant="outline" size="lg" className="px-8 h-12 text-base border-primary/30 text-primary hover:bg-primary/5" onClick={() => { trackSample(); navigate('/sample-report'); }}>
               <FileCheck className="w-4 h-4 mr-1" /> View Sample Report
             </Button>
           </div>
