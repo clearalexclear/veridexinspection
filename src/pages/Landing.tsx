@@ -378,7 +378,7 @@ export default function Landing() {
             <span className="text-xs text-muted-foreground">© {new Date().getFullYear()} Veridex</span>
           </div>
           <div className="flex gap-6 text-xs text-muted-foreground">
-            <button onClick={() => navigate('/sample-report')} className="hover:text-foreground transition-colors">Sample Report</button>
+            <button onClick={() => { trackSample(); navigate('/sample-report'); }} className="hover:text-foreground transition-colors">Sample Report</button>
             <button onClick={() => navigate('/auth')} className="hover:text-foreground transition-colors">Sign In</button>
           </div>
         </div>
