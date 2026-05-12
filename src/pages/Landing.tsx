@@ -350,7 +350,7 @@ export default function Landing() {
                 <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> Priority scheduling</li>
                 <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> Dedicated inspector</li>
               </ul>
-              <button className="btn-gradient w-full h-10 rounded-lg text-sm" onClick={() => navigate('/book')}>Book Priority</button>
+              <button className="btn-gradient w-full h-10 rounded-lg text-sm" onClick={() => { trackPricing('Priority Inspection'); trackCta('Book Priority'); navigate('/book'); }}>Book Priority</button>
             </div>
           </div>
         </div>
