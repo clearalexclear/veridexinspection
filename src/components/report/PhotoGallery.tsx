@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, ZoomIn } from 'lucide-react';
 import type { PhotoItem } from '@/data/reportData';
 import { cn } from '@/lib/utils';
+import { ttqTrackOnce } from '@/lib/tiktok';
 
 const categories = [
   { key: 'all', label: 'All' },
