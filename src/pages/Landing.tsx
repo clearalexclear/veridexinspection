@@ -240,7 +240,7 @@ export default function Landing() {
           </div>
 
           <p className="text-center mt-8">
-            <button className="text-accent hover:underline text-sm font-medium inline-flex items-center gap-1" onClick={() => navigate('/sample-report')}>
+            <button className="text-accent hover:underline text-sm font-medium inline-flex items-center gap-1" onClick={() => { trackSample(); navigate('/sample-report'); }}>
               Explore full sample report <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </p>
