@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
+import { ttqTrack } from '@/lib/tiktok';
 import {
   FileText, ClipboardList, Target, CheckSquare,
   AlertTriangle, Camera, Package, Zap, Ruler, Box, MessageSquare,
