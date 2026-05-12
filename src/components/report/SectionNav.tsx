@@ -45,7 +45,10 @@ export function SectionNav() {
     return () => observer.disconnect();
   }, []);
 
-  const scrollTo = (id: string) => {
+  const scrollTo = (id: string, label: string) => {
+    if (typeof window !== 'undefined' && window.location.pathname === '/sample-report') {
+      ttqTrack('ClickButton', { content_name: `Sample Report - ${label} Tab`, content_type: 'report_section' });
+    }
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
