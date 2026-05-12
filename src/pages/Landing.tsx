@@ -337,7 +337,7 @@ export default function Landing() {
                 <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> Photo gallery included</li>
                 <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> AQL, defects & test results</li>
               </ul>
-              <Button className="w-full" variant="outline" onClick={() => navigate('/book')}>Book Now</Button>
+              <Button className="w-full" variant="outline" onClick={() => { trackPricing('Pre-Shipment Inspection'); trackCta('Book Now'); navigate('/book'); }}>Book Now</Button>
             </div>
 
             <div className="rounded-2xl border-2 border-primary bg-card p-8 text-left shadow-lg relative transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
