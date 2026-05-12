@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ttqTrack } from '@/lib/tiktok';
 
 import { ArrowLeft, Loader2, CheckCircle } from 'lucide-react';
 
@@ -81,6 +82,8 @@ export default function BookInspection() {
           },
         },
       }).catch((e) => console.error('Notification email failed', e));
+      ttqTrack('SubmitForm', { content_name: 'Inspection Quote Request' });
+      ttqTrack('Contact', { content_name: 'Inspection Lead' });
       setSuccess(true);
     }
     setLoading(false);
