@@ -30,9 +30,11 @@ export default function BookInspection() {
     setLoading(true);
     setError('');
 
+    const bookingId = crypto.randomUUID();
     let err;
     if (user) {
       ({ error: err } = await supabase.from('inspections').insert({
+        id: bookingId,
         user_id: user.id,
         product_name: productName.trim(),
         factory_location: factoryLocation.trim(),
@@ -45,6 +47,7 @@ export default function BookInspection() {
       }));
     } else {
       ({ error: err } = await supabase.from('guest_inspection_requests').insert({
+        id: bookingId,
         product_name: productName.trim(),
         factory_location: factoryLocation.trim(),
         quantity: parseInt(quantity),
@@ -59,6 +62,25 @@ export default function BookInspection() {
     if (err) {
       setError(err.message);
     } else {
+      // Fire-and-forget admin notification email
+      supabase.functions.invoke('send-transactional-email', {
+        body: {
+          templateName: 'booking-notification',
+          recipientEmail: 'alexandre@softorgsarl.com',
+          idempotencyKey: `booking-notify-${bookingId}`,
+          templateData: {
+            productName: productName.trim(),
+            factoryLocation: factoryLocation.trim(),
+            quantity: quantity,
+            inspectionDate,
+            contactName: user ? (contactName.trim() || user.email) : contactName.trim(),
+            contactEmail: user ? (contactEmail.trim() || user.email) : contactEmail.trim(),
+            contactPhone: contactPhone.trim(),
+            notes: notes.trim(),
+            accountType: user ? 'Signed-in user' : 'Guest',
+          },
+        },
+      }).catch((e) => console.error('Notification email failed', e));
       setSuccess(true);
     }
     setLoading(false);
