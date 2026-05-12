@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ttqTrack } from '@/lib/tiktok';
+import { ttqTrack, ttqTrackOnce } from '@/lib/tiktok';
 
 import { ArrowLeft, Loader2, CheckCircle } from 'lucide-react';
 
@@ -130,7 +130,7 @@ export default function BookInspection() {
             <CardDescription>Tell us about your product and we'll arrange the inspection.</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} onFocus={() => ttqTrackOnce('quote-form-started', 'ClickButton', { content_name: 'Quote Form Started' })} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="product">Product Name</Label>
                 <Input id="product" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="e.g. Stainless Steel Water Bottle 750ml" required />

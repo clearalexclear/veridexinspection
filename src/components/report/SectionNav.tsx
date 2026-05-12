@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
+import { ttqTrack } from '@/lib/tiktok';
 import {
   FileText, ClipboardList, Target, CheckSquare,
   AlertTriangle, Camera, Package, Zap, Ruler, Box, MessageSquare,
@@ -44,7 +45,10 @@ export function SectionNav() {
     return () => observer.disconnect();
   }, []);
 
-  const scrollTo = (id: string) => {
+  const scrollTo = (id: string, label: string) => {
+    if (typeof window !== 'undefined' && window.location.pathname === '/sample-report') {
+      ttqTrack('ClickButton', { content_name: `Sample Report - ${label} Tab`, content_type: 'report_section' });
+    }
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -58,7 +62,7 @@ export function SectionNav() {
             return (
               <button
                 key={s.id}
-                onClick={() => scrollTo(s.id)}
+                onClick={() => scrollTo(s.id, s.label)}
                 className={cn(
                   'flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-200',
                   'hover:bg-secondary active:scale-[0.97]',

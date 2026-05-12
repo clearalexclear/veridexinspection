@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, ZoomIn } from 'lucide-react';
 import type { PhotoItem } from '@/data/reportData';
 import { cn } from '@/lib/utils';
+import { ttqTrackOnce } from '@/lib/tiktok';
 
 const categories = [
   { key: 'all', label: 'All' },
@@ -40,7 +41,7 @@ export function PhotoGallery({ photos }: { photos: PhotoItem[] }) {
         {filtered.map(photo => (
           <button
             key={photo.id}
-            onClick={() => setLightbox(photo)}
+            onClick={() => { ttqTrackOnce('photo-gallery-open', 'ViewContent', { content_name: 'Photo Evidence Gallery Viewed', content_type: 'report_section' }); setLightbox(photo); }}
             className="group report-card overflow-hidden cursor-pointer active:scale-[0.98] transition-transform"
           >
             <div className="relative aspect-[3/2] overflow-hidden">

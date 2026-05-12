@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import veridexLogo from '@/assets/veridex-logo-full.png';
-import { ttqTrack } from '@/lib/tiktok';
+import { ttqTrack, ttqTrackOnce } from '@/lib/tiktok';
 
 import { useAuth } from '@/hooks/useAuth';
 import {
@@ -92,6 +92,45 @@ export default function Landing() {
   const pricing = useReveal();
   const cta = useReveal();
 
+  // Scroll-depth tracking (once per session)
+  useEffect(() => {
+    const onScroll = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      if (max <= 0) return;
+      const pct = (h.scrollTop / max) * 100;
+      const tiers: Array<[number, string]> = [
+        [25, 'Homepage 25 Percent Scroll'],
+        [50, 'Homepage 50 Percent Scroll'],
+        [75, 'Homepage 75 Percent Scroll'],
+        [90, 'Homepage 90 Percent Scroll'],
+      ];
+      for (const [t, name] of tiers) {
+        if (pct >= t) ttqTrackOnce(`scroll-${t}`, 'ViewContent', { content_name: name, content_type: 'scroll' });
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Pricing section in-view
+  useEffect(() => {
+    const el = pricing.ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        ttqTrackOnce('pricing-view', 'ViewContent', { content_name: 'Pricing Section Viewed', content_type: 'pricing' });
+        io.disconnect();
+      }
+    }, { threshold: 0.3 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [pricing.ref]);
+
+  const trackCta = (text: string) => ttqTrack('ClickButton', { content_name: 'Primary CTA Click', button_text: text });
+  const trackPricing = (plan: string) => ttqTrack('ClickButton', { content_name: 'Pricing Plan Click', plan_name: plan });
+  const trackSample = () => ttqTrack('ClickButton', { content_name: 'View Sample Report Click', content_type: 'cta' });
+
   return (
     <div className="min-h-screen bg-background">
       {/* Nav */}
@@ -106,7 +145,7 @@ export default function Landing() {
             ) : (
               <>
                 <Button variant="ghost" size="sm" onClick={() => navigate('/auth')}>Sign In</Button>
-                <Button size="sm" className="btn-gradient" onClick={() => navigate('/auth')}>Get Started</Button>
+                <Button size="sm" className="btn-gradient" onClick={() => { trackCta('Get Started'); navigate('/auth'); }}>Get Started</Button>
               </>
             )}
           </div>
@@ -126,10 +165,10 @@ export default function Landing() {
             Veridex turns factory inspections into structured, fact-based data — defects, AQL, tests, and photos — delivered in 24h.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button className="btn-gradient h-12 px-8 rounded-lg text-base inline-flex items-center gap-2" onClick={() => navigate('/book')}>
+            <button className="btn-gradient h-12 px-8 rounded-lg text-base inline-flex items-center gap-2" onClick={() => { trackCta('Book Inspection'); navigate('/book'); }}>
               Book Inspection <ArrowRight className="w-4 h-4" />
             </button>
-            <Button variant="outline" size="lg" className="px-8 h-12 text-base border-primary/30 text-primary hover:bg-primary/5" onClick={() => navigate('/sample-report')}>
+            <Button variant="outline" size="lg" className="px-8 h-12 text-base border-primary/30 text-primary hover:bg-primary/5" onClick={() => { trackSample(); navigate('/sample-report'); }}>
               <FileCheck className="w-4 h-4 mr-1" /> View Sample Report
             </Button>
           </div>
@@ -201,7 +240,7 @@ export default function Landing() {
           </div>
 
           <p className="text-center mt-8">
-            <button className="text-accent hover:underline text-sm font-medium inline-flex items-center gap-1" onClick={() => navigate('/sample-report')}>
+            <button className="text-accent hover:underline text-sm font-medium inline-flex items-center gap-1" onClick={() => { trackSample(); navigate('/sample-report'); }}>
               Explore full sample report <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </p>
@@ -298,7 +337,7 @@ export default function Landing() {
                 <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> Photo gallery included</li>
                 <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> AQL, defects & test results</li>
               </ul>
-              <Button className="w-full" variant="outline" onClick={() => navigate('/book')}>Book Now</Button>
+              <Button className="w-full" variant="outline" onClick={() => { trackPricing('Pre-Shipment Inspection'); trackCta('Book Now'); navigate('/book'); }}>Book Now</Button>
             </div>
 
             <div className="rounded-2xl border-2 border-primary bg-card p-8 text-left shadow-lg relative transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
@@ -311,7 +350,7 @@ export default function Landing() {
                 <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> Priority scheduling</li>
                 <li className="flex items-center gap-2"><Check className="w-4 h-4 text-success" /> Dedicated inspector</li>
               </ul>
-              <button className="btn-gradient w-full h-10 rounded-lg text-sm" onClick={() => navigate('/book')}>Book Priority</button>
+              <button className="btn-gradient w-full h-10 rounded-lg text-sm" onClick={() => { trackPricing('Priority Inspection'); trackCta('Book Priority'); navigate('/book'); }}>Book Priority</button>
             </div>
           </div>
         </div>
@@ -326,7 +365,7 @@ export default function Landing() {
             Stop guessing.<br />Get the facts before you ship.
           </h2>
           <p className="mb-8" style={{ color: 'hsl(215 16% 60%)' }}>Book your inspection and get your structured report in 24h.</p>
-          <button className="btn-gradient h-12 px-10 rounded-lg text-base inline-flex items-center gap-2" onClick={() => navigate('/book')}>
+          <button className="btn-gradient h-12 px-10 rounded-lg text-base inline-flex items-center gap-2" onClick={() => { trackCta('Book Your Inspection'); navigate('/book'); }}>
             Book Your Inspection <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -339,7 +378,7 @@ export default function Landing() {
             <span className="text-xs text-muted-foreground">© {new Date().getFullYear()} Veridex</span>
           </div>
           <div className="flex gap-6 text-xs text-muted-foreground">
-            <button onClick={() => navigate('/sample-report')} className="hover:text-foreground transition-colors">Sample Report</button>
+            <button onClick={() => { trackSample(); navigate('/sample-report'); }} className="hover:text-foreground transition-colors">Sample Report</button>
             <button onClick={() => navigate('/auth')} className="hover:text-foreground transition-colors">Sign In</button>
           </div>
         </div>
