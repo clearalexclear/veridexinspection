@@ -25,6 +25,7 @@ export default function BookInspection() {
   const [honeypot, setHoneypot] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("Thanks — we received your inspection request. We'll contact you shortly.");
   const [error, setError] = useState('');
 
   const resetForm = () => {
@@ -95,13 +96,20 @@ export default function BookInspection() {
       });
 
       const data = await res.json().catch(() => ({}));
-      if (!res.ok || (data && data.success === 'false')) {
+      const requiresActivation = typeof data?.message === 'string' && data.message.toLowerCase().includes('activation');
+
+      if (res.ok && requiresActivation) {
+        resetForm();
+        setSuccessMessage('Almost done — FormSubmit sent an activation email to masseyalexandre@gmail.com. Open it, click Activate Form, then submit one more test request.');
+        setSuccess(true);
+      } else if (!res.ok || (data && data.success === 'false')) {
         console.error('FormSubmit failed', res.status, data);
         setError('Something went wrong. Please try again or contact us directly.');
       } else {
         ttqTrack('SubmitForm', { content_name: 'Inspection Quote Request' });
         ttqTrack('Contact', { content_name: 'Inspection Lead' });
         resetForm();
+        setSuccessMessage("Thanks — we received your inspection request. We'll contact you shortly.");
         setSuccess(true);
       }
     } catch (err) {
@@ -119,7 +127,7 @@ export default function BookInspection() {
             <CheckCircle className="w-12 h-12 text-success mx-auto mb-3" />
             <CardTitle className="text-xl">Inspection Request Received!</CardTitle>
             <CardDescription>
-              Thanks — we received your inspection request. We'll contact you shortly.
+              {successMessage}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
