@@ -22,19 +22,33 @@ export default function BookInspection() {
   const [contactEmail, setContactEmail] = useState('');
   const [contactPhone, setContactPhone] = useState('');
   const [notes, setNotes] = useState('');
+  const [honeypot, setHoneypot] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
+  const resetForm = () => {
+    setProductName('');
+    setFactoryLocation('');
+    setQuantity('');
+    setInspectionDate('');
+    setContactName('');
+    setContactEmail('');
+    setContactPhone('');
+    setNotes('');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (honeypot) return; // spam bot
     setLoading(true);
     setError('');
 
     const bookingId = crypto.randomUUID();
-    let err;
+
+    // Persist to DB in background (does not block email delivery)
     if (user) {
-      ({ error: err } = await supabase.from('inspections').insert({
+      supabase.from('inspections').insert({
         id: bookingId,
         user_id: user.id,
         product_name: productName.trim(),
@@ -45,9 +59,9 @@ export default function BookInspection() {
         contact_email: contactEmail.trim() || null,
         contact_phone: contactPhone.trim() || null,
         notes: notes.trim() || null,
-      }));
+      }).then(({ error: dbErr }) => { if (dbErr) console.error('DB insert failed', dbErr); });
     } else {
-      ({ error: err } = await supabase.from('guest_inspection_requests').insert({
+      supabase.from('guest_inspection_requests').insert({
         id: bookingId,
         product_name: productName.trim(),
         factory_location: factoryLocation.trim(),
@@ -57,34 +71,42 @@ export default function BookInspection() {
         contact_email: contactEmail.trim(),
         contact_phone: contactPhone.trim() || null,
         notes: notes.trim() || null,
-      }));
+      }).then(({ error: dbErr }) => { if (dbErr) console.error('DB insert failed', dbErr); });
     }
 
-    if (err) {
-      setError(err.message);
-    } else {
-      // Fire-and-forget admin notification email
-      supabase.functions.invoke('send-transactional-email', {
-        body: {
-          templateName: 'booking-notification',
-          recipientEmail: 'alexandre@softorgsarl.com',
-          idempotencyKey: `booking-notify-${bookingId}`,
-          templateData: {
-            productName: productName.trim(),
-            factoryLocation: factoryLocation.trim(),
-            quantity: quantity,
-            inspectionDate,
-            contactName: user ? (contactName.trim() || user.email) : contactName.trim(),
-            contactEmail: user ? (contactEmail.trim() || user.email) : contactEmail.trim(),
-            contactPhone: contactPhone.trim(),
-            notes: notes.trim(),
-            accountType: user ? 'Signed-in user' : 'Guest',
-          },
-        },
-      }).catch((e) => console.error('Notification email failed', e));
-      ttqTrack('SubmitForm', { content_name: 'Inspection Quote Request' });
-      ttqTrack('Contact', { content_name: 'Inspection Lead' });
-      setSuccess(true);
+    try {
+      const res = await fetch('https://formsubmit.co/ajax/masseyalexandre@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          _subject: 'New Veridex inspection request',
+          _template: 'table',
+          _captcha: 'false',
+          _honey: honeypot,
+          'Product Name': productName.trim(),
+          'Factory Location': factoryLocation.trim(),
+          'Order Quantity': quantity,
+          'Inspection Date': inspectionDate,
+          'Your Name': contactName.trim(),
+          'Email': contactEmail.trim(),
+          'Phone / WhatsApp': contactPhone.trim(),
+          'Additional Notes': notes.trim(),
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || (data && data.success === 'false')) {
+        console.error('FormSubmit failed', res.status, data);
+        setError('Something went wrong. Please try again or contact us directly.');
+      } else {
+        ttqTrack('SubmitForm', { content_name: 'Inspection Quote Request' });
+        ttqTrack('Contact', { content_name: 'Inspection Lead' });
+        resetForm();
+        setSuccess(true);
+      }
+    } catch (err) {
+      console.error('FormSubmit network error', err);
+      setError('Something went wrong. Please try again or contact us directly.');
     }
     setLoading(false);
   };
