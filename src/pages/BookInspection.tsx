@@ -119,9 +119,7 @@ export default function BookInspection() {
             <CheckCircle className="w-12 h-12 text-success mx-auto mb-3" />
             <CardTitle className="text-xl">Inspection Request Received!</CardTitle>
             <CardDescription>
-              {user
-                ? 'Your inspection has been scheduled. You can track it in your dashboard.'
-                : "Thanks! We've received your request and will contact you shortly by email."}
+              Thanks — we received your inspection request. We'll contact you shortly.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
