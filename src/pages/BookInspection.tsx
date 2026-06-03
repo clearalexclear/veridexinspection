@@ -151,6 +151,17 @@ export default function BookInspection() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} onFocus={() => ttqTrackOnce('quote-form-started', 'ClickButton', { content_name: 'Quote Form Started' })} className="space-y-4">
+              {/* honeypot: hidden from real users, bots will fill it */}
+              <input
+                type="text"
+                name="_honey"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+                aria-hidden="true"
+              />
               <div className="space-y-2">
                 <Label htmlFor="product">Product Name</Label>
                 <Input id="product" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="e.g. Stainless Steel Water Bottle 750ml" required />
