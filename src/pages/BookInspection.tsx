@@ -96,13 +96,8 @@ export default function BookInspection() {
       });
 
       const data = await res.json().catch(() => ({}));
-      const requiresActivation = typeof data?.message === 'string' && data.message.toLowerCase().includes('activation');
 
-      if (res.ok && requiresActivation) {
-        resetForm();
-        setSuccessMessage('Almost done — FormSubmit sent an activation email to masseyalexandre@gmail.com. Open it, click Activate Form, then submit one more test request.');
-        setSuccess(true);
-      } else if (!res.ok || (data && data.success === 'false')) {
+      if (!res.ok || (data && data.success === 'false')) {
         console.error('FormSubmit failed', res.status, data);
         setError('Something went wrong. Please try again or contact us directly.');
       } else {
