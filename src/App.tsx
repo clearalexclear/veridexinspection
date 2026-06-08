@@ -13,9 +13,11 @@ import SampleReport from "./pages/SampleReport";
 import UploadReport from "./pages/UploadReport";
 import ReviewReport from "./pages/ReviewReport";
 import AdminPanel from "./pages/AdminPanel";
+import AdminAnalytics from "./pages/AdminAnalytics";
 import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 import TikTokRouteTracker from "./components/TikTokRouteTracker";
+import { PageTracker } from "./hooks/usePageTracking";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +29,7 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <TikTokRouteTracker />
+          <PageTracker />
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/auth" element={<Auth />} />
@@ -37,6 +40,7 @@ const App = () => (
             <Route path="/upload" element={<UploadReport />} />
             <Route path="/review-report" element={<ReviewReport />} />
             <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/admin/analytics" element={<AdminAnalytics />} />
             <Route path="/unsubscribe" element={<Unsubscribe />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
