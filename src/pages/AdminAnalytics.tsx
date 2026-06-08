@@ -38,7 +38,7 @@ function dayKey(iso: string) {
 
 export default function AdminAnalytics() {
   const { user, loading: authLoading } = useAuth();
-  const { isAdmin, loading: roleLoading } = useRole();
+  const { isAdmin, roleLoading } = useRole();
   const [visits, setVisits] = useState<Visit[]>([]);
   const [loading, setLoading] = useState(true);
   const [days, setDays] = useState(7);
