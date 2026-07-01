@@ -186,11 +186,17 @@ export default function BookInspection() {
                 tabIndex={-1}
                 autoComplete="off"
                 style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+              <input
+                type="text"
+                name="website"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
                 aria-hidden="true"
               />
               <div className="space-y-2">
-                <Label htmlFor="product">Product Name</Label>
-                <Input id="product" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="e.g. Stainless Steel Water Bottle 750ml" required />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="factory">Factory Location</Label>
