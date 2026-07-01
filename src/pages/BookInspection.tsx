@@ -11,6 +11,13 @@ import { ttqTrack, ttqTrackOnce } from '@/lib/tiktok';
 
 import { ArrowLeft, Loader2, CheckCircle } from 'lucide-react';
 
+const BOT_EMAIL_PATTERNS = [/\.test@/i, /\+test/i, /test\d*@/i, /noreply/i, /example\.com$/i];
+const BOT_NOTE_PATTERNS = [
+  /seeking a demo and pricing/i,
+  /interested in your services/i,
+  /please get back to me/i,
+];
+
 export default function BookInspection() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -23,6 +30,8 @@ export default function BookInspection() {
   const [contactPhone, setContactPhone] = useState('');
   const [notes, setNotes] = useState('');
   const [honeypot, setHoneypot] = useState('');
+  const [website, setWebsite] = useState(''); // 2nd honeypot (bots love filling "website")
+  const [mountedAt] = useState(() => Date.now());
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("Thanks — we received your inspection request. We'll contact you shortly.");
@@ -39,9 +48,23 @@ export default function BookInspection() {
     setNotes('');
   };
 
+  const looksLikeBot = () => {
+    if (honeypot || website) return true;
+    if (Date.now() - mountedAt < 4000) return true; // filled too fast
+    const email = contactEmail.trim().toLowerCase();
+    if (BOT_EMAIL_PATTERNS.some((r) => r.test(email))) return true;
+    if (BOT_NOTE_PATTERNS.some((r) => r.test(notes))) return true;
+    return false;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (honeypot) return; // spam bot
+    if (looksLikeBot()) {
+      // Silently fake success so bots don't retry with variations
+      resetForm();
+      setSuccess(true);
+      return;
+    }
     setLoading(true);
     setError('');
 
